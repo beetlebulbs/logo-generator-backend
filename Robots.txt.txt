@@ -1,7 +1,0 @@
-User-agent: *
-Allow: /
-
-# Disallow admin-only APIs
-Disallow: /api/admin/
-
-Sitemap: https://beetlebulbs.com/sitemap.xml
