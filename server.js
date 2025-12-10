@@ -819,16 +819,16 @@ app.get('/api/blog/:slug/comments', (req, res) => {
 // FRONTEND SPA FALLBACK SETUP
 // -------------------------------------------
 
-const frontendPath = path.join(__dirname, "..", "dist");
+//const frontendPath = path.join(__dirname, "..", "dist");
 
 // Serve static frontend assets
-app.use(express.static(frontendPath));
+//app.use(express.static(frontendPath));
 
 // SPA fallback for all non-API routes
-app.use((req, res, next) => {
-  if (req.url.startsWith("/api")) return next();
-  res.sendFile(path.join(frontendPath, "index.html"));
-});
+//app.use((req, res, next) => {
+  //if (req.url.startsWith("/api")) return next();
+  //res.sendFile(path.join(frontendPath, "index.html"));
+//});
 
 // -------------------------------------------------------------
 // START SERVER (NO CHANGE) - put at bottom
