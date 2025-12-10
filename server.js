@@ -125,7 +125,7 @@ const adminAuthMiddleware = (req, res, next) => {
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 // --- MODEL CONFIGURATION UPDATE: SWITCHING IMAGE TO HUGGING FACE (HF) ---
-const HF_API_KEY = process.env.HF_API_KEY || "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";
+const HF_API_KEY = process.env.HF_API_KEY;
 const HF_IMAGEN_ENDPOINT = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
 const GEMINI_TEXT_MODEL_NAME = "gemini-2.5-flash-preview-05-20";
 
