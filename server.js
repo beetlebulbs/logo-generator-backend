@@ -437,7 +437,7 @@ app.get("/api/blogs", (req, res) => {
 // -------------------------------------------------------------
 // GET SINGLE BLOG
 // -------------------------------------------------------------
-app.get("/api/blog/:slug", (req, res) => {
+app.get("/api/blogs/:slug", (req, res) => {
   try {
     const slug = req.params.slug;
     const filePath = path.join(__dirname, "blogs", slug + ".json");
