@@ -5,22 +5,24 @@ import express from "express";
 import { replaceLocalUrls } from "../utils/replaceUrls.js";
 import { generateSitemap } from "../utils/generateSitemap.js";
 import { fileURLToPath } from "url";
+import { requireAdmin } from "../server.js"; // ✅ IMPORT ADMIN PROTECTION
 
 const router = express.Router();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Correct blogs folder path (one level above /routes)
+// Correct blogs directory
 const blogsDir = path.join(__dirname, "..", "blogs");
-
-// Ensure blogs folder exists
 if (!fs.existsSync(blogsDir)) fs.mkdirSync(blogsDir, { recursive: true });
 
 
-// ---------------------------------------
-// CREATE BLOG
-// ---------------------------------------
+// -------------------------------------------------
+// ADMIN: CREATE BLOG (Protected)
+// -------------------------------------------------
 router.post("/api/admin/create-blog", (req, res) => {
+  if (!requireAdmin(req, res)) return;
+
   try {
     let blog = req.body;
 
@@ -35,7 +37,6 @@ router.post("/api/admin/create-blog", (req, res) => {
     fs.writeFileSync(filePath, JSON.stringify(blog, null, 2), "utf8");
 
     generateSitemap();
-
     return res.json({ success: true });
   } catch (err) {
     console.error("Create blog error:", err);
@@ -44,10 +45,12 @@ router.post("/api/admin/create-blog", (req, res) => {
 });
 
 
-// ---------------------------------------
-// UPDATE BLOG
-// ---------------------------------------
+// -------------------------------------------------
+// ADMIN: UPDATE BLOG (Protected)
+// -------------------------------------------------
 router.put("/api/admin/update-blog/:slug", (req, res) => {
+  if (!requireAdmin(req, res)) return;
+
   try {
     let blog = req.body;
 
@@ -58,13 +61,13 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
     blog.content = replaceLocalUrls(blog.content);
     blog.coverImage = replaceLocalUrls(blog.coverImage);
 
-    const filePath = path.join(blogsDir, req.params.slug + ".json");
-    fs.writeFileSync(filePath, JSON.stringify(blog, null, 2), "utf8");
+    const oldPath = path.join(blogsDir, req.params.slug + ".json");
+    const newPath = path.join(blogsDir, blog.slug + ".json");
 
-    // If slug changed → rename file
+    fs.writeFileSync(oldPath, JSON.stringify(blog, null, 2), "utf8");
+
     if (req.params.slug !== blog.slug) {
-      const newPath = path.join(blogsDir, blog.slug + ".json");
-      fs.renameSync(filePath, newPath);
+      fs.renameSync(oldPath, newPath);
     }
 
     generateSitemap();
@@ -76,10 +79,12 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
 });
 
 
-// ---------------------------------------
-// DELETE BLOG
-// ---------------------------------------
+// -------------------------------------------------
+// ADMIN: DELETE BLOG (Protected)
+// -------------------------------------------------
 router.delete("/api/admin/delete-blog/:slug", (req, res) => {
+  if (!requireAdmin(req, res)) return;
+
   try {
     const filePath = path.join(blogsDir, req.params.slug + ".json");
 
@@ -96,9 +101,9 @@ router.delete("/api/admin/delete-blog/:slug", (req, res) => {
 });
 
 
-// ---------------------------------------
-// GET ALL BLOGS (Lightweight list) 👍
-// ---------------------------------------
+// -------------------------------------------------
+// PUBLIC: GET ALL BLOGS (Lightweight list)
+// -------------------------------------------------
 router.get("/api/blogs", (req, res) => {
   try {
     const files = fs.existsSync(blogsDir) ? fs.readdirSync(blogsDir) : [];
@@ -108,8 +113,6 @@ router.get("/api/blogs", (req, res) => {
       .map(f => {
         const fullPath = path.join(blogsDir, f);
         const blog = JSON.parse(fs.readFileSync(fullPath, "utf8"));
-
-        // IMPORTANT: lightweight response for frontend speed
         return {
           slug: blog.slug,
           title: blog.title,
@@ -120,7 +123,6 @@ router.get("/api/blogs", (req, res) => {
         };
       });
 
-    // Sort newest first
     blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     res.json(blogs);
@@ -131,9 +133,9 @@ router.get("/api/blogs", (req, res) => {
 });
 
 
-// ---------------------------------------
-// GET SINGLE BLOG (Full Content)
-// ---------------------------------------
+// -------------------------------------------------
+// PUBLIC: GET SINGLE BLOG (Full content)
+// -------------------------------------------------
 router.get("/api/blog/:slug", (req, res) => {
   try {
     const filePath = path.join(blogsDir, req.params.slug + ".json");
