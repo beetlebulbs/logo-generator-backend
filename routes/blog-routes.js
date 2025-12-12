@@ -6,6 +6,9 @@ import { replaceLocalUrls } from "../utils/replaceUrls.js";
 import { generateSitemap } from "../utils/generateSitemap.js";
 import { fileURLToPath } from "url";
 import { verifyToken } from "../utils/jwt.js";
+import { logAdmin } from "../utils/adminLog.js";
+
+ 
 
 function requireAdmin(req, res) {
   const authHeader = req.headers.authorization || "";
@@ -46,6 +49,7 @@ router.post("/api/admin/create-blog", (req, res) => {
 
   try {
     let blog = req.body;
+    blog.views = blog.views || 0;
 
     if (!blog.slug) {
       return res.status(400).json({ success: false, error: "Slug is required" });
@@ -56,7 +60,7 @@ router.post("/api/admin/create-blog", (req, res) => {
 
     const filePath = path.join(blogsDir, blog.slug + ".json");
     fs.writeFileSync(filePath, JSON.stringify(blog, null, 2), "utf8");
-
+    logAdmin(`Created blog: ${blog.slug}`);
     generateSitemap();
     return res.json({ success: true });
   } catch (err) {
@@ -74,6 +78,7 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
 
   try {
     let blog = req.body;
+    blog.views = existing.views || 0;
 
     if (!blog.slug) {
       return res.status(400).json({ success: false, error: "Slug is required" });
@@ -84,13 +89,13 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
 
     const oldPath = path.join(blogsDir, req.params.slug + ".json");
     const newPath = path.join(blogsDir, blog.slug + ".json");
-
+    const existing = JSON.parse(fs.readFileSync(oldPath, "utf8"));
     fs.writeFileSync(oldPath, JSON.stringify(blog, null, 2), "utf8");
 
     if (req.params.slug !== blog.slug) {
       fs.renameSync(oldPath, newPath);
     }
-
+logAdmin(`Updated blog: ${blog.slug}`);
     generateSitemap();
     return res.json({ success: true });
   } catch (err) {
@@ -112,7 +117,7 @@ router.delete("/api/admin/delete-blog/:slug", (req, res) => {
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
-
+logAdmin("DELETE_BLOG", { slug });
     generateSitemap();
     return res.json({ success: true });
   } catch (err) {
@@ -165,8 +170,14 @@ router.get("/api/blog/:slug", (req, res) => {
       return res.status(404).json({ error: "Not found" });
     }
 
-    const raw = fs.readFileSync(filePath, "utf8");
-    res.json(JSON.parse(raw));
+    const blog = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+    // INCREASE VIEW COUNT
+    blog.views = (blog.views || 0) + 1;
+
+    fs.writeFileSync(filePath, JSON.stringify(blog, null, 2), "utf8");
+
+    res.json(blog);
   } catch (err) {
     console.error("Read blog error:", err);
     res.status(500).json({ error: "Read failed" });

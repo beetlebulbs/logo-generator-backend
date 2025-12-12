@@ -15,11 +15,36 @@ import { Buffer } from "buffer";
 import blogRoutes from "./routes/blog-routes.js";
 import { generateSitemap } from "./utils/generateSitemap.js";
 import { verifyToken } from "./utils/jwt.js"; // optional - used in requireAdmin if available
+import { lookupGeo } from "./utils/geo.js";
+import { logAdmin } from "./utils/adminLog.js";
+
+
+// -------- FREE IP LOOKUP --------
+async function getLocationFromIP(ip) {
+  try {
+    const res = await fetch(`https://ipapi.co/${ip}/json/`);
+    const data = await res.json();
+
+    return {
+      country: data.country_name || "Unknown",
+      city: data.city || "Unknown",
+      region: data.region || "Unknown"
+    };
+  } catch (err) {
+    console.error("IP lookup failed:", err);
+    return {
+      country: "Unknown",
+      city: "Unknown",
+      region: "Unknown"
+    };
+  }
+}
+
 
 // ---- __dirname for ESM ----
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+const LOG_FILE = path.join(__dirname, "logs", "admin-activity.json");
 // ---- App + config ----
 const app = express();
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3001;
@@ -121,7 +146,7 @@ const upload = multer({ storage });
 
 // ---- Mount blog routes (Option A) ----
 // blogRoutes handles: GET /api/blog/:slug, GET /api/blogs, and admin create/update/delete in routes file
-app.use(blogRoutes);
+app.use("/api", blogRoutes);
 
 // ---- Sitemap, health ----
 app.get("/sitemap.xml", (req, res) => {
@@ -245,6 +270,20 @@ app.post("/api/admin/upload-image", upload.single("image"), (req, res) => {
   }
 });
 
+// ---- ADMIN LOG VIEW ----
+app.get("/api/admin/logs", adminAuthMiddleware, (req, res) => {
+  try {
+    if (!fs.existsSync(LOG_FILE)) return res.json([]);
+    const data = JSON.parse(fs.readFileSync(LOG_FILE, "utf8"));
+    res.json(data);
+  } catch (err) {
+    console.error("Error reading logs:", err);
+    res.status(500).json({ error: "Failed to load logs" });
+  }
+});
+
+// ---- COMMENTS ADMIN aggregate & actions (kept in server.js) ----
+
 // ---- COMMENTS ADMIN aggregate & actions (kept in server.js) ----
 // admin: list all comments across slugs
 app.get('/api/admin/comments', adminAuthMiddleware, (req, res) => {
@@ -298,6 +337,7 @@ app.put('/api/admin/comments/:slug/:id/approve', adminAuthMiddleware, express.js
     arr[idx].approved = true;
     arr[idx].approvedAt = new Date().toISOString();
     saveCommentsFor(slug, arr);
+    logAdmin(`Approved comment: ${id} on blog ${slug}`);
     return res.json({ success: true, comment: arr[idx] });
   } catch (err) {
     console.error("Approve error", err);
@@ -389,11 +429,14 @@ app.delete('/api/admin/comments/:slug/:commentId/reply/:replyId', adminAuthMiddl
 });
 
 // ---- PUBLIC: submit comment (moderated) ----
-app.post('/api/blog/:slug/comments', express.json(), (req, res) => {
+app.post('/api/blog/:slug/comments', express.json(), async (req, res) => {
   try {
     const { slug } = req.params;
     const { name, email, content } = req.body || {};
     if (!content || !content.trim()) return res.status(400).json({ error: "Content is required" });
+
+    // ensure comments dir exists
+    if (!fs.existsSync(COMMENTS_DIR)) fs.mkdirSync(COMMENTS_DIR, { recursive: true });
 
     const file = path.join(COMMENTS_DIR, `${slug}.json`);
     let arr = [];
@@ -407,6 +450,20 @@ app.post('/api/blog/:slug/comments', express.json(), (req, res) => {
       }
     }
 
+    // ---------------------------
+    // get IP address (try X-Forwarded-For first)
+    // ---------------------------
+    const rawForwarded = req.headers["x-forwarded-for"];
+    const ipFromHeader = Array.isArray(rawForwarded) ? rawForwarded[0] : rawForwarded;
+    const ipAddress =
+      (ipFromHeader && ipFromHeader.split(",")[0].trim()) ||
+      req.ip ||
+      req.connection?.remoteAddress ||
+      "unknown";
+
+    // lookup geo
+    const geo = await lookupGeo(ipAddress);
+
     const newComment = {
       id: genId(),
       name: name || "Anonymous",
@@ -414,17 +471,25 @@ app.post('/api/blog/:slug/comments', express.json(), (req, res) => {
       content,
       createdAt: new Date().toISOString(),
       approved: false,
-      replies: []
+      replies: [],
+      ip: ipAddress,
+      countryName: geo.country_name,
+countryCode: geo.country_code,  // ADD THIS
+
+      city: geo.city || "Unknown",
+      region: geo.region || ""
     };
 
     arr.push(newComment);
     fs.writeFileSync(file, JSON.stringify(arr, null, 2), "utf8");
+
     return res.status(201).json({ success: true, comment: newComment });
   } catch (err) {
     console.error("POST /api/blog/:slug/comments error", err);
     return res.status(500).json({ error: "Server error while saving comment" });
   }
 });
+
 
 // ---- PUBLIC: Get approved comments (paginated) ----
 app.get('/api/blog/:slug/comments', (req, res) => {
