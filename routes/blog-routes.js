@@ -5,7 +5,28 @@ import express from "express";
 import { replaceLocalUrls } from "../utils/replaceUrls.js";
 import { generateSitemap } from "../utils/generateSitemap.js";
 import { fileURLToPath } from "url";
-import { requireAdmin } from "../server.js"; // ✅ IMPORT ADMIN PROTECTION
+import { verifyToken } from "../utils/jwt.js";
+
+function requireAdmin(req, res) {
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.replace(/^Bearer\s*/i, "").trim();
+
+  if (!token) {
+    res.status(401).json({ message: "Missing admin token" });
+    return false;
+  }
+
+  try {
+    const decoded = verifyToken(token);
+    if (decoded) return true;
+  } catch (e) {}
+
+  const adminSecret = process.env.ADMIN_SECRET;
+  if (token === adminSecret) return true;
+
+  res.status(403).json({ message: "Invalid admin token" });
+  return false;
+}
 
 const router = express.Router();
 
