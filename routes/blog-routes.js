@@ -10,6 +10,15 @@ import { verifyToken } from "../utils/jwt.js";
 import { logAdmin } from "../utils/adminLog.js";
 
  
+// ---- Simple in-memory cache ----
+const cache = {
+  blogs: {
+    data: null,
+    expires: 0
+  }
+};
+
+const BLOG_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 function requireAdmin(req, res) {
   const authHeader = req.headers.authorization || "";
@@ -65,6 +74,7 @@ router.post("/api/admin/create-blog", (req, res) => {
     fs.writeFileSync(filePath, JSON.stringify(blog, null, 2), "utf8");
     logAdmin(`Created blog: ${blog.slug}`);
     generateSitemap();
+    cache.blogs.data = null;
     return res.json({ success: true });
   } catch (err) {
     console.error("Create blog error:", err);
@@ -108,7 +118,7 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
 
     logAdmin(`Updated blog: ${newSlug}`);
     generateSitemap();
-
+cache.blogs.data = null;
     return res.json({ success: true });
   } catch (err) {
     console.error("Update blog error:", err);
@@ -132,6 +142,7 @@ router.delete("/api/admin/delete-blog/:slug", (req, res) => {
     }
 logAdmin(`Deleted blog: ${req.params.slug}`);
     generateSitemap();
+    cache.blogs.data = null;
     return res.json({ success: true });
   } catch (err) {
     console.error("Delete blog error:", err);
@@ -145,24 +156,34 @@ logAdmin(`Deleted blog: ${req.params.slug}`);
 // -------------------------------------------------
 router.get("/api/blogs", (req, res) => {
   try {
-    const files = fs.existsSync(blogsDir) ? fs.readdirSync(blogsDir) : [];
+    // serve from cache
+    if (cache.blogs.data && Date.now() < cache.blogs.expires) {
+      return res.json(cache.blogs.data);
+    }
 
-    const blogs = files
-      .filter(f => f.endsWith(".json"))
-      .map(f => {
-        const fullPath = path.join(blogsDir, f);
-        const blog = JSON.parse(fs.readFileSync(fullPath, "utf8"));
-        return {
-          slug: blog.slug,
-          title: blog.title,
-          description: blog.description || "",
-          coverImage: blog.coverImage,
-          category: blog.category || "",
-          date: blog.date || "",
-        };
-      });
+    const files = fs.existsSync(BLOGS_DIR)
+      ? fs.readdirSync(BLOGS_DIR).filter(f => f.endsWith(".json"))
+      : [];
+
+    const blogs = files.map(f => {
+      const blog = JSON.parse(fs.readFileSync(path.join(BLOGS_DIR, f), "utf8"));
+      return {
+        slug: blog.slug,
+        title: blog.title,
+        description: blog.description || "",
+        coverImage: blog.coverImage,
+        category: blog.category || "",
+        date: blog.date || ""
+      };
+    });
 
     blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // save to cache
+    cache.blogs = {
+      data: blogs,
+      expires: Date.now() + BLOG_CACHE_TTL
+    };
 
     res.json(blogs);
   } catch (err) {
@@ -170,7 +191,6 @@ router.get("/api/blogs", (req, res) => {
     res.status(500).json([]);
   }
 });
-
 
 // -------------------------------------------------
 // PUBLIC: GET SINGLE BLOG (Full content)
