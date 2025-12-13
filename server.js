@@ -146,7 +146,7 @@ const upload = multer({ storage });
 
 // ---- Mount blog routes (Option A) ----
 // blogRoutes handles: GET /api/blog/:slug, GET /api/blogs, and admin create/update/delete in routes file
-app.use("/api", blogRoutes);
+app.use("/api/blogs", blogRoutes);
 
 // ---- Sitemap, health ----
 app.get("/sitemap.xml", (req, res) => {
