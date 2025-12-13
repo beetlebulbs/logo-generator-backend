@@ -132,8 +132,7 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
-app.use(bodyParser.json({ limit: "20mb" }));
-app.use(bodyParser.urlencoded({ extended: true, limit: "20mb" }));
+
 app.use(compression());
 
 // ---- Uploads (multer) ----
