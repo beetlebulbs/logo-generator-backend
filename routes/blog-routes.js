@@ -75,12 +75,12 @@ router.post("/api/admin/create-blog", (req, res) => {
 
 // -------------------------------------------------
 // ADMIN: UPDATE BLOG (Protected)
-// -------------------------------------------------
 router.put("/api/admin/update-blog/:slug", (req, res) => {
   if (!requireAdmin(req, res)) return;
 
   try {
-    const oldPath = path.join(blogsDir, req.params.slug + ".json");
+    const oldSlug = req.params.slug;
+    const oldPath = path.join(blogsDir, oldSlug + ".json");
 
     if (!fs.existsSync(oldPath)) {
       return res.status(404).json({ success: false, error: "Blog not found" });
@@ -88,24 +88,25 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
 
     const existing = JSON.parse(fs.readFileSync(oldPath, "utf8"));
 
-    const blog = {
-      ...existing,      // 👈 keep old data
-      ...req.body,      // 👈 overwrite with new data (NEW IMAGE URL)
-      views: existing.views || 0
+    const updatedBlog = {
+      ...existing,
+      ...req.body,
+      views: existing.views || 0,
     };
 
-    blog.content = replaceLocalUrls(blog.content);
-    blog.coverImage = replaceLocalUrls(blog.coverImage);
+    updatedBlog.content = replaceLocalUrls(updatedBlog.content);
+    updatedBlog.coverImage = replaceLocalUrls(updatedBlog.coverImage);
 
-    const newPath = path.join(blogsDir, blog.slug + ".json");
+    const newSlug = updatedBlog.slug || oldSlug;
+    const newPath = path.join(blogsDir, newSlug + ".json");
 
-    fs.writeFileSync(newPath, JSON.stringify(blog, null, 2), "utf8");
+    fs.writeFileSync(newPath, JSON.stringify(updatedBlog, null, 2), "utf8");
 
-    if (req.params.slug !== blog.slug) {
+    if (newSlug !== oldSlug) {
       fs.unlinkSync(oldPath);
     }
 
-    logAdmin(`Updated blog: ${blog.slug}`);
+    logAdmin(`Updated blog: ${newSlug}`);
     generateSitemap();
 
     return res.json({ success: true });
@@ -114,6 +115,7 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
     return res.status(500).json({ success: false, error: "Update failed" });
   }
 });
+
 
 
 // -------------------------------------------------
