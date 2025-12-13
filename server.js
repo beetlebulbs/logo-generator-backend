@@ -5,8 +5,7 @@
 import 'dotenv/config';
 import express from "express";
 console.log("🔥 SERVER.JS LOADED");
-
-import bodyParser from "body-parser";
+ 
 import cors from "cors";
 import compression from "compression";
 import path from "path";
@@ -50,6 +49,9 @@ const __dirname = path.dirname(__filename);
 const LOG_FILE = path.join(__dirname, "logs", "admin-activity.json");
 // ---- App + config ----
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3001;
 
 // ---- Directories ----
@@ -241,7 +243,7 @@ app.post('/generate-rationale', async (req, res) => {
 
 // ---- ADMIN LOGIN (keeps admin logic here) ----
 // Frontend will POST { email, password } -> returns token (ADMIN_SECRET) on success
-app.post("/api/admin/login", express.json(), (req, res) => {
+app.post("/api/admin/login", (req, res) => {
   const { email, password } = req.body || {};
   const adminEmail = process.env.ADMIN_EMAIL;
   const adminPassword = process.env.ADMIN_PASSWORD;
