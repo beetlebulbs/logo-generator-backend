@@ -81,29 +81,34 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
 
   try {
     const oldPath = path.join(blogsDir, req.params.slug + ".json");
+
+    if (!fs.existsSync(oldPath)) {
+      return res.status(404).json({ success: false, error: "Blog not found" });
+    }
+
     const existing = JSON.parse(fs.readFileSync(oldPath, "utf8"));
 
-    let blog = req.body;
-    blog.views = existing.views || 0;
-
-    if (!blog.slug) {
-      return res.status(400).json({ success: false, error: "Slug is required" });
-    }
+    const blog = {
+      ...existing,      // 👈 keep old data
+      ...req.body,      // 👈 overwrite with new data (NEW IMAGE URL)
+      views: existing.views || 0
+    };
 
     blog.content = replaceLocalUrls(blog.content);
     blog.coverImage = replaceLocalUrls(blog.coverImage);
 
     const newPath = path.join(blogsDir, blog.slug + ".json");
-    fs.writeFileSync(oldPath, JSON.stringify(blog, null, 2), "utf8");
+
+    fs.writeFileSync(newPath, JSON.stringify(blog, null, 2), "utf8");
 
     if (req.params.slug !== blog.slug) {
-      fs.renameSync(oldPath, newPath);
+      fs.unlinkSync(oldPath);
     }
 
     logAdmin(`Updated blog: ${blog.slug}`);
     generateSitemap();
-    return res.json({ success: true });
 
+    return res.json({ success: true });
   } catch (err) {
     console.error("Update blog error:", err);
     return res.status(500).json({ success: false, error: "Update failed" });
