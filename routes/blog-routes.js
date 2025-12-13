@@ -57,7 +57,9 @@ router.post("/api/admin/create-blog", (req, res) => {
     }
 
     blog.content = replaceLocalUrls(blog.content);
-    blog.coverImage = replaceLocalUrls(blog.coverImage);
+    if (blog.coverImage && !blog.coverImage.startsWith("http")) {
+  blog.coverImage = replaceLocalUrls(blog.coverImage);
+}
 
     const filePath = path.join(blogsDir, blog.slug + ".json");
     fs.writeFileSync(filePath, JSON.stringify(blog, null, 2), "utf8");
