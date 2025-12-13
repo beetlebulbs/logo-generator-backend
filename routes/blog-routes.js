@@ -78,6 +78,9 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
   if (!requireAdmin(req, res)) return;
 
   try {
+    const oldPath = path.join(blogsDir, req.params.slug + ".json");
+    const existing = JSON.parse(fs.readFileSync(oldPath, "utf8"));
+
     let blog = req.body;
     blog.views = existing.views || 0;
 
@@ -88,17 +91,17 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
     blog.content = replaceLocalUrls(blog.content);
     blog.coverImage = replaceLocalUrls(blog.coverImage);
 
-    const oldPath = path.join(blogsDir, req.params.slug + ".json");
     const newPath = path.join(blogsDir, blog.slug + ".json");
-    const existing = JSON.parse(fs.readFileSync(oldPath, "utf8"));
     fs.writeFileSync(oldPath, JSON.stringify(blog, null, 2), "utf8");
 
     if (req.params.slug !== blog.slug) {
       fs.renameSync(oldPath, newPath);
     }
-logAdmin(`Updated blog: ${blog.slug}`);
+
+    logAdmin(`Updated blog: ${blog.slug}`);
     generateSitemap();
     return res.json({ success: true });
+
   } catch (err) {
     console.error("Update blog error:", err);
     return res.status(500).json({ success: false, error: "Update failed" });
@@ -118,7 +121,7 @@ router.delete("/api/admin/delete-blog/:slug", (req, res) => {
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
-logAdmin("DELETE_BLOG", { slug });
+logAdmin(`Deleted blog: ${req.params.slug}`);
     generateSitemap();
     return res.json({ success: true });
   } catch (err) {
