@@ -1,4 +1,5 @@
 // blog-routes.js
+console.log("🔥 BLOG ROUTES FILE LOADED");
 import fs from "fs";
 import path from "path";
 import express from "express";
