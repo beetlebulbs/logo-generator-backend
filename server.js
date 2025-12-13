@@ -260,18 +260,24 @@ app.post("/api/admin/login", express.json(), (req, res) => {
 });
 
 // ---- IMAGE UPLOAD (ADMIN) ----
-app.post("/api/admin/upload-image", upload.single("image"), (req, res) => {
-  // allow either requireAdmin or an ADMIN_SECRET in Authorization header
+app.post("/api/admin/upload-image", (req, res, next) => {
   if (!requireAdmin(req, res)) return;
+  next();
+}, upload.single("image"), (req, res) => {
   try {
-    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+    if (!req.file) {
+      console.error("UPLOAD ERROR: req.file missing");
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
     const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
     return res.json({ url: fileUrl });
   } catch (err) {
-    console.error("upload-image error:", err);
+    console.error("upload-image fatal:", err);
     return res.status(500).json({ message: "Upload failed" });
   }
 });
+
 
 // ---- ADMIN LOG VIEW ----
 app.get("/api/admin/logs", adminAuthMiddleware, (req, res) => {
@@ -465,23 +471,28 @@ app.post('/api/blog/:slug/comments', express.json(), async (req, res) => {
       "unknown";
 
     // lookup geo
-    const geo = await lookupGeo(ipAddress);
+    let geo = {};
+try {
+  geo = await lookupGeo(ipAddress);
+} catch (err) {
+  console.error("Geo lookup failed:", err.message);
+  geo = {};
+}
 
-    const newComment = {
-      id: genId(),
-      name: name || "Anonymous",
-      email: email || "",
-      content,
-      createdAt: new Date().toISOString(),
-      approved: false,
-      replies: [],
-      ip: ipAddress,
-      countryName: geo.country_name,
-countryCode: geo.country_code,  // ADD THIS
-
-      city: geo.city || "Unknown",
-      region: geo.region || ""
-    };
+   const newComment = {
+  id: Date.now().toString(),
+  name: name || "Anonymous",
+  email: email || "",
+  content,
+  createdAt: new Date().toISOString(),
+  approved: false,
+  replies: [],
+  ip: ipAddress,
+  countryName: geo.country_name || "",
+  countryCode: geo.country_code || "",
+  city: geo.city || "",
+  region: geo.region || ""
+};
 
     arr.push(newComment);
     fs.writeFileSync(file, JSON.stringify(arr, null, 2), "utf8");
