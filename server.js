@@ -4,6 +4,8 @@
 // Load environment variables
 import 'dotenv/config';
 import express from "express";
+console.log("🔥 SERVER.JS LOADED");
+
 import bodyParser from "body-parser";
 import cors from "cors";
 import compression from "compression";
@@ -13,12 +15,13 @@ import multer from "multer";
 import { fileURLToPath } from "url";
 import { Buffer } from "buffer";
 import blogRoutes from "./routes/blog-routes.js";
+console.log("🔥 BLOG ROUTES IMPORTED:", blogRoutes);
 import { generateSitemap } from "./utils/generateSitemap.js";
 import { verifyToken } from "./utils/jwt.js"; // optional - used in requireAdmin if available
 import { lookupGeo } from "./utils/geo.js";
 import { logAdmin } from "./utils/adminLog.js";
 
-
+console.log("🔥 SERVER.JS LOADED");
 // -------- FREE IP LOOKUP --------
 async function getLocationFromIP(ip) {
   try {
@@ -146,7 +149,7 @@ const upload = multer({ storage });
 
 // ---- Mount blog routes (Option A) ----
 // blogRoutes handles: GET /api/blog/:slug, GET /api/blogs, and admin create/update/delete in routes file
-app.use("/api/blogs", blogRoutes);
+app.use(blogRoutes);
 
 // ---- Sitemap, health ----
 app.get("/sitemap.xml", (req, res) => {
