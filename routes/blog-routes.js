@@ -87,6 +87,46 @@ const __dirname = path.dirname(__filename);
 const blogsDir = path.join(__dirname, "..", "blogs");
 if (!fs.existsSync(blogsDir)) fs.mkdirSync(blogsDir, { recursive: true });
 
+// =================================================
+// ADMIN: UPLOAD IMAGE (IMAGEKIT)
+// =================================================
+router.post("/api/admin/upload-image", async (req, res) => {
+  console.log("🟡 IMAGE UPLOAD ROUTE HIT");
+  console.log("🟡 req.files =", req.files);
+
+  if (!requireAdmin(req, res)) return;
+
+  if (!req.files || !req.files.image) {
+    console.error("❌ No file received");
+    return res.status(400).json({ message: "No image file received" });
+  }
+
+  if (!imagekit) {
+    console.error("❌ ImageKit instance missing");
+    return res.status(500).json({ message: "ImageKit not configured" });
+  }
+
+  try {
+    const file = req.files.image;
+
+    console.log("🟢 File name:", file.name);
+    console.log("🟢 File size:", file.size);
+
+    const upload = await imagekit.upload({
+      file: file.data.toString("base64"),
+      fileName: file.name,
+      folder: "blogs",
+    });
+
+    console.log("🟢 ImageKit upload success:", upload.url);
+    return res.json({ url: upload.url });
+  } catch (err) {
+    console.error("❌ ImageKit upload error:", err);
+    return res.status(500).json({ message: "Image upload failed" });
+  }
+});
+
+
 /* =================================================
    ADMIN: CREATE BLOG
 ================================================== */

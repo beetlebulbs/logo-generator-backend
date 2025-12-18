@@ -10,7 +10,6 @@ import cors from "cors";
 import compression from "compression";
 import path from "path";
 import fs from "fs";
-import multer from "multer";
 import { fileURLToPath } from "url";
 import { Buffer } from "buffer";
 import blogRoutes from "./routes/blog-routes.js";
@@ -141,23 +140,11 @@ app.use(cors({
 }));
 
 app.use(compression());
-
-// ---- Uploads (multer) ----
-app.use("/uploads", express.static(UPLOADS_DIR));
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, UPLOADS_DIR),
-  filename: (req, file, cb) => {
-    const unique = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const ext = (file.originalname || "").split(".").pop();
-    cb(null, unique + (ext ? "." + ext : ""));
-  }
-});
-const upload = multer({ storage });
+ 
 
 // ---- Mount blog routes (Option A) ----
 // blogRoutes handles: GET /api/blog/:slug, GET /api/blogs, and admin create/update/delete in routes file
-app.use(fileUpload());
+ 
 app.use(blogRoutes);
 
 // ---- Sitemap, health ----
