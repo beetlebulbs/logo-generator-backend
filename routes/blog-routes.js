@@ -21,6 +21,7 @@ import { replaceLocalUrls } from "../utils/replaceUrls.js";
 import { generateSitemap } from "../utils/generateSitemap.js";
 import { fileURLToPath } from "url";
 import { verifyToken } from "../utils/jwt.js";
+import { requireAdmin } from "../server.js";
 import { logAdmin } from "../utils/adminLog.js";
 
 // ✅ SUPABASE (ADDED – does NOT remove file logic)
@@ -55,28 +56,7 @@ const cache = {
 };
 
 const BLOG_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-
-function requireAdmin(req, res) {
-  const authHeader = req.headers.authorization || "";
-  const token = authHeader.replace(/^Bearer\s*/i, "").trim();
-
-  // 1️⃣ Allow admin via ADMIN_SECRET (Admin Panel)
-  if (token && token === process.env.ADMIN_SECRET) {
-    return true;
-  }
-
-  // 2️⃣ Allow admin via JWT (Future / API)
-  if (token) {
-    try {
-      const decoded = verifyToken(token);
-      if (decoded) return true;
-    } catch (e) {}
-  }
-
-  res.status(403).json({ message: "Invalid admin token" });
-  return false;
-}
-
+ 
 
 const router = express.Router();
 
@@ -131,7 +111,8 @@ router.post("/api/admin/upload-image", async (req, res) => {
    ADMIN: CREATE BLOG
 ================================================== */
 router.post("/api/admin/create-blog", async (req, res) => {
-  console.log("🧪 CREATE BLOG ROUTE HIT");
+  console.log("🔥 CREATE BLOG HIT");
+  console.log("🔥 BODY:", req.body);
   if (!requireAdmin(req, res)) return;
 
   try {
@@ -144,31 +125,50 @@ router.post("/api/admin/create-blog", async (req, res) => {
 
     blog.content = replaceLocalUrls(blog.content);
 
-    if (blog.coverImage && !blog.coverImage.startsWith("http")) {
-      blog.coverImage = replaceLocalUrls(blog.coverImage);
-    }
-
-   // ✅ SUPABASE INSERT (FIXED)
-if (supabase) {
-  const { data, error } = await supabase
-    .from("blogs")
-    .insert([
-      {
-        title: blog.title,
-        slug: blog.slug,
-        category: blog.category || "",
-        short_description: blog.description || "",
-        html_content: blog.content,
-        image_url: blog.coverImage || "",
-      },
-    ]);
-
-  if (error) {
-    console.error("❌ SUPABASE INSERT ERROR:", error);
-  } else {
-    console.log("🟢 SUPABASE INSERT SUCCESS:", data);
-  }
+    if (blog.coverImage && blog.coverImage.startsWith("http")) {
+  // ImageKit or absolute URL → leave as-is
+} else if (blog.coverImage) {
+  blog.coverImage = replaceLocalUrls(blog.coverImage);
 }
+
+
+    
+ // ✅ SUPABASE INSERT (STRICT MODE)
+if (!supabase) {
+  return res.status(500).json({
+    success: false,
+    error: "Supabase client not initialized",
+  });
+}
+
+console.log("🧪 INSERTING INTO SUPABASE:", blog.slug);
+
+const { data, error } = await supabase
+  .from("blogs")
+  .insert([
+    {
+      title: blog.title,
+      slug: blog.slug,
+      category: blog.category || "",
+      short_description: blog.description || "",
+      html_content: blog.content,
+      image_url: blog.coverImage || "",
+      status: "published",
+    },
+  ])
+  .select(); // 👈 VERY IMPORTANT
+
+if (error) {
+  console.error("❌ SUPABASE INSERT ERROR:", error);
+  return res.status(500).json({
+    success: false,
+    error: "Supabase insert failed",
+    details: error.message,
+  });
+}
+
+console.log("🟢 SUPABASE INSERT SUCCESS:", data);
+
 
 
     // 🟡 FILE BACKUP (UNCHANGED)
