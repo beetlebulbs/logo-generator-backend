@@ -1,5 +1,23 @@
 [
   {
+    "id": "1766083931609",
+    "action": "Deleted blog: supabase-direct-test",
+    "meta": {},
+    "time": "2025-12-18T18:52:11.609Z"
+  },
+  {
+    "id": "1766083915502",
+    "action": "Deleted blog: bbb",
+    "meta": {},
+    "time": "2025-12-18T18:51:55.502Z"
+  },
+  {
+    "id": "1766083603254",
+    "action": "Created blog: bbb",
+    "meta": {},
+    "time": "2025-12-18T18:46:43.254Z"
+  },
+  {
     "id": "1766054430485",
     "action": "Created blog: supabase-direct-test",
     "meta": {},
