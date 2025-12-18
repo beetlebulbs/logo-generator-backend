@@ -1,5 +1,19 @@
+console.log("🧪 LIVE ENV CHECK");
+console.log("SUPABASE_URL =", process.env.SUPABASE_URL);
+console.log("SUPABASE_KEY PRESENT =", !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+console.log("IMAGEKIT_PUBLIC =", process.env.IMAGEKIT_PUBLIC_KEY);
+console.log("IMAGEKIT_ENDPOINT =", process.env.IMAGEKIT_URL_ENDPOINT);
+
+
+console.log("🧪 SUPABASE_URL:", process.env.SUPABASE_URL);
+console.log(
+  "🧪 SUPABASE KEY PRESENT:",
+  !!process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
 // blog-routes.js
 console.log("🔥 BLOG ROUTES FILE LOADED");
+
 import fs from "fs";
 import path from "path";
 import express from "express";
@@ -9,13 +23,23 @@ import { fileURLToPath } from "url";
 import { verifyToken } from "../utils/jwt.js";
 import { logAdmin } from "../utils/adminLog.js";
 
- 
+// ✅ SUPABASE (ADDED – does NOT remove file logic)
+import { createClient } from "@supabase/supabase-js";
+
+const supabase =
+  process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+    ? createClient(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY
+      )
+    : null;
+
 // ---- Simple in-memory cache ----
 const cache = {
   blogs: {
     data: null,
-    expires: 0
-  }
+    expires: 0,
+  },
 };
 
 const BLOG_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
@@ -24,37 +48,38 @@ function requireAdmin(req, res) {
   const authHeader = req.headers.authorization || "";
   const token = authHeader.replace(/^Bearer\s*/i, "").trim();
 
-  if (!token) {
-    res.status(401).json({ message: "Missing admin token" });
-    return false;
+  // 1️⃣ Allow admin via ADMIN_SECRET (Admin Panel)
+  if (token && token === process.env.ADMIN_SECRET) {
+    return true;
   }
 
-  try {
-    const decoded = verifyToken(token);
-    if (decoded) return true;
-  } catch (e) {}
-
-  const adminSecret = process.env.ADMIN_SECRET;
-  if (token === adminSecret) return true;
+  // 2️⃣ Allow admin via JWT (Future / API)
+  if (token) {
+    try {
+      const decoded = verifyToken(token);
+      if (decoded) return true;
+    } catch (e) {}
+  }
 
   res.status(403).json({ message: "Invalid admin token" });
   return false;
 }
+
 
 const router = express.Router();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Correct blogs directory
+// ---------------- FILE SYSTEM (KEEPING AS FALLBACK) ----------------
 const blogsDir = path.join(__dirname, "..", "blogs");
 if (!fs.existsSync(blogsDir)) fs.mkdirSync(blogsDir, { recursive: true });
 
-
-// -------------------------------------------------
-// ADMIN: CREATE BLOG (Protected)
-// -------------------------------------------------
-router.post("/api/admin/create-blog", (req, res) => {
+/* =================================================
+   ADMIN: CREATE BLOG
+================================================== */
+router.post("/api/admin/create-blog", async (req, res) => {
+  console.log("🧪 CREATE BLOG ROUTE HIT");
   if (!requireAdmin(req, res)) return;
 
   try {
@@ -66,15 +91,36 @@ router.post("/api/admin/create-blog", (req, res) => {
     }
 
     blog.content = replaceLocalUrls(blog.content);
-    if (blog.coverImage && !blog.coverImage.startsWith("http")) {
-  blog.coverImage = replaceLocalUrls(blog.coverImage);
-}
 
+    if (blog.coverImage && !blog.coverImage.startsWith("http")) {
+      blog.coverImage = replaceLocalUrls(blog.coverImage);
+    }
+
+    // ✅ SUPABASE INSERT (WITH LOG)
+    if (supabase) {
+      const { data, error } = await supabase.from("blogs").upsert({
+        title: blog.title,
+        slug: blog.slug,
+        category: blog.category || "",
+        short_description: blog.description || "",
+        html_content: blog.content,
+        image_url: blog.coverImage || "",
+        seo_title: blog.seoTitle || "",
+        seo_description: blog.seoDescription || "",
+        seo_keywords: blog.seoKeywords || "",
+      });
+
+      console.log("🟣 SUPABASE INSERT RESULT:", data, error);
+    }
+
+    // 🟡 FILE BACKUP (UNCHANGED)
     const filePath = path.join(blogsDir, blog.slug + ".json");
     fs.writeFileSync(filePath, JSON.stringify(blog, null, 2), "utf8");
+
     logAdmin(`Created blog: ${blog.slug}`);
     generateSitemap();
     cache.blogs.data = null;
+
     return res.json({ success: true });
   } catch (err) {
     console.error("Create blog error:", err);
@@ -82,10 +128,10 @@ router.post("/api/admin/create-blog", (req, res) => {
   }
 });
 
-
-// -------------------------------------------------
-// ADMIN: UPDATE BLOG (Protected)
-router.put("/api/admin/update-blog/:slug", (req, res) => {
+/* =================================================
+   ADMIN: UPDATE BLOG
+================================================== */
+router.put("/api/admin/update-blog/:slug", async (req, res) => {
   if (!requireAdmin(req, res)) return;
 
   try {
@@ -93,7 +139,9 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
     const oldPath = path.join(blogsDir, oldSlug + ".json");
 
     if (!fs.existsSync(oldPath)) {
-      return res.status(404).json({ success: false, error: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Blog not found" });
     }
 
     const existing = JSON.parse(fs.readFileSync(oldPath, "utf8"));
@@ -108,17 +156,31 @@ router.put("/api/admin/update-blog/:slug", (req, res) => {
     updatedBlog.coverImage = replaceLocalUrls(updatedBlog.coverImage);
 
     const newSlug = updatedBlog.slug || oldSlug;
-    const newPath = path.join(blogsDir, newSlug + ".json");
 
+    // ✅ UPDATE SUPABASE
+    if (supabase) {
+      await supabase
+        .from("blogs")
+        .update({
+          title: updatedBlog.title,
+          category: updatedBlog.category,
+          short_description: updatedBlog.description || "",
+          html_content: updatedBlog.content,
+          image_url: updatedBlog.coverImage,
+        })
+        .eq("slug", oldSlug);
+    }
+
+    // 🟡 UPDATE FILE
+    const newPath = path.join(blogsDir, newSlug + ".json");
     fs.writeFileSync(newPath, JSON.stringify(updatedBlog, null, 2), "utf8");
 
-    if (newSlug !== oldSlug) {
-      fs.unlinkSync(oldPath);
-    }
+    if (newSlug !== oldSlug) fs.unlinkSync(oldPath);
 
     logAdmin(`Updated blog: ${newSlug}`);
     generateSitemap();
-cache.blogs.data = null;
+    cache.blogs.data = null;
+
     return res.json({ success: true });
   } catch (err) {
     console.error("Update blog error:", err);
@@ -126,23 +188,26 @@ cache.blogs.data = null;
   }
 });
 
-
-
-// -------------------------------------------------
-// ADMIN: DELETE BLOG (Protected)
-// -------------------------------------------------
-router.delete("/api/admin/delete-blog/:slug", (req, res) => {
+/* =================================================
+   ADMIN: DELETE BLOG
+================================================== */
+router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
   if (!requireAdmin(req, res)) return;
 
   try {
-    const filePath = path.join(blogsDir, req.params.slug + ".json");
+    const slug = req.params.slug;
 
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+    if (supabase) {
+      await supabase.from("blogs").delete().eq("slug", slug);
     }
-logAdmin(`Deleted blog: ${req.params.slug}`);
+
+    const filePath = path.join(blogsDir, slug + ".json");
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+
+    logAdmin(`Deleted blog: ${slug}`);
     generateSitemap();
     cache.blogs.data = null;
+
     return res.json({ success: true });
   } catch (err) {
     console.error("Delete blog error:", err);
@@ -150,70 +215,92 @@ logAdmin(`Deleted blog: ${req.params.slug}`);
   }
 });
 
-
-// -------------------------------------------------
-// PUBLIC: GET ALL BLOGS (Lightweight list)
-// -------------------------------------------------
-router.get("/api/blogs", (req, res) => {
+/* =================================================
+   PUBLIC: GET ALL BLOGS
+================================================== */
+router.get("/api/blogs", async (req, res) => {
   try {
-    // Ensure blogs directory exists
-    if (!fs.existsSync(blogsDir)) {
-      return res.json([]);
+    // ✅ TRY SUPABASE FIRST
+    if (supabase) {
+      const { data } = await supabase
+        .from("blogs")
+        .select(
+          "slug,title,short_description,image_url,category,created_at"
+        )
+        .order("created_at", { ascending: false });
+
+      if (data) {
+        return res.json(
+          data.map((b) => ({
+            slug: b.slug,
+            title: b.title,
+            description: b.short_description || "",
+            coverImage: b.image_url || "",
+            category: b.category || "",
+            date: b.created_at,
+          }))
+        );
+      }
     }
 
-    const files = fs.readdirSync(blogsDir).filter(f => f.endsWith(".json"));
-
+    // 🟡 FALLBACK: FILE SYSTEM
+    const files = fs.readdirSync(blogsDir).filter((f) => f.endsWith(".json"));
     const blogs = [];
 
     for (const file of files) {
-      try {
-        const fullPath = path.join(blogsDir, file);
-        const raw = fs.readFileSync(fullPath, "utf8");
+      const raw = fs.readFileSync(path.join(blogsDir, file), "utf8");
+      if (!raw) continue;
+      const blog = JSON.parse(raw);
 
-        if (!raw || !raw.trim()) continue;
-
-        const blog = JSON.parse(raw);
-
-        blogs.push({
-          slug: blog.slug,
-          title: blog.title,
-          description: blog.description || "",
-          coverImage: blog.coverImage || "",
-          category: blog.category || "",
-          date: blog.date || ""
-        });
-      } catch (fileErr) {
-        console.error("⚠️ Skipping broken blog file:", file, fileErr.message);
-        continue;
-      }
+      blogs.push({
+        slug: blog.slug,
+        title: blog.title,
+        description: blog.description || "",
+        coverImage: blog.coverImage || "",
+        category: blog.category || "",
+        date: blog.date || "",
+      });
     }
 
     blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
     return res.json(blogs);
-
   } catch (err) {
-    console.error("🔥 /api/blogs fatal error:", err);
+    console.error("🔥 /api/blogs error:", err);
     return res.status(500).json({ error: "Failed to load blogs" });
   }
 });
 
-
-// -------------------------------------------------
-// PUBLIC: GET SINGLE BLOG (Full content)
-// -------------------------------------------------
-router.get("/api/blog/:slug", (req, res) => {
+/* =================================================
+   PUBLIC: GET SINGLE BLOG
+================================================== */
+router.get("/api/blog/:slug", async (req, res) => {
   try {
-    const filePath = path.join(blogsDir, req.params.slug + ".json");
+    const slug = req.params.slug;
 
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ error: "Not found" });
+    // ✅ SUPABASE FIRST
+    if (supabase) {
+      const { data } = await supabase
+        .from("blogs")
+        .select("*")
+        .eq("slug", slug)
+        .single();
+
+      if (data) {
+        return res.json({
+          ...data,
+          content: data.html_content,
+          coverImage: data.image_url,
+        });
+      }
     }
 
+    // 🟡 FALLBACK FILE
+    const filePath = path.join(blogsDir, slug + ".json");
+    if (!fs.existsSync(filePath))
+      return res.status(404).json({ error: "Not found" });
+
     const blog = JSON.parse(fs.readFileSync(filePath, "utf8"));
-
-    // INCREASE VIEW COUNT
     blog.views = (blog.views || 0) + 1;
-
     fs.writeFileSync(filePath, JSON.stringify(blog, null, 2), "utf8");
 
     res.json(blog);
