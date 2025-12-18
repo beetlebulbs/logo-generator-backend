@@ -148,22 +148,28 @@ router.post("/api/admin/create-blog", async (req, res) => {
       blog.coverImage = replaceLocalUrls(blog.coverImage);
     }
 
-    // ✅ SUPABASE INSERT (WITH LOG)
-    if (supabase) {
-      const { data, error } = await supabase.from("blogs").upsert({
+   // ✅ SUPABASE INSERT (FIXED)
+if (supabase) {
+  const { data, error } = await supabase
+    .from("blogs")
+    .insert([
+      {
         title: blog.title,
         slug: blog.slug,
         category: blog.category || "",
         short_description: blog.description || "",
         html_content: blog.content,
         image_url: blog.coverImage || "",
-        seo_title: blog.seoTitle || "",
-        seo_description: blog.seoDescription || "",
-        seo_keywords: blog.seoKeywords || "",
-      });
+      },
+    ]);
 
-      console.log("🟣 SUPABASE INSERT RESULT:", data, error);
-    }
+  if (error) {
+    console.error("❌ SUPABASE INSERT ERROR:", error);
+  } else {
+    console.log("🟢 SUPABASE INSERT SUCCESS:", data);
+  }
+}
+
 
     // 🟡 FILE BACKUP (UNCHANGED)
     const filePath = path.join(blogsDir, blog.slug + ".json");
