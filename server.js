@@ -19,9 +19,14 @@ import { generateSitemap } from "./utils/generateSitemap.js";
 import { verifyToken } from "./utils/jwt.js"; // optional - used in requireAdmin if available
 import { lookupGeo } from "./utils/geo.js";
 import { logAdmin } from "./utils/adminLog.js";
+import fileUpload from "express-fileupload";
 
-
-
+app.use(
+  fileUpload({
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+    useTempFiles: false,
+  })
+);
 console.log("🔥 SERVER.JS LOADED");
 // -------- FREE IP LOOKUP --------
 async function getLocationFromIP(ip) {
