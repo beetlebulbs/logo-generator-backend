@@ -21,12 +21,7 @@ import { lookupGeo } from "./utils/geo.js";
 import { logAdmin } from "./utils/adminLog.js";
 import fileUpload from "express-fileupload";
 
-app.use(
-  fileUpload({
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
-    useTempFiles: false,
-  })
-);
+
 console.log("🔥 SERVER.JS LOADED");
 // -------- FREE IP LOOKUP --------
 async function getLocationFromIP(ip) {
@@ -58,7 +53,12 @@ const LOG_FILE = path.join(__dirname, "logs", "admin-activity.json");
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(
+  fileUpload({
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+    useTempFiles: false,
+  })
+);
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3001;
 
 // ---- Directories ----
