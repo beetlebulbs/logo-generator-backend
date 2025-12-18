@@ -25,6 +25,7 @@ import { logAdmin } from "../utils/adminLog.js";
 
 // ✅ SUPABASE (ADDED – does NOT remove file logic)
 import { createClient } from "@supabase/supabase-js";
+import ImageKit from "imagekit";
 
 const supabase =
   process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -32,6 +33,17 @@ const supabase =
         process.env.SUPABASE_URL,
         process.env.SUPABASE_SERVICE_ROLE_KEY
       )
+    : null;
+
+const imagekit =
+  process.env.IMAGEKIT_PUBLIC_KEY &&
+  process.env.IMAGEKIT_PRIVATE_KEY &&
+  process.env.IMAGEKIT_URL_ENDPOINT
+    ? new ImageKit({
+        publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+        privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+        urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
+      })
     : null;
 
 // ---- Simple in-memory cache ----
