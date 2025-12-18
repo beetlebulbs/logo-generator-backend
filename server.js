@@ -157,6 +157,7 @@ const upload = multer({ storage });
 
 // ---- Mount blog routes (Option A) ----
 // blogRoutes handles: GET /api/blog/:slug, GET /api/blogs, and admin create/update/delete in routes file
+app.use(fileUpload());
 app.use(blogRoutes);
 
 // ---- Sitemap, health ----
@@ -266,25 +267,7 @@ app.post("/api/admin/login", (req, res) => {
   // return the admin secret token
   return res.json({ token: process.env.ADMIN_SECRET });
 });
-
-// ---- IMAGE UPLOAD (ADMIN) ----
-app.post("/api/admin/upload-image", (req, res, next) => {
-  if (!requireAdmin(req, res)) return;
-  next();
-}, upload.single("image"), (req, res) => {
-  try {
-    if (!req.file) {
-      console.error("UPLOAD ERROR: req.file missing");
-      return res.status(400).json({ message: "No file uploaded" });
-    }
-
-    const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-    return res.json({ url: fileUrl });
-  } catch (err) {
-    console.error("upload-image fatal:", err);
-    return res.status(500).json({ message: "Upload failed" });
-  }
-});
+ 
 
 
 // ---- ADMIN LOG VIEW ----
