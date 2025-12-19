@@ -207,45 +207,37 @@ console.log("🟢 SUPABASE INSERT SUCCESS:", data);
 /* =================================================
    ADMIN: UPDATE BLOG
 ================================================== */
-router.put("/api/admin/update-blog/:id", async (req, res) => {
+router.put("/api/admin/update-blog/:slug", async (req, res) => {
   if (!requireAdmin(req, res)) return;
 
   try {
-    const blogId = req.params.id;
     const updatedBlog = req.body;
 
-    if (!supabase) {
-      return res.status(500).json({ error: "Supabase not configured" });
+    const { data, error } = await supabase
+      .from("blogs")
+      .update({
+        title: updatedBlog.title,
+        category: updatedBlog.category || "",
+        short_description: updatedBlog.description || "",
+        html_content: updatedBlog.content,
+        image_url: updatedBlog.coverImage || "",
+        image_file_id: updatedBlog.image_file_id || "",
+      })
+      .eq("slug", updatedBlog.slug)
+      .select()
+      .single();
+
+    if (error || !data) {
+      return res.status(404).json({ error: "Blog not found" });
     }
 
-   const { data, error } = await supabase
-  .from("blogs")
-  .update({
-    title: updatedBlog.title,
-    category: updatedBlog.category || "",
-    short_description: updatedBlog.description || "",
-    html_content: updatedBlog.content,
-    image_url: updatedBlog.coverImage || "",
-    image_file_id: updatedBlog.image_file_id || "",
-  })
-  .eq("id", blogId)
-  .select()
-  .maybeSingle();
-
-console.log("🧪 UPDATE BLOG ID:", blogId);
-console.log("🧪 UPDATE RESULT:", data);
-console.log("🧪 UPDATE ERROR:", error);
-
-if (error || !data) {
-  return res.status(404).json({ error: "Blog not found" });
-}
-
-return res.json({ success: true, blog: data });
+    return res.json({ success: true, blog: data });
   } catch (err) {
     console.error("Update blog error:", err);
     return res.status(500).json({ error: "Update failed" });
   }
 });
+
 
 
 /* =================================================
