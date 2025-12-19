@@ -207,62 +207,45 @@ console.log("🟢 SUPABASE INSERT SUCCESS:", data);
 /* =================================================
    ADMIN: UPDATE BLOG
 ================================================== */
-router.put("/api/admin/update-blog/:slug", async (req, res) => {
+router.put("/api/admin/update-blog/:id", async (req, res) => {
   if (!requireAdmin(req, res)) return;
 
   try {
-    const oldSlug = req.params.slug;
-    const oldPath = path.join(blogsDir, oldSlug + ".json");
+    const blogId = req.params.id;
+    const updatedBlog = req.body;
 
-    if (!fs.existsSync(oldPath)) {
-      return res
-        .status(404)
-        .json({ success: false, error: "Blog not found" });
+    if (!supabase) {
+      return res.status(500).json({ error: "Supabase not configured" });
     }
 
-    const existing = JSON.parse(fs.readFileSync(oldPath, "utf8"));
+    const { error } = await supabase
+      .from("blogs")
+      .update({
+        title: updatedBlog.title,
+        category: updatedBlog.category,
+        short_description: updatedBlog.description || "",
+        html_content: updatedBlog.content,
+        image_url: updatedBlog.coverImage,
+        image_file_id: updatedBlog.image_file_id || "",
 
-    const updatedBlog = {
-      ...existing,
-      ...req.body,
-      views: existing.views || 0,
-    };
+        seo_title: updatedBlog.seo_title || "",
+        seo_description: updatedBlog.seo_description || "",
+        seo_keywords: updatedBlog.seo_keywords || "",
+      })
+      .eq("id", blogId);
 
-    updatedBlog.content = replaceLocalUrls(updatedBlog.content);
-    updatedBlog.coverImage = replaceLocalUrls(updatedBlog.coverImage);
-
-    const newSlug = updatedBlog.slug || oldSlug;
-
-    // ✅ UPDATE SUPABASE
-    if (supabase) {
-      await supabase
-        .from("blogs")
-        .update({
-          title: updatedBlog.title,
-          category: updatedBlog.category,
-          short_description: updatedBlog.description || "",
-          html_content: updatedBlog.content,
-          image_url: updatedBlog.coverImage,
-        })
-        .eq("slug", oldSlug);
+    if (error) {
+      console.error("Supabase update error:", error);
+      return res.status(404).json({ error: "Blog not found" });
     }
-
-    // 🟡 UPDATE FILE
-    const newPath = path.join(blogsDir, newSlug + ".json");
-    fs.writeFileSync(newPath, JSON.stringify(updatedBlog, null, 2), "utf8");
-
-    if (newSlug !== oldSlug) fs.unlinkSync(oldPath);
-
-    logAdmin(`Updated blog: ${newSlug}`);
-    generateSitemap();
-    cache.blogs.data = null;
 
     return res.json({ success: true });
   } catch (err) {
     console.error("Update blog error:", err);
-    return res.status(500).json({ success: false, error: "Update failed" });
+    return res.status(500).json({ error: "Update failed" });
   }
 });
+
 
 /* =================================================
    ADMIN: DELETE BLOG
