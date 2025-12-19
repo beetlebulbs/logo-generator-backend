@@ -71,8 +71,7 @@ if (!fs.existsSync(blogsDir)) fs.mkdirSync(blogsDir, { recursive: true });
 // ADMIN: UPLOAD IMAGE (IMAGEKIT)
 // =================================================
 router.post("/api/admin/upload-image", async (req, res) => {
-  console.log("🟡 IMAGE UPLOAD ROUTE HIT");
-  console.log("🟡 req.files =", req.files);
+   
 
   if (!requireAdmin(req, res)) return;
 
@@ -92,11 +91,25 @@ router.post("/api/admin/upload-image", async (req, res) => {
     console.log("🟢 File name:", file.name);
     console.log("🟢 File size:", file.size);
 
-    const upload = await imagekit.upload({
-      file: file.data.toString("base64"),
-      fileName: file.name,
-      folder: "blogs",
-    });
+    // 🔥 Optional: old image fileId (edit case)
+const oldFileId = req.body.oldFileId || null;
+
+// 🔥 If editing blog & old image exists → delete it
+if (oldFileId) {
+  try {
+    await imagekit.deleteFile(oldFileId);
+    console.log("🗑️ Old ImageKit file deleted:", oldFileId);
+  } catch (e) {
+    console.warn("⚠️ Failed to delete old image:", e.message);
+  }
+}
+
+// 🔥 Upload new image (same name allowed)
+const upload = await imagekit.upload({
+  file: file.data.toString("base64"),
+  fileName: file.name.replace(/\s+/g, "-"),
+  folder: "blogs",
+});
 
     console.log("🟢 ImageKit upload success:", upload.url);
     return res.json({ url: upload.url });
@@ -260,10 +273,39 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
   try {
     const slug = req.params.slug;
 
+    // 🔥 1. Fetch image_file_id BEFORE deleting blog
+    let imageFileId = null;
+
+    if (supabase) {
+      const { data: blog, error } = await supabase
+        .from("blogs")
+        .select("image_file_id")
+        .eq("slug", slug)
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        console.warn("⚠️ Failed to fetch blog image_file_id:", error.message);
+      }
+
+      imageFileId = blog?.image_file_id || null;
+    }
+
+    // 🔥 2. Delete image from ImageKit (if exists)
+    if (imageFileId && imagekit) {
+      try {
+        await imagekit.deleteFile(imageFileId);
+        console.log("🗑️ ImageKit file deleted:", imageFileId);
+      } catch (e) {
+        console.warn("⚠️ ImageKit delete failed:", e.message);
+      }
+    }
+
+    // 🔥 3. Delete blog from Supabase
     if (supabase) {
       await supabase.from("blogs").delete().eq("slug", slug);
     }
 
+    // 🟡 4. Delete JSON fallback (if exists)
     const filePath = path.join(blogsDir, slug + ".json");
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
@@ -277,6 +319,7 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
     return res.status(500).json({ success: false, error: "Delete failed" });
   }
 });
+
 
 /* =================================================
    PUBLIC: GET ALL BLOGS
