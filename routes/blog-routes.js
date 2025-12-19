@@ -218,28 +218,29 @@ router.put("/api/admin/update-blog/:id", async (req, res) => {
       return res.status(500).json({ error: "Supabase not configured" });
     }
 
-    const { error } = await supabase
-      .from("blogs")
-      .update({
-        title: updatedBlog.title,
-        category: updatedBlog.category,
-        short_description: updatedBlog.description || "",
-        html_content: updatedBlog.content,
-        image_url: updatedBlog.coverImage,
-        image_file_id: updatedBlog.image_file_id || "",
+   const { data, error } = await supabase
+  .from("blogs")
+  .update({
+    title: updatedBlog.title,
+    category: updatedBlog.category || "",
+    short_description: updatedBlog.description || "",
+    html_content: updatedBlog.content,
+    image_url: updatedBlog.coverImage || "",
+    image_file_id: updatedBlog.image_file_id || "",
+  })
+  .eq("id", blogId)
+  .select()
+  .maybeSingle();
 
-        seo_title: updatedBlog.seo_title || "",
-        seo_description: updatedBlog.seo_description || "",
-        seo_keywords: updatedBlog.seo_keywords || "",
-      })
-      .eq("id", blogId);
+console.log("🧪 UPDATE BLOG ID:", blogId);
+console.log("🧪 UPDATE RESULT:", data);
+console.log("🧪 UPDATE ERROR:", error);
 
-    if (error) {
-      console.error("Supabase update error:", error);
-      return res.status(404).json({ error: "Blog not found" });
-    }
+if (error || !data) {
+  return res.status(404).json({ error: "Blog not found" });
+}
 
-    return res.json({ success: true });
+return res.json({ success: true, blog: data });
   } catch (err) {
     console.error("Update blog error:", err);
     return res.status(500).json({ error: "Update failed" });
