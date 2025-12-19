@@ -111,7 +111,10 @@ router.post("/api/admin/upload-image", async (req, res) => {
    ADMIN: CREATE BLOG
 ================================================== */
 router.post("/api/admin/create-blog", async (req, res) => {
-    
+    console.log("🧪 RENDER SUPABASE CHECK:", {
+  url: process.env.SUPABASE_URL,
+  hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+});
   if (!requireAdmin(req, res)) return;
 
   try {
@@ -282,26 +285,30 @@ router.get("/api/blogs", async (req, res) => {
   try {
     // ✅ TRY SUPABASE FIRST
     if (supabase) {
-      const { data } = await supabase
-        .from("blogs")
-        .select(
-          "slug,title,short_description,image_url,category,created_at"
-        )
-        .order("created_at", { ascending: false });
+  const { data, error } = await supabase
+    .from("blogs")
+    .select(
+      "slug,title,short_description,image_url,category,created_at"
+    )
+    .order("created_at", { ascending: false });
 
-      if (data) {
-        return res.json(
-          data.map((b) => ({
-            slug: b.slug,
-            title: b.title,
-            description: b.short_description || "",
-            coverImage: b.image_url || "",
-            category: b.category || "",
-            date: b.created_at,
-          }))
-        );
-      }
-    }
+  // ✅ ONLY return if Supabase actually has blogs
+  if (!error && Array.isArray(data) && data.length > 0) {
+    return res.json(
+      data.map((b) => ({
+        slug: b.slug,
+        title: b.title,
+        description: b.short_description || "",
+        coverImage: b.image_url || "",
+        category: b.category || "",
+        date: b.created_at,
+      }))
+    );
+  }
+
+  console.log("ℹ️ Supabase empty, falling back to filesystem");
+}
+
 
     // 🟡 FALLBACK: FILE SYSTEM
     const files = fs.readdirSync(blogsDir).filter((f) => f.endsWith(".json"));
