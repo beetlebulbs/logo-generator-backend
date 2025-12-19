@@ -214,25 +214,24 @@ router.put("/api/admin/update-blog/:slug", async (req, res) => {
     const slug = req.params.slug;        // 🔥 SOURCE OF TRUTH
     const updatedBlog = req.body;
 
-    const { data, error } = await supabase
-      .from("blogs")
-      .update({
-        title: updatedBlog.title,
-        category: updatedBlog.category || "",
-        short_description: updatedBlog.description || "",
-        html_content: updatedBlog.content,
-        image_url: updatedBlog.coverImage || "",
-        image_file_id: updatedBlog.image_file_id || "",
-      })
-      .eq("slug", slug)                  // ✅ FIX
-      .select()
-      .single();
+    const { error } = await supabase
+  .from("blogs")
+  .update({
+    title: updatedBlog.title,
+    category: updatedBlog.category || "",
+    short_description: updatedBlog.description || "",
+    html_content: updatedBlog.content,
+    image_url: updatedBlog.coverImage || "",
+    image_file_id: updatedBlog.image_file_id || "",
+  })
+  .eq("slug", req.params.slug); // 🔥 SOURCE OF TRUTH
 
-    if (error || !data) {
-      return res.status(404).json({ error: "Blog not found" });
-    }
+if (error) {
+  console.error("Supabase update error:", error);
+  return res.status(500).json({ error: "Update failed" });
+}
 
-    return res.json({ success: true, blog: data });
+return res.json({ success: true });
   } catch (err) {
     console.error("Update blog error:", err);
     return res.status(500).json({ error: "Update failed" });
