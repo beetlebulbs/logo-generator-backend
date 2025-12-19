@@ -309,7 +309,8 @@ router.get("/api/blogs", async (req, res) => {
 
   console.log("ℹ️ Supabase empty, falling back to filesystem");
 }
-
+console.log("📂 blogsDir path:", blogsDir);
+console.log("📄 JSON files:", fs.readdirSync(blogsDir));
 
     // 🟡 FALLBACK: FILE SYSTEM
     const files = fs.readdirSync(blogsDir).filter((f) => f.endsWith(".json"));
