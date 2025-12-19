@@ -211,6 +211,7 @@ router.put("/api/admin/update-blog/:slug", async (req, res) => {
   if (!requireAdmin(req, res)) return;
 
   try {
+    const slug = req.params.slug;        // 🔥 SOURCE OF TRUTH
     const updatedBlog = req.body;
 
     const { data, error } = await supabase
@@ -223,8 +224,7 @@ router.put("/api/admin/update-blog/:slug", async (req, res) => {
         image_url: updatedBlog.coverImage || "",
         image_file_id: updatedBlog.image_file_id || "",
       })
-      // 🔥 THIS IS THE FIX
-      .eq("slug", req.params.slug)
+      .eq("slug", slug)                  // ✅ FIX
       .select()
       .single();
 
