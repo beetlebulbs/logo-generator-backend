@@ -211,6 +211,7 @@ router.put("/api/admin/update-blog/:slug", async (req, res) => {
   if (!requireAdmin(req, res)) return;
 
   try {
+    const slug = req.params.slug;          // ✅ URL slug
     const updatedBlog = req.body;
 
     const { data, error } = await supabase
@@ -223,7 +224,7 @@ router.put("/api/admin/update-blog/:slug", async (req, res) => {
         image_url: updatedBlog.coverImage || "",
         image_file_id: updatedBlog.image_file_id || "",
       })
-      .eq("slug", updatedBlog.slug)
+      .eq("slug", slug)                    // ✅ ONLY THIS
       .select()
       .single();
 
