@@ -282,21 +282,27 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
    PUBLIC: GET ALL BLOGS
 ================================================== */
 router.get("/api/blogs", async (req, res) => {
-  console.log("🔥 /api/blogs ROUTE HIT");
-  try {
-    // ✅ TRY SUPABASE FIRST
-    if (supabase) {
-  const { data, error } = await supabase
-    .from("blogs")
-    .select(
-      "slug,title,short_description,image_url,category,created_at"
-    )
-    .order("created_at", { ascending: false });
+  console.log("🔥 /api/blogs ROUTE HIT (SUPABASE ONLY)");
 
-  // ✅ ONLY return if Supabase actually has blogs
-  if (!error && Array.isArray(data) && data.length > 0) {
+  try {
+    if (!supabase) {
+      return res.status(500).json({ error: "Supabase not configured" });
+    }
+
+    const { data, error } = await supabase
+      .from("blogs")
+      .select(
+        "slug,title,short_description,image_url,category,created_at"
+      )
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("❌ Supabase fetch error:", error);
+      return res.status(500).json({ error: "Failed to load blogs" });
+    }
+
     return res.json(
-      data.map((b) => ({
+      (data || []).map((b) => ({
         slug: b.slug,
         title: b.title,
         description: b.short_description || "",
@@ -305,39 +311,12 @@ router.get("/api/blogs", async (req, res) => {
         date: b.created_at,
       }))
     );
-  }
-
-  console.log("ℹ️ Supabase empty, falling back to filesystem");
-}
-console.log("📂 blogsDir path:", blogsDir);
-console.log("📄 JSON files:", fs.readdirSync(blogsDir));
-
-    // 🟡 FALLBACK: FILE SYSTEM
-    const files = fs.readdirSync(blogsDir).filter((f) => f.endsWith(".json"));
-    const blogs = [];
-
-    for (const file of files) {
-      const raw = fs.readFileSync(path.join(blogsDir, file), "utf8");
-      if (!raw) continue;
-      const blog = JSON.parse(raw);
-
-      blogs.push({
-        slug: blog.slug,
-        title: blog.title,
-        description: blog.description || "",
-        coverImage: blog.coverImage || "",
-        category: blog.category || "",
-        date: blog.date || "",
-      });
-    }
-
-    blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
-    return res.json(blogs);
   } catch (err) {
     console.error("🔥 /api/blogs error:", err);
     return res.status(500).json({ error: "Failed to load blogs" });
   }
 });
+
 
 /* =================================================
    PUBLIC: GET SINGLE BLOG
@@ -359,6 +338,7 @@ router.get("/api/blog/:slug", async (req, res) => {
           ...data,
           content: data.html_content,
           coverImage: data.image_url,
+          description: data.short_description || "",
         });
       }
     }
