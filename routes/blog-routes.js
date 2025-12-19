@@ -222,7 +222,7 @@ router.put("/api/admin/update-blog/:slug", async (req, res) => {
     short_description: updatedBlog.description || "",
     html_content: updatedBlog.content,
     image_url: updatedBlog.coverImage || "",
-    image_file_id: updatedBlog.image_file_id || "",
+    
   })
   .eq("slug", req.params.slug); // 🔥 SOURCE OF TRUTH
 
