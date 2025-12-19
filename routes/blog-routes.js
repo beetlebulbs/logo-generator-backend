@@ -111,8 +111,7 @@ router.post("/api/admin/upload-image", async (req, res) => {
    ADMIN: CREATE BLOG
 ================================================== */
 router.post("/api/admin/create-blog", async (req, res) => {
-  console.log("🔥 CREATE BLOG HIT");
-  console.log("🔥 BODY:", req.body);
+    
   if (!requireAdmin(req, res)) return;
 
   try {
@@ -156,16 +155,19 @@ const { data, error } = await supabase
       status: "published",
     },
   ])
-  .select(); // 👈 VERY IMPORTANT
+  .select(); // 👈 REQUIRED
+
+console.log("🟢 SUPABASE DATA:", data);
+console.log("🔴 SUPABASE ERROR:", JSON.stringify(error, null, 2));
 
 if (error) {
-  console.error("❌ SUPABASE INSERT ERROR:", error);
   return res.status(500).json({
     success: false,
     error: "Supabase insert failed",
-    details: error.message,
+    details: error,
   });
 }
+
 
 console.log("🟢 SUPABASE INSERT SUCCESS:", data);
 
