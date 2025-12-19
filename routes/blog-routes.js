@@ -282,6 +282,7 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
    PUBLIC: GET ALL BLOGS
 ================================================== */
 router.get("/api/blogs", async (req, res) => {
+  console.log("🔥 /api/blogs ROUTE HIT");
   try {
     // ✅ TRY SUPABASE FIRST
     if (supabase) {
