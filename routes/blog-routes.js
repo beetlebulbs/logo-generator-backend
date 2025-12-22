@@ -169,6 +169,7 @@ const { data, error } = await supabase
       html_content: blog.content,
       image_url: blog.coverImage || "",
       status: "published",
+      published_at: blog.date || new Date().toISOString(), // ✅ ADD
     },
   ])
   .select(); // 👈 REQUIRED
@@ -222,6 +223,7 @@ router.put("/api/admin/update-blog/:slug", async (req, res) => {
     short_description: updatedBlog.description || "",
     html_content: updatedBlog.content,
     image_url: updatedBlog.coverImage || "",
+    published_at: updatedBlog.published_at || undefined,
     
   })
   .eq("slug", req.params.slug); // 🔥 SOURCE OF TRUTH
@@ -302,7 +304,7 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
    PUBLIC: GET ALL BLOGS
 ================================================== */
 router.get("/api/blogs", async (req, res) => {
-  console.log("🔥 /api/blogs ROUTE HIT (SUPABASE ONLY)");
+   
 
   try {
     if (!supabase) {
@@ -314,7 +316,7 @@ router.get("/api/blogs", async (req, res) => {
       .select(
         "slug,title,short_description,image_url,category,created_at"
       )
-      .order("created_at", { ascending: false });
+     .order("published_at", { ascending: false });
 
     if (error) {
       console.error("❌ Supabase fetch error:", error);
@@ -328,7 +330,7 @@ router.get("/api/blogs", async (req, res) => {
         description: b.short_description || "",
         coverImage: b.image_url || "",
         category: b.category || "",
-        date: b.created_at,
+        date: b.published_at || b.created_at,
       }))
     );
   } catch (err) {
