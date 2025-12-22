@@ -139,13 +139,7 @@ router.post("/api/admin/create-blog", async (req, res) => {
     }
 
     blog.content = replaceLocalUrls(blog.content);
-
-    if (blog.coverImage && blog.coverImage.startsWith("http")) {
-  // ImageKit or absolute URL → leave as-is
-} else if (blog.coverImage) {
-  blog.coverImage = replaceLocalUrls(blog.coverImage);
-}
-
+ 
 
     
  // ✅ SUPABASE INSERT (STRICT MODE)
@@ -302,40 +296,54 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
    PUBLIC: GET ALL BLOGS
 ================================================== */
 router.get("/api/blogs", async (req, res) => {
-  
-
   try {
-    if (!supabase) {
-      return res.status(500).json({ error: "Supabase not configured" });
+    let blogs = [];
+
+    // 1️⃣ JSON BLOGS (OLD — REQUIRED)
+    if (fs.existsSync(blogsDir)) {
+      const files = fs.readdirSync(blogsDir);
+      for (const file of files) {
+        if (!file.endsWith(".json")) continue;
+        const blog = JSON.parse(
+          fs.readFileSync(path.join(blogsDir, file), "utf8")
+        );
+
+        blogs.push({
+          slug: blog.slug,
+          title: blog.title,
+          description: blog.description || "",
+          coverImage: blog.coverImage, // ✅ AS-IS
+          category: blog.category || "",
+          date: blog.date || null,
+        });
+      }
     }
 
-    const { data, error } = await supabase
-      .from("blogs")
-      .select(
-        "slug,title,short_description,image_url,category,created_at"
-      )
-      .order("created_at", { ascending: false });
+    // 2️⃣ SUPABASE BLOGS (NEW)
+    if (supabase) {
+      const { data } = await supabase
+        .from("blogs")
+        .select("slug,title,short_description,image_url,category,created_at");
 
-    if (error) {
-      console.error("❌ Supabase fetch error:", error);
-      return res.status(500).json({ error: "Failed to load blogs" });
+      (data || []).forEach((b) => {
+        blogs.push({
+          slug: b.slug,
+          title: b.title,
+          description: b.short_description || "",
+          coverImage: b.image_url, // ✅ AS-IS
+          category: b.category || "",
+          date: b.created_at,
+        });
+      });
     }
 
-    return res.json(
-      (data || []).map((b) => ({
-        slug: b.slug,
-        title: b.title,
-        description: b.short_description || "",
-        coverImage: b.image_url || "",
-        category: b.category || "",
-        date: b.created_at,
-      }))
-    );
+    return res.json(blogs);
   } catch (err) {
-    console.error("🔥 /api/blogs error:", err);
-    return res.status(500).json({ error: "Failed to load blogs" });
+    console.error("/api/blogs error:", err);
+    res.status(500).json({ error: "Failed to load blogs" });
   }
 });
+
 
 
 /* =================================================
@@ -354,12 +362,15 @@ router.get("/api/blog/:slug", async (req, res) => {
         .single();
 
       if (data) {
-        return res.json({
-          ...data,
-          content: data.html_content,
-          coverImage: data.image_url,
-          description: data.short_description || "",
-        });
+      return res.json({
+  slug: data.slug,
+  title: data.title,
+  content: data.html_content,
+  description: data.short_description || "",
+  coverImage: data.image_url, // AS-IS
+  category: data.category || "",
+  date: data.created_at,
+});
       }
     }
 
