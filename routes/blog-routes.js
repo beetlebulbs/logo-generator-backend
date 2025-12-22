@@ -141,6 +141,7 @@ router.post("/api/admin/create-blog", async (req, res) => {
     blog.content = replaceLocalUrls(blog.content);
  
 
+
     
  // ✅ SUPABASE INSERT (STRICT MODE)
 if (!supabase) {
@@ -299,27 +300,26 @@ router.get("/api/blogs", async (req, res) => {
   try {
     let blogs = [];
 
-    // 1️⃣ JSON BLOGS (OLD — REQUIRED)
-    if (fs.existsSync(blogsDir)) {
-      const files = fs.readdirSync(blogsDir);
-      for (const file of files) {
-        if (!file.endsWith(".json")) continue;
-        const blog = JSON.parse(
-          fs.readFileSync(path.join(blogsDir, file), "utf8")
-        );
+    // 1️⃣ OLD JSON BLOGS (AS IT WAS)
+    const files = fs.readdirSync(blogsDir);
+    for (const file of files) {
+      if (!file.endsWith(".json")) continue;
 
-        blogs.push({
-          slug: blog.slug,
-          title: blog.title,
-          description: blog.description || "",
-          coverImage: blog.coverImage, // ✅ AS-IS
-          category: blog.category || "",
-          date: blog.date || null,
-        });
-      }
+      const blog = JSON.parse(
+        fs.readFileSync(path.join(blogsDir, file), "utf8")
+      );
+
+      blogs.push({
+        slug: blog.slug,
+        title: blog.title,
+        description: blog.description || "",
+        coverImage: blog.coverImage, // 🔥 DO NOT TOUCH
+        category: blog.category || "",
+        date: blog.date || null, // TEMP OK
+      });
     }
 
-    // 2️⃣ SUPABASE BLOGS (NEW)
+    // 2️⃣ SUPABASE BLOGS (AS IT WAS)
     if (supabase) {
       const { data } = await supabase
         .from("blogs")
@@ -330,7 +330,7 @@ router.get("/api/blogs", async (req, res) => {
           slug: b.slug,
           title: b.title,
           description: b.short_description || "",
-          coverImage: b.image_url, // ✅ AS-IS
+          coverImage: b.image_url, // 🔥 DO NOT TOUCH
           category: b.category || "",
           date: b.created_at,
         });
@@ -339,12 +339,10 @@ router.get("/api/blogs", async (req, res) => {
 
     return res.json(blogs);
   } catch (err) {
-    console.error("/api/blogs error:", err);
+    console.error("BLOG LIST ERROR:", err);
     res.status(500).json({ error: "Failed to load blogs" });
   }
 });
-
-
 
 /* =================================================
    PUBLIC: GET SINGLE BLOG
@@ -362,12 +360,12 @@ router.get("/api/blog/:slug", async (req, res) => {
         .single();
 
       if (data) {
-      return res.json({
+        return res.json({
   slug: data.slug,
   title: data.title,
   content: data.html_content,
   description: data.short_description || "",
-  coverImage: data.image_url, // AS-IS
+  coverImage: data.image_url, // 🔥 AS-IS
   category: data.category || "",
   date: data.created_at,
 });
