@@ -312,9 +312,10 @@ router.get("/api/blogs", async (req, res) => {
       const { data, error } = await supabase
         .from("blogs")
         .select(
-          "slug,title,short_description,image_url,category,created_at"
-        )
-        .order("created_at", { ascending: false });
+  "slug,title,short_description,image_url,category,created_at,published_at"
+)
+        .order("published_at", { ascending: false })
+.order("created_at", { ascending: false });
 
       if (!error && Array.isArray(data)) {
         blogs = data.map((b) => ({
