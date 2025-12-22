@@ -301,65 +301,41 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
 /* =================================================
    PUBLIC: GET ALL BLOGS
 ================================================== */
-/* =================================================
-   PUBLIC: GET ALL BLOGS (BASELINE – WORKING)
-================================================== */
 router.get("/api/blogs", async (req, res) => {
+  
+
   try {
-    let blogs = [];
-
-    // 1️⃣ SUPABASE BLOGS (NEW)
-    if (supabase) {
-      const { data, error } = await supabase
-        .from("blogs")
-        .select(
-          "slug,title,short_description,image_url,category,created_at"
-        )
-        .order("created_at", { ascending: false });
-
-      if (!error && Array.isArray(data)) {
-        blogs = data.map((b) => ({
-          slug: b.slug,
-          title: b.title,
-          description: b.short_description || "",
-          coverImage: b.image_url || "",   // 🔥 IMAGEKIT URL AS-IS
-          category: b.category || "",
-          date: b.created_at,              // 🔥 SUPABASE DATE
-        }));
-      }
+    if (!supabase) {
+      return res.status(500).json({ error: "Supabase not configured" });
     }
 
-    // 2️⃣ JSON BLOGS (OLD)
-    const files = fs.readdirSync(blogsDir).filter(f => f.endsWith(".json"));
+    const { data, error } = await supabase
+      .from("blogs")
+      .select(
+        "slug,title,short_description,image_url,category,created_at"
+      )
+      .order("created_at", { ascending: false });
 
-    for (const file of files) {
-      const blog = JSON.parse(
-        fs.readFileSync(path.join(blogsDir, file), "utf8")
-      );
-
-      // skip duplicate slug
-      if (blogs.find(b => b.slug === blog.slug)) continue;
-
-      blogs.push({
-        slug: blog.slug,
-        title: blog.title,
-        description: blog.description || "",
-        coverImage: blog.coverImage || "", // 🔥 /uploads/xxx.jpg
-        category: blog.category || "",
-        date: blog.date || "",             // 🔥 JSON DATE
-      });
+    if (error) {
+      console.error("❌ Supabase fetch error:", error);
+      return res.status(500).json({ error: "Failed to load blogs" });
     }
 
-    // 3️⃣ SORT (OLD BEHAVIOR)
-    blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    return res.json(blogs);
+    return res.json(
+      (data || []).map((b) => ({
+        slug: b.slug,
+        title: b.title,
+        description: b.short_description || "",
+        coverImage: b.image_url || "",
+        category: b.category || "",
+        date: b.created_at,
+      }))
+    );
   } catch (err) {
     console.error("🔥 /api/blogs error:", err);
     return res.status(500).json({ error: "Failed to load blogs" });
   }
 });
-
 
 
 /* =================================================
@@ -369,7 +345,7 @@ router.get("/api/blog/:slug", async (req, res) => {
   try {
     const slug = req.params.slug;
 
-    // SUPABASE FIRST
+    // ✅ SUPABASE FIRST
     if (supabase) {
       const { data } = await supabase
         .from("blogs")
@@ -379,29 +355,28 @@ router.get("/api/blog/:slug", async (req, res) => {
 
       if (data) {
         return res.json({
-          slug: data.slug,
-          title: data.title,
-          category: data.category,
-          description: data.short_description || "",
+          ...data,
           content: data.html_content,
-          coverImage: data.image_url || "",   // 🔥 ImageKit
-          date: data.created_at,
+          coverImage: data.image_url,
+          description: data.short_description || "",
         });
       }
     }
 
-    // JSON FALLBACK
+    // 🟡 FALLBACK FILE
     const filePath = path.join(blogsDir, slug + ".json");
     if (!fs.existsSync(filePath))
       return res.status(404).json({ error: "Not found" });
 
     const blog = JSON.parse(fs.readFileSync(filePath, "utf8"));
-    return res.json(blog);
+    blog.views = (blog.views || 0) + 1;
+    fs.writeFileSync(filePath, JSON.stringify(blog, null, 2), "utf8");
+
+    res.json(blog);
   } catch (err) {
     console.error("Read blog error:", err);
     res.status(500).json({ error: "Read failed" });
   }
 });
-
 
 export default router;
