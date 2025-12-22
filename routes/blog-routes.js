@@ -301,59 +301,57 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
 
 
 /* =================================================
-   PUBLIC: GET ALL BLOGS
+   PUBLIC: GET ALL BLOGS (SUPABASE + JSON FALLBACK)
 ================================================== */
 router.get("/api/blogs", async (req, res) => {
   try {
     let blogs = [];
 
-    // 1️⃣ SUPABASE FIRST
+    // 1️⃣ SUPABASE (PRIMARY SOURCE)
     if (supabase) {
       const { data, error } = await supabase
         .from("blogs")
         .select(
-  "slug,title,short_description,image_url,category,created_at,published_at"
-)
-        .order("published_at", { ascending: false })
-.order("created_at", { ascending: false });
+          "slug,title,short_description,image_url,category,created_at,published_at"
+        )
+        // ✅ ONLY ONE ORDER (IMPORTANT)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("❌ Supabase fetch error:", error);
+      }
 
       if (!error && Array.isArray(data)) {
         blogs = data.map((b) => ({
           slug: b.slug,
           title: b.title,
           description: b.short_description || "",
-          coverImage: b.image_url || "",   // ImageKit
+          coverImage: b.image_url || "",        // ✅ ImageKit source
           category: b.category || "",
-          date: b.created_at,
+          // ✅ DATE FALLBACK FIX
+          date: b.published_at || b.created_at,
         }));
       }
     }
 
     // 2️⃣ FILESYSTEM FALLBACK (OLD JSON BLOGS)
-    const files = fs
-      .readdirSync(blogsDir)
-      .filter((f) => f.endsWith(".json"));
+  let cover = blog.coverImage || "";
 
-    for (const file of files) {
-      const raw = fs.readFileSync(path.join(blogsDir, file), "utf8");
-      if (!raw) continue;
+// 🔥 FIX: normalize old absolute URLs
+if (cover.startsWith("https://beetlebulbs.com/uploads")) {
+  cover = cover.replace("https://beetlebulbs.com", "");
+}
 
-      const blog = JSON.parse(raw);
+blogs.push({
+  slug: blog.slug,
+  title: blog.title,
+  description: blog.description || "",
+  coverImage: cover,   // ✅ now "/uploads/xxx.jpg"
+  category: blog.category || "",
+  date: blog.date || "",
+});
 
-      // 🔥 skip if already exists in Supabase list
-      if (blogs.find((b) => b.slug === blog.slug)) continue;
-
-      blogs.push({
-        slug: blog.slug,
-        title: blog.title,
-        description: blog.description || "",
-        coverImage: blog.coverImage || "", // /uploads/…
-        category: blog.category || "",
-        date: blog.date || "",
-      });
-    }
-
-    // 3️⃣ FINAL SORT
+    // 3️⃣ FINAL SORT (MOST IMPORTANT)
     blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return res.json(blogs);
