@@ -314,7 +314,6 @@ router.get("/api/blogs", async (req, res) => {
         .select(
           "slug,title,short_description,image_url,category,created_at,published_at"
         )
-        // ✅ ONLY ONE ORDER (IMPORTANT)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -326,32 +325,43 @@ router.get("/api/blogs", async (req, res) => {
           slug: b.slug,
           title: b.title,
           description: b.short_description || "",
-          coverImage: b.image_url || "",        // ✅ ImageKit source
+          coverImage: b.image_url || "", // ✅ ImageKit
           category: b.category || "",
-          // ✅ DATE FALLBACK FIX
           date: b.published_at || b.created_at,
         }));
       }
     }
 
     // 2️⃣ FILESYSTEM FALLBACK (OLD JSON BLOGS)
-  let cover = blog.coverImage || "";
+    const files = fs.readdirSync(blogsDir).filter((f) => f.endsWith(".json"));
 
-// 🔥 FIX: normalize old absolute URLs
-if (cover.startsWith("https://beetlebulbs.com/uploads")) {
-  cover = cover.replace("https://beetlebulbs.com", "");
-}
+    for (const file of files) {
+      const raw = fs.readFileSync(path.join(blogsDir, file), "utf8");
+      if (!raw) continue;
 
-blogs.push({
-  slug: blog.slug,
-  title: blog.title,
-  description: blog.description || "",
-  coverImage: cover,   // ✅ now "/uploads/xxx.jpg"
-  category: blog.category || "",
-  date: blog.date || "",
-});
+      const blog = JSON.parse(raw);
 
-    // 3️⃣ FINAL SORT (MOST IMPORTANT)
+      // 🔥 skip duplicate slugs (already from Supabase)
+      if (blogs.find((b) => b.slug === blog.slug)) continue;
+
+      let cover = blog.coverImage || "";
+
+      // 🔥 FIX: normalize absolute URLs
+      if (cover.startsWith("https://beetlebulbs.com/uploads")) {
+        cover = cover.replace("https://beetlebulbs.com", "");
+      }
+
+      blogs.push({
+        slug: blog.slug,
+        title: blog.title,
+        description: blog.description || "",
+        coverImage: cover, // "/uploads/xxx.jpg"
+        category: blog.category || "",
+        date: blog.date || "",
+      });
+    }
+
+    // 3️⃣ FINAL SORT
     blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return res.json(blogs);
