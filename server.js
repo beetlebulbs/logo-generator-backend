@@ -12,7 +12,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { Buffer } from "buffer";
-import blogRoutes from "./routes/blog-routes.js";
+import blogRoutes from "./blog-routes.js";
 console.log("🔥 BLOG ROUTES IMPORTED:", blogRoutes);
 import { generateSitemap } from "./utils/generateSitemap.js";
 import { verifyToken } from "./utils/jwt.js"; // optional - used in requireAdmin if available
