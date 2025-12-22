@@ -380,12 +380,16 @@ router.get("/api/blog/:slug", async (req, res) => {
         .single();
 
       if (data) {
-        return res.json({
-          ...data,
-          content: data.html_content,
-          coverImage: data.image_url,
-          description: data.short_description || "",
-        });
+       return res.json({
+  id: data.id,
+  slug: data.slug,
+  title: data.title,
+  category: data.category,
+  description: data.short_description || "",
+  content: data.html_content,
+  coverImage: data.image_url || "",
+  date: data.published_at || data.created_at,
+});
       }
     }
 
