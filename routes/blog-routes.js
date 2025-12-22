@@ -305,33 +305,57 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
 ================================================== */
 router.get("/api/blogs", async (req, res) => {
   try {
-    if (!supabase) {
-      return res.status(500).json({ error: "Supabase not configured" });
+    let blogs = [];
+
+    // 1️⃣ SUPABASE FIRST
+    if (supabase) {
+      const { data, error } = await supabase
+        .from("blogs")
+        .select(
+          "slug,title,short_description,image_url,category,created_at"
+        )
+        .order("created_at", { ascending: false });
+
+      if (!error && Array.isArray(data)) {
+        blogs = data.map((b) => ({
+          slug: b.slug,
+          title: b.title,
+          description: b.short_description || "",
+          coverImage: b.image_url || "",   // ImageKit
+          category: b.category || "",
+          date: b.created_at,
+        }));
+      }
     }
 
-    const { data, error } = await supabase
-      .from("blogs")
-      .select(
-        "slug,title,short_description,image_url,category,created_at,published_at"
-      )
-      .order("published_at", { ascending: false, nullsFirst: false })
-.order("created_at", { ascending: false });
+    // 2️⃣ FILESYSTEM FALLBACK (OLD JSON BLOGS)
+    const files = fs
+      .readdirSync(blogsDir)
+      .filter((f) => f.endsWith(".json"));
 
-    if (error) {
-      console.error("❌ Supabase fetch error:", error);
-      return res.status(500).json({ error: "Failed to load blogs" });
+    for (const file of files) {
+      const raw = fs.readFileSync(path.join(blogsDir, file), "utf8");
+      if (!raw) continue;
+
+      const blog = JSON.parse(raw);
+
+      // 🔥 skip if already exists in Supabase list
+      if (blogs.find((b) => b.slug === blog.slug)) continue;
+
+      blogs.push({
+        slug: blog.slug,
+        title: blog.title,
+        description: blog.description || "",
+        coverImage: blog.coverImage || "", // /uploads/…
+        category: blog.category || "",
+        date: blog.date || "",
+      });
     }
 
-  return res.json(
-  (data || []).map((b) => ({
-    slug: b.slug,
-    title: b.title,
-    description: b.short_description || "",
-    coverImage: b.image_url || "",   // 👈 DO NOT TOUCH
-    category: b.category || "",
-    date: b.published_at ?? b.created_at,
-  }))
-);
+    // 3️⃣ FINAL SORT
+    blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    return res.json(blogs);
   } catch (err) {
     console.error("🔥 /api/blogs error:", err);
     return res.status(500).json({ error: "Failed to load blogs" });
