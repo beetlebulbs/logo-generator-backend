@@ -304,8 +304,6 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
    PUBLIC: GET ALL BLOGS
 ================================================== */
 router.get("/api/blogs", async (req, res) => {
-   
-
   try {
     if (!supabase) {
       return res.status(500).json({ error: "Supabase not configured" });
@@ -314,27 +312,26 @@ router.get("/api/blogs", async (req, res) => {
     const { data, error } = await supabase
       .from("blogs")
       .select(
-  "slug,title,short_description,image_url,category,published_at,created_at"
-)
-     .order("published_at", { ascending: false });
+        "slug,title,short_description,image_url,category,created_at,published_at"
+      )
+      .order("published_at", { ascending: false, nullsFirst: false })
+.order("created_at", { ascending: false });
 
     if (error) {
       console.error("❌ Supabase fetch error:", error);
       return res.status(500).json({ error: "Failed to load blogs" });
     }
 
-    return res.json(
-      (data || []).map((b) => ({
-        slug: b.slug,
-        title: b.title,
-        description: b.short_description || "",
-        coverImage: b.image_url && b.image_url.trim() !== ""
-  ? b.image_url
-  : `/uploads/${b.slug}.jpg`,
-        category: b.category || "",
-        date: b.published_at || b.created_at,
-      }))
-    );
+  return res.json(
+  (data || []).map((b) => ({
+    slug: b.slug,
+    title: b.title,
+    description: b.short_description || "",
+    coverImage: b.image_url || "",   // 👈 DO NOT TOUCH
+    category: b.category || "",
+    date: b.published_at ?? b.created_at,
+  }))
+);
   } catch (err) {
     console.error("🔥 /api/blogs error:", err);
     return res.status(500).json({ error: "Failed to load blogs" });
