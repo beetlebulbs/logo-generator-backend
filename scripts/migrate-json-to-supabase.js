@@ -38,15 +38,20 @@ async function migrate() {
       continue;
     }
 
-    const { error } = await supabase.from("blogs").insert([{
-      title: blog.title,
-      slug: blog.slug,
-      category: blog.category || "",
-      short_description: blog.description || "",
-      html_content: blog.content || "",
-      image_url: blog.coverImage || "",
-      status: "published",
-    }]);
+   const { error } = await supabase.from("blogs").insert([{
+  title: blog.title,
+  slug: blog.slug,
+  category: blog.category || "",
+  short_description: blog.description || "",
+  html_content: blog.content || "",
+  image_url: blog.coverImage || "",
+  status: "published",
+
+  // 🔥 THIS BRINGS BACK JSON DATE
+  published_at: blog.date
+    ? new Date(blog.date).toISOString()
+    : new Date().toISOString(),
+}]);
 
     if (error) {
       console.error("❌ Failed:", blog.slug, error.message);

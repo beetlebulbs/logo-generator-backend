@@ -314,8 +314,8 @@ router.get("/api/blogs", async (req, res) => {
     const { data, error } = await supabase
       .from("blogs")
       .select(
-        "slug,title,short_description,image_url,category,created_at"
-      )
+  "slug,title,short_description,image_url,category,published_at,created_at"
+)
      .order("published_at", { ascending: false });
 
     if (error) {
