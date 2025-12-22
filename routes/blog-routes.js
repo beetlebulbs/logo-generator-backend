@@ -328,7 +328,9 @@ router.get("/api/blogs", async (req, res) => {
         slug: b.slug,
         title: b.title,
         description: b.short_description || "",
-        coverImage: b.image_url || "",
+        coverImage: b.image_url && b.image_url.trim() !== ""
+  ? b.image_url
+  : `/uploads/${b.slug}.jpg`,
         category: b.category || "",
         date: b.published_at || b.created_at,
       }))
