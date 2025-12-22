@@ -332,34 +332,41 @@ router.get("/api/blogs", async (req, res) => {
       }
     }
 
-    // 2️⃣ FILESYSTEM FALLBACK (OLD JSON BLOGS)
-    const files = fs.readdirSync(blogsDir).filter((f) => f.endsWith(".json"));
+   // 2️⃣ FILESYSTEM FALLBACK (OLD JSON BLOGS)
+const files = fs.readdirSync(blogsDir).filter((f) => f.endsWith(".json"));
 
-    for (const file of files) {
-      const raw = fs.readFileSync(path.join(blogsDir, file), "utf8");
-      if (!raw) continue;
+for (const file of files) {
+  const raw = fs.readFileSync(path.join(blogsDir, file), "utf8");
+  if (!raw) continue;
 
-      const blog = JSON.parse(raw);
+  const blog = JSON.parse(raw);
 
-      // 🔥 skip duplicate slugs (already from Supabase)
-      if (blogs.find((b) => b.slug === blog.slug)) continue;
+  // skip if already from Supabase
+  if (blogs.find((b) => b.slug === blog.slug)) continue;
 
-      let cover = blog.coverImage || "";
+  let cover = blog.coverImage || "";
 
-      // 🔥 FIX: normalize absolute URLs
-      if (cover.startsWith("https://beetlebulbs.com/uploads")) {
-        cover = cover.replace("https://beetlebulbs.com", "");
-      }
+  // 🔥 FINAL FIX (DO NOT CHANGE)
+  if (cover.startsWith("/uploads")) {
+    cover = `${process.env.DOMAIN}${cover}`;
+  }
 
-      blogs.push({
-        slug: blog.slug,
-        title: blog.title,
-        description: blog.description || "",
-        coverImage: cover, // "/uploads/xxx.jpg"
-        category: blog.category || "",
-        date: blog.date || "",
-      });
-    }
+  if (cover.startsWith("https://beetlebulbs.com/uploads")) {
+    cover = cover.replace(
+      "https://beetlebulbs.com",
+      process.env.DOMAIN
+    );
+  }
+
+  blogs.push({
+    slug: blog.slug,
+    title: blog.title,
+    description: blog.description || "",
+    coverImage: cover,
+    category: blog.category || "",
+    date: blog.date || "",
+  });
+}
 
     // 3️⃣ FINAL SORT
     blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
