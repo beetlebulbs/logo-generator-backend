@@ -301,6 +301,9 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
 /* =================================================
    PUBLIC: GET ALL BLOGS
 ================================================== */
+/* =================================================
+   PUBLIC: GET ALL BLOGS (STABLE VERSION)
+================================================== */
 router.get("/api/blogs", async (req, res) => {
   try {
     if (!supabase) {
@@ -309,7 +312,9 @@ router.get("/api/blogs", async (req, res) => {
 
     const { data, error } = await supabase
       .from("blogs")
-      .select("slug,title,short_description,image_url,category,created_at")
+      .select(
+        "slug,title,short_description,image_url,category,created_at"
+      )
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -325,22 +330,20 @@ router.get("/api/blogs", async (req, res) => {
         category: b.category || "",
         date: b.created_at,
 
-        // 🔥 IMAGE NORMALIZATION (CRITICAL FIX)
+        // ✅ IMAGE NORMALIZATION (SAFE)
         coverImage: (() => {
           if (!b.image_url) return "";
 
-          // ✅ ImageKit URLs → leave untouched
+          // ImageKit → keep as-is
           if (b.image_url.startsWith("https://ik.imagekit.io")) {
             return b.image_url;
           }
 
-          // ✅ If absolute domain uploads URL slipped in → normalize back
-          // https://beetlebulbs.com/uploads/xyz.jpg → /uploads/xyz.jpg
+          // Absolute uploads → normalize
           if (b.image_url.includes("/uploads/")) {
             return b.image_url.replace(/^https?:\/\/[^/]+/, "");
           }
 
-          // fallback (old behavior)
           return b.image_url;
         })(),
       }))
@@ -350,6 +353,7 @@ router.get("/api/blogs", async (req, res) => {
     return res.status(500).json({ error: "Failed to load blogs" });
   }
 });
+
 
 
 
