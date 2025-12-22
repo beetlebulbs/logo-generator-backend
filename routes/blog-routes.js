@@ -169,7 +169,6 @@ const { data, error } = await supabase
       html_content: blog.content,
       image_url: blog.coverImage || "",
       status: "published",
-      published_at: blog.date || new Date().toISOString(), // ✅ ADD
     },
   ])
   .select(); // 👈 REQUIRED
@@ -223,7 +222,6 @@ router.put("/api/admin/update-blog/:slug", async (req, res) => {
     short_description: updatedBlog.description || "",
     html_content: updatedBlog.content,
     image_url: updatedBlog.coverImage || "",
-    published_at: updatedBlog.published_at || undefined,
     
   })
   .eq("slug", req.params.slug); // 🔥 SOURCE OF TRUTH
@@ -301,77 +299,38 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
 
 
 /* =================================================
-   PUBLIC: GET ALL BLOGS (SUPABASE + JSON FALLBACK)
+   PUBLIC: GET ALL BLOGS
 ================================================== */
 router.get("/api/blogs", async (req, res) => {
+  console.log("🔥 /api/blogs ROUTE HIT (SUPABASE ONLY)");
+
   try {
-    let blogs = [];
-
-    // 1️⃣ SUPABASE (PRIMARY SOURCE)
-    if (supabase) {
-      const { data, error } = await supabase
-        .from("blogs")
-        .select(
-          "slug,title,short_description,image_url,category,created_at,published_at"
-        )
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("❌ Supabase fetch error:", error);
-      }
-
-      if (!error && Array.isArray(data)) {
-        blogs = data.map((b) => ({
-          slug: b.slug,
-          title: b.title,
-          description: b.short_description || "",
-          coverImage: b.image_url || "", // ✅ ImageKit
-          category: b.category || "",
-          date: b.published_at || b.created_at,
-        }));
-      }
+    if (!supabase) {
+      return res.status(500).json({ error: "Supabase not configured" });
     }
 
-   // 2️⃣ FILESYSTEM FALLBACK (OLD JSON BLOGS)
-const files = fs.readdirSync(blogsDir).filter((f) => f.endsWith(".json"));
+    const { data, error } = await supabase
+      .from("blogs")
+      .select(
+        "slug,title,short_description,image_url,category,created_at"
+      )
+      .order("created_at", { ascending: false });
 
-for (const file of files) {
-  const raw = fs.readFileSync(path.join(blogsDir, file), "utf8");
-  if (!raw) continue;
+    if (error) {
+      console.error("❌ Supabase fetch error:", error);
+      return res.status(500).json({ error: "Failed to load blogs" });
+    }
 
-  const blog = JSON.parse(raw);
-
-  // skip if already from Supabase
-  if (blogs.find((b) => b.slug === blog.slug)) continue;
-
-  let cover = blog.coverImage || "";
-
-  // 🔥 FINAL FIX (DO NOT CHANGE)
-  if (cover.startsWith("/uploads")) {
-    cover = `${process.env.DOMAIN}${cover}`;
-  }
-
-  if (cover.startsWith("https://beetlebulbs.com/uploads")) {
-    cover = cover.replace(
-      "https://beetlebulbs.com",
-      process.env.DOMAIN
+    return res.json(
+      (data || []).map((b) => ({
+        slug: b.slug,
+        title: b.title,
+        description: b.short_description || "",
+        coverImage: b.image_url || "",
+        category: b.category || "",
+        date: b.created_at,
+      }))
     );
-  }
-
-  blogs.push({
-    slug: blog.slug,
-    title: blog.title,
-    description: blog.description || "",
-    coverImage: cover,
-    category: blog.category || "",
-    date: blog.date || "",
-  });
-}
-
-    // 3️⃣ FINAL SORT
-    blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    return res.json(blogs);
   } catch (err) {
     console.error("🔥 /api/blogs error:", err);
     return res.status(500).json({ error: "Failed to load blogs" });
@@ -395,16 +354,12 @@ router.get("/api/blog/:slug", async (req, res) => {
         .single();
 
       if (data) {
-       return res.json({
-  id: data.id,
-  slug: data.slug,
-  title: data.title,
-  category: data.category,
-  description: data.short_description || "",
-  content: data.html_content,
-  coverImage: data.image_url || "",
-  date: data.published_at || data.created_at,
-});
+        return res.json({
+          ...data,
+          content: data.html_content,
+          coverImage: data.image_url,
+          description: data.short_description || "",
+        });
       }
     }
 
