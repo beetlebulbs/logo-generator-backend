@@ -328,7 +328,7 @@ router.get("/api/blogs", async (req, res) => {
 
     // 🔥 FINAL & CORRECT SORT (RECENT FIRST)
     blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
-
+res.setHeader("Cache-Control", "public, max-age=60");
     return res.json(blogs);
   } catch (err) {
     console.error("/api/blogs error:", err);
