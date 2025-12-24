@@ -310,32 +310,31 @@ router.get("/api/blogs", async (req, res) => {
       .from("blogs")
       .select(
         "slug,title,short_description,image_url,category,created_at,original_date"
-      )
-      .order("created_at", { ascending: false });
+      );
 
     if (error) {
       console.error("Supabase fetch error:", error);
       return res.status(500).json({ error: "Failed to load blogs" });
     }
 
-    return res.json(
-      (data || []).map((b) => ({
-        slug: b.slug,
-        title: b.title,
-        description: b.short_description || "",
-        category: b.category || "",
-        coverImage: b.image_url || "",
-        // 🔥 ONLY THIS MATTERS
-        date: b.original_date ?? b.created_at,
-      }))
-    );
+    const blogs = (data || []).map((b) => ({
+      slug: b.slug,
+      title: b.title,
+      description: b.short_description || "",
+      category: b.category || "",
+      coverImage: b.image_url || "",
+      date: b.original_date ?? b.created_at,
+    }));
+
+    // 🔥 FINAL & CORRECT SORT (RECENT FIRST)
+    blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    return res.json(blogs);
   } catch (err) {
     console.error("/api/blogs error:", err);
     res.status(500).json({ error: "Failed to load blogs" });
   }
 });
-
-
 
 
 /* =================================================
