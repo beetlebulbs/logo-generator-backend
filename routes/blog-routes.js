@@ -306,19 +306,15 @@ router.delete("/api/admin/delete-blog/:slug", async (req, res) => {
 ================================================== */
 router.get("/api/blogs", async (req, res) => {
   try {
-    if (!supabase) {
-      return res.status(500).json({ error: "Supabase not configured" });
-    }
-
     const { data, error } = await supabase
       .from("blogs")
       .select(
-        "slug,title,short_description,image_url,category,created_at"
+        "slug,title,short_description,image_url,category,created_at,original_date"
       )
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("❌ Supabase fetch error:", error);
+      console.error("Supabase fetch error:", error);
       return res.status(500).json({ error: "Failed to load blogs" });
     }
 
@@ -328,29 +324,14 @@ router.get("/api/blogs", async (req, res) => {
         title: b.title,
         description: b.short_description || "",
         category: b.category || "",
-        date: b.created_at,
-
-        // ✅ IMAGE NORMALIZATION (SAFE)
-        coverImage: (() => {
-          if (!b.image_url) return "";
-
-          // ImageKit → keep as-is
-          if (b.image_url.startsWith("https://ik.imagekit.io")) {
-            return b.image_url;
-          }
-
-          // Absolute uploads → normalize
-          if (b.image_url.includes("/uploads/")) {
-            return b.image_url.replace(/^https?:\/\/[^/]+/, "");
-          }
-
-          return b.image_url;
-        })(),
+        coverImage: b.image_url || "",
+        // 🔥 ONLY THIS MATTERS
+        date: b.original_date ?? b.created_at,
       }))
     );
   } catch (err) {
-    console.error("🔥 /api/blogs error:", err);
-    return res.status(500).json({ error: "Failed to load blogs" });
+    console.error("/api/blogs error:", err);
+    res.status(500).json({ error: "Failed to load blogs" });
   }
 });
 
