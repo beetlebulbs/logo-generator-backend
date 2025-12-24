@@ -230,7 +230,9 @@ if (error) {
   console.error("Supabase update error:", error);
   return res.status(500).json({ error: "Update failed" });
 }
-
+logAdmin(`Updated blog: ${slug}`);
+generateSitemap();          // ✅ EXACT PLACE
+cache.blogs.data = null;
 return res.json({ success: true });
   } catch (err) {
     console.error("Update blog error:", err);
