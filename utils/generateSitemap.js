@@ -2,39 +2,39 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createClient } from "@supabase/supabase-js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Build XML format
-function buildSitemap(urls) {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
-    .map(
-      (u) => `
-  <url>
-    <loc>${u}</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>`
-    )
-    .join("")}
-</urlset>`;
-}
+// --------------------
+// SUPABASE
+// --------------------
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
-export function generateSitemap() {
+// --------------------
+// MAIN FUNCTION
+// --------------------
+export async function generateSitemap() {
   try {
-    const domain = "https://beetlebulbs.com"; // final domain (no env needed)
+    const DOMAIN = "https://beetlebulbs.com";
 
-    // Correct blog folder location
-    const blogsDir = path.join(__dirname, "..", "blogs");
-
-    // sitemap.xml path
-    const sitemapPath = path.join(__dirname, "..", "sitemap.xml");
+    // sitemap will be served from frontend
+    const sitemapPath = path.join(
+      __dirname,
+      "..",
+      "..",
+      "..",
+      "frontend",
+      "public",
+      "sitemap.xml"
+    );
 
     // ---------------------------------------
-    // STATIC PAGES (your final cleaned list)
+    // STATIC PAGES (AS PROVIDED BY YOU)
     // ---------------------------------------
     const staticPages = [
       "",
@@ -63,37 +63,59 @@ export function generateSitemap() {
       "refundpolicy"
     ];
 
-    // convert static pages to URLs
-    const staticUrls = staticPages.map((page) =>
-      `${domain}/${page}`
-    );
+    const staticUrlsXml = staticPages
+      .map(
+        (page) => `
+  <url>
+    <loc>${DOMAIN}/${page}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>`
+      )
+      .join("");
 
     // ---------------------------------------
-    // BLOG URLs
+    // BLOG URLs (SUPABASE – SOURCE OF TRUTH)
     // ---------------------------------------
-    let blogUrls = [];
+    const { data: blogs, error } = await supabase
+      .from("blogs")
+      .select("slug, original_date, created_at");
 
-    if (fs.existsSync(blogsDir)) {
-      const files = fs.readdirSync(blogsDir);
-
-      blogUrls = files
-        .filter((file) => file.endsWith(".json"))
-        .map((file) => {
-          const slug = file.replace(".json", "");
-          return `${domain}/blog/${slug}`;
-        });
+    if (error) {
+      console.error("❌ Sitemap blog fetch error:", error);
+      return;
     }
 
-    // MERGE STATIC + BLOG URLs
-    const allUrls = [...staticUrls, ...blogUrls];
+    const blogUrlsXml = (blogs || [])
+      .map((b) => {
+        const lastmod = new Date(
+          b.original_date || b.created_at
+        ).toISOString();
 
-    // BUILD FINAL SITEMAP XML
-    const xml = buildSitemap(allUrls);
+        return `
+  <url>
+    <loc>${DOMAIN}/blog/${b.slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+      })
+      .join("");
 
-    // WRITE FILE
+    // ---------------------------------------
+    // FINAL SITEMAP XML
+    // ---------------------------------------
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${staticUrlsXml}
+${blogUrlsXml}
+</urlset>`;
+
     fs.writeFileSync(sitemapPath, xml, "utf8");
 
-    console.log(`✔ Sitemap generated: ${allUrls.length} URLs`);
+    console.log(
+      `✔ Sitemap generated successfully (${staticPages.length + blogs.length} URLs)`
+    );
   } catch (err) {
     console.error("✖ Error generating sitemap:", err);
   }
