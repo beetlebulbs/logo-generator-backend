@@ -182,8 +182,10 @@ app.use(compression());
 
 // ---- Mount blog routes (Option A) ----
 // blogRoutes handles: GET /api/blog/:slug, GET /api/blogs, and admin create/update/delete in routes file
- 
-app.use(blogRoutes);
+ app.get("/api/__test", (req, res) => {
+  res.send("SERVER REACHED");
+});
+app.use("/api/blog", blogRoutes);
 
 // ---- Sitemap, health ----
 app.get("/sitemap.xml", (req, res) => {
