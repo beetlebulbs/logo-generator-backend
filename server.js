@@ -80,7 +80,7 @@ app.use(cors({
     "https://beetlebulbs.com",
     "https://www.beetlebulbs.com"
   ],
-  credentials: false,
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "x-billing-auth"]
 }));
@@ -106,15 +106,6 @@ app.use(
   })
 );
   
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Origin", "https://beetlebulbs.com");
-    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    return res.sendStatus(204);
-  }
-  next();
-});
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3001;
 
@@ -192,7 +183,7 @@ app.use(compression());
 // ---- Mount blog routes (Option A) ----
 // blogRoutes handles: GET /api/blog/:slug, GET /api/blogs, and admin create/update/delete in routes file
  
-
+app.use(blogRoutes);
 
 // ---- Sitemap, health ----
 app.get("/sitemap.xml", (req, res) => {
@@ -722,8 +713,21 @@ app.use(
     error: err.message || err
   });
 });
- 
+ app.options("/api/formlead", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://beetlebulbs.com");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "POST, OPTIONS"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type"
+  );
+  return res.sendStatus(204);
+});
+
 app.post("/api/formlead", async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://beetlebulbs.com");
   try {
     const {
       name,
@@ -788,7 +792,7 @@ app.post("/api/formlead", async (req, res) => {
   }
 });
 
-app.use("/api/blog", blogRoutes);
+
 // ---- START SERVER ----
 app.listen(PORT, () => {
   console.log(`🚀 Backend running on port ${PORT}`);
