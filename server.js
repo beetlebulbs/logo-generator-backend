@@ -72,27 +72,6 @@ const __dirname = path.dirname(__filename);
 const LOG_FILE = path.join(__dirname, "logs", "admin-activity.json");
 // ---- App + config ----
 const app = express();
- 
-
-// ✅ FINAL CORS PREFLIGHT FIX
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://beetlebulbs.com");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
-  }
-
-  next();
-});
-
 /* ================== GLOBAL CORS (SAFE) ================== */
 app.use(cors({
   origin: [
