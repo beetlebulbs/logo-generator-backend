@@ -80,7 +80,7 @@ app.use(cors({
     "https://beetlebulbs.com",
     "https://www.beetlebulbs.com"
   ],
-  credentials: true,
+  credentials: false,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "x-billing-auth"]
 }));
