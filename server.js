@@ -72,6 +72,16 @@ const __dirname = path.dirname(__filename);
 const LOG_FILE = path.join(__dirname, "logs", "admin-activity.json");
 // ---- App + config ----
 const app = express();
+ 
+
+// 🔥 GLOBAL OPTIONS FALLBACK (safe)
+app.options("*", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://beetlebulbs.com");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  return res.sendStatus(204);
+});
+
 /* ================== GLOBAL CORS (SAFE) ================== */
 app.use(cors({
   origin: [
@@ -713,17 +723,8 @@ app.use(
     error: err.message || err
   });
 });
- // 🔥 EXPLICIT preflight handler for THIS route only
-app.options("/api/formlead", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://beetlebulbs.com");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  return res.sendStatus(204);
-});
-
-
+ 
 app.post("/api/formlead", async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://beetlebulbs.com");
   try {
     const {
       name,
