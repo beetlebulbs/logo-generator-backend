@@ -72,8 +72,24 @@ const __dirname = path.dirname(__filename);
 const LOG_FILE = path.join(__dirname, "logs", "admin-activity.json");
 // ---- App + config ----
 const app = express();
+/* ================== HARD CORS FIX (RENDER SAFE) ================== */
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://beetlebulbs.com");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  // 🚨 VERY IMPORTANT: handle preflight
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
+
 /* ================== GLOBAL CORS (SAFE) ================== */
-app.use(cors({
+/*app.use(cors({
   origin: [
     "http://localhost:5173",
     "http://localhost:3000",
@@ -85,15 +101,8 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization", "x-billing-auth"]
 }));
  
-app.get("/", (req, res) => {
-  res.status(200).json({
-    status: "Backend running",
-    service: "Beetlebulbs API",
-    time: new Date().toISOString()
-  });
-});
 
-app.options("*", cors());
+app.options("*", cors()); */
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
