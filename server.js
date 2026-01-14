@@ -80,7 +80,7 @@ app.use(cors({
     "https://beetlebulbs.com",
     "https://www.beetlebulbs.com"
   ],
-  credentials: true,
+  credentials: false,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "x-billing-auth"]
 }));
@@ -183,10 +183,8 @@ app.use(compression());
 // ---- Mount blog routes (Option A) ----
 // blogRoutes handles: GET /api/blog/:slug, GET /api/blogs, and admin create/update/delete in routes file
  
-app.use(blogRoutes);
-app.get("/api/formlead", (req, res) => {
-  res.send("Formlead API is live ✅");
-});
+app.use("/api/blog", blogRoutes);
+
 // ---- Sitemap, health ----
 app.get("/sitemap.xml", (req, res) => {
   const file = path.join(__dirname, "sitemap.xml");
