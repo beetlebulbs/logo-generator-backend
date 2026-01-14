@@ -85,6 +85,13 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization", "x-billing-auth"]
 }));
  
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "Backend running",
+    service: "Beetlebulbs API",
+    time: new Date().toISOString()
+  });
+});
 
 app.options("*", cors());
 
