@@ -85,9 +85,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization", "x-billing-auth"]
 }));
  
-app.get("/__render-proof-xyz", (req, res) => {
-  res.send("RENDER IS RUNNING THIS SERVER.JS ✅");
-});
+
 app.options("*", cors());
 
 app.use(express.json()); 
@@ -185,8 +183,10 @@ app.use(compression());
 // ---- Mount blog routes (Option A) ----
 // blogRoutes handles: GET /api/blog/:slug, GET /api/blogs, and admin create/update/delete in routes file
  
-app.use("/api/blog", blogRoutes);
-
+app.use(blogRoutes);
+app.get("/api/formlead", (req, res) => {
+  res.send("Formlead API is live ✅");
+});
 // ---- Sitemap, health ----
 app.get("/sitemap.xml", (req, res) => {
   const file = path.join(__dirname, "sitemap.xml");
