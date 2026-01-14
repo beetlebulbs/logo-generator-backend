@@ -1,0 +1,4504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Growth Lite — Base Layout</title>
+
+<style>
+@page { margin: 0; }
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+}
+
+/* ================= A4 PAGE ================= */
+.page {
+  height: 1123px;
+  min-height: 1123px;
+  position: relative;
+  page-break-after: always;
+  background: #fff;
+}
+
+/* ================= WATERMARK (PER PAGE, TRUE CENTER) ================= */
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 44px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.08);
+  white-space: nowrap;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ================= HEADER ================= */
+.header {
+  background: linear-gradient(135deg, #000, #1a1a1a);
+  color: #fff;
+  padding: 26px 32px;
+  position: relative;
+  z-index: 3;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.header-left img {
+  height: 36px;
+  background: #fff;
+  padding: 6px 8px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.sub {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.header-right {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* ================= CONTENT ================= */
+.content {
+  padding: 26px 32px 60px; /* footer space reserved */
+  position: relative;
+  z-index: 2;
+}
+
+/* Dummy section styling (for testing only) */
+.section {
+  margin-bottom: 18px;
+}
+
+.section h2 {
+  font-size: 16.5px;
+  border-bottom: 2px solid #000;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.section p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ================= FOOTER (PERMANENT FIX) ================= */
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-top: 1px solid #ddd;
+  padding: 6px 28px;
+  font-size: 12px;
+  line-height: 1.25;
+  background: #fff;
+  z-index: 4;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: flex-start;
+}
+
+.footer-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-no {
+  min-width: 120px;
+  text-align: left;
+  font-weight: 700;
+  color: #000;
+}
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  color: #111;
+}
+
+/* Headings */
+.section h2 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  margin-bottom: 6px;
+}
+
+/* Body text */
+.section p {
+  font-size: 14.2px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* Lists */
+li {
+  font-size: 13.8px;
+  line-height: 1.6;
+}
+
+/* Tables */
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+th {
+  background: #000;
+  color: #fff;
+  text-align: left;
+}
+/* tighter spacing only for page 1 */
+.page.page-1 .section {
+  margin-bottom: 14px;
+}
+
+.page.page-1 h2 {
+  margin-bottom: 4px;
+}
+
+.page.page-1 p {
+  margin-bottom: 6px;
+}
+.page.page-1 table td,
+.page.page-1 table th {
+  padding: 4px 5px;
+}
+.page.page-1 table {
+  margin-top: 4px;
+  page-break-inside: auto !important;
+}
+.page.page-1 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+
+.page.page-3 table td,
+.page.page-3 table th {
+  padding: 2px 2px;
+}
+.page.page-3 table {
+  margin-top: 0px;
+  page-break-inside: auto !important;
+}
+.page.page-3 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.pagepage-1.section {
+  margin-bottom: 10px;
+}
+.page.page-4 table td,
+.page.page-4 table th {
+  padding: 3px 4px;
+}
+.page.page-4 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-4 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+.page.page-11 table td,
+.page.page-11 table th {
+  padding: 3px 4px;
+}
+.page.page-11 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-11 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+.page.page-12 table td,
+.page.page-12 table th {
+  padding: 3px 4px;
+}
+.page.page-12 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-12 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+.page.page-13 table td,
+.page.page-13 table th {
+  padding: 4px 5px;
+}
+.page.page-13 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-13 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+
+.page.page-14 table td,
+.page.page-14 table th {
+  padding: 3px 4px;
+}
+.page.page-14 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-14 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+.page.page-15 table td,
+.page.page-15 table th {
+  padding: 3px 4px;
+}
+.page.page-15 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-15 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+.page.page-17 table td,
+.page.page-17 table th {
+  padding: 3px 4px;
+}
+.page.page-17 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-17 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+.page.page-18 table td,
+.page.page-18 table th {
+  padding: 3px 4px;
+}
+.page.page-18 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-18 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+.page.page-19 table td,
+.page.page-19 table th {
+  padding: 3px 4px;
+}
+.page.page-19 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-19 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+.page.page-20 table td,
+.page.page-20 table th {
+  padding: 3px 4px;
+}
+.page.page-20 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-20 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+.page.page-22 table td,
+.page.page-22 table th {
+  padding: 4px 5px;
+}
+.page.page-22 table {
+  margin-top: 4px;
+  page-break-inside: auto !important;
+}
+.page.page-22 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+.page.page-23 table td,
+.page.page-23 table th {
+  padding: 3px 4px;
+}
+.page.page-23 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-23 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+} 
+</style>
+</head>
+
+<body>
+
+<!-- ================= PAGE 1 : GROWTH ENGINE ================= -->
+<div class="page page-1">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left">
+        <img src="http://localhost:3001/pdf-assets/Tmlogo.png" />
+        <div>
+          <h1>Growth Engine</h1>
+          <div class="sub">
+            Leads, Calls & Customers — Fully Owned by Beetlebulbs®
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        Generated on {{GENERATED_DATE}}
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero-block">
+   <p style="
+  font-size:22px;
+  font-weight:900;
+  line-height:1.35;
+  margin-top:0;
+  margin-left:32px;
+  margin-right:32px;
+">
+  Your team should focus on closing sales.<br/>
+  Growth Engine takes ownership of leads,
+  calls, and customer flow.
+</p>
+
+<p style="
+  font-size:14.8px;
+  opacity:0.95;
+  margin-bottom:0;
+  margin-left:32px;
+  margin-right:32px;
+">
+  Growth Engine is built for businesses that no longer
+  want to manage daily marketing decisions,
+  platform execution, or lead quality issues.
+</p>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- EXECUTIVE REALITY -->
+    <div class="section">
+      <h2>Why Execution Alone Is No Longer Enough</h2>
+      <p>
+        Most businesses already run ads, hire agencies,
+        manage platforms, and generate enquiries.
+      </p>
+      <p>
+        The real struggle begins when founders realise
+        they are still personally managing:
+      </p>
+      <ul>
+        <li>Lead quality problems</li>
+        <li>Sales complaints about seriousness</li>
+        <li>Daily optimisation decisions</li>
+        <li>Spend anxiety and reporting confusion</li>
+        <li>Unpredictable customer flow</li>
+      </ul>
+      <p>
+        Growth Engine exists to remove this burden.
+      </p>
+    </div>
+
+    <!-- OWNERSHIP TABLE -->
+    <div class="section">
+      <h2>What “Ownership” Means in Growth Engine</h2>
+      <table>
+        <tr>
+          <th>Area</th>
+          <th>Traditional Setup</th>
+          <th>Growth Engine Model</th>
+        </tr>
+        <tr>
+          <td>Platforms</td>
+          <td>Managed by agencies or in-house teams</td>
+          <td>Fully operated by Beetlebulbs</td>
+        </tr>
+        <tr>
+          <td>Lead Quality</td>
+          <td>Sales handles mixed intent</td>
+          <td>Beetlebulbs filters seriousness</td>
+        </tr>
+        <tr>
+          <td>Call Flow</td>
+          <td>Reactive & inconsistent</td>
+          <td>Engineered & prioritised</td>
+        </tr>
+        <tr>
+          <td>Daily Decisions</td>
+          <td>Founder involvement required</td>
+          <td>Beetlebulbs takes charge</td>
+        </tr>
+        <tr>
+          <td>Outcome Focus</td>
+          <td>Leads & metrics</td>
+          <td>Customers & revenue flow</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : YOUR TEAM vs BEETLEBULBS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Your Team Focuses On</h2>
+        <ul>
+          <li>Sales conversations</li>
+          <li>Closing deals</li>
+          <li>Customer experience</li>
+          <li>Revenue growth</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Beetlebulbs Owns</h2>
+        <ul>
+          <li>Lead generation across platforms</li>
+          <li>Call quality and seriousness</li>
+          <li>Follow-up logic and timing</li>
+          <li>Spend allocation and optimisation</li>
+          <li>Customer flow stability</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- POSITIONING NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;margin-top:-10px">
+        Growth Engine is not for experimentation.
+        It is for businesses ready to
+        delegate ownership
+        and expect accountable customer outcomes.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Growth Engine removes execution burden
+        so founders can focus on scale.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+
+ 
+<!-- ================= PAGE 2 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Why Founders Burn Out Managing Marketing & Sales Together</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>The Hidden Cost of “Staying Involved”</h2>
+      <p>
+        In most growing businesses, founders remain deeply involved
+        in marketing decisions while also monitoring sales outcomes.
+      </p>
+      <p>
+        What starts as oversight slowly turns into
+        daily firefighting — approvals, platform reviews,
+        lead complaints, and budget anxiety.
+      </p>
+    </div>
+
+    <!-- DATA SNAPSHOT -->
+    <div class="section">
+      <h2>Where Founder Time Actually Goes</h2>
+      <table>
+        <tr>
+          <th>Area</th>
+          <th>Founder Expectation</th>
+          <th>Ground Reality</th>
+        </tr>
+        <tr>
+          <td>Marketing Platforms</td>
+          <td>Occasional review</td>
+          <td>Daily optimisation discussions</td>
+        </tr>
+        <tr>
+          <td>Lead Quality</td>
+          <td>Handled by teams</td>
+          <td>Escalations & complaints</td>
+        </tr>
+        <tr>
+          <td>Sales Calls</td>
+          <td>Performance tracking</td>
+          <td>Intervention & coaching</td>
+        </tr>
+        <tr>
+          <td>Budgets</td>
+          <td>Monthly planning</td>
+          <td>Frequent reallocations</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : PAIN -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Founder Pain Signals</h2>
+        <ul>
+          <li>Too many decisions every day</li>
+          <li>No clear owner of customer outcomes</li>
+          <li>Sales and marketing blame cycles</li>
+          <li>Spend increases without peace of mind</li>
+          <li>Growth feels stressful, not controlled</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Why This Persists</h2>
+        <ul>
+          <li>Execution spread across multiple teams</li>
+          <li>No single point of accountability</li>
+          <li>Leads counted, not qualified</li>
+          <li>Platforms optimised separately</li>
+          <li>Revenue impact seen too late</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- OWNERSHIP SHIFT -->
+    <div class="section">
+      <h2>The Shift Growth Engine Creates</h2>
+      <table>
+        <tr>
+          <th>Before</th>
+          <th>After Growth Engine</th>
+        </tr>
+        <tr>
+          <td>Founder manages decisions</td>
+          <td>Beetlebulbs owns execution</td>
+        </tr>
+        <tr>
+          <td>Teams react to problems</td>
+          <td>Problems prevented upstream</td>
+        </tr>
+        <tr>
+          <td>Unclear responsibility</td>
+          <td>Clear outcome ownership</td>
+        </tr>
+        <tr>
+          <td>Stress-driven growth</td>
+          <td>Structured, calmer scaling</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- POSITIONING NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine removes the need for founders
+        to manage daily marketing and sales friction —
+        without losing visibility or control.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Ownership reduces stress
+        and enables confident scaling.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+
+ <!-- ================= PAGE 3 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Ownership Model & Accountability</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Ownership Matters More Than Optimisation</h2>
+      <p>
+        Most marketing engagements fail not because of effort,
+        but because responsibility is divided.
+        Platforms blame creatives, agencies blame sales,
+        and founders sit in the middle resolving conflicts.
+      </p>
+      <p>
+        Growth Engine removes ambiguity by defining
+        <strong>clear ownership of outcomes</strong>.
+      </p>
+    </div>
+
+    <!-- CORE OWNERSHIP TABLE -->
+    <div class="section">
+      <h2>Growth Engine Ownership Structure</h2>
+
+      <table>
+        <tr>
+          <th style="width:33%;">Area</th>
+          <th style="width:33%;">Client Team Owns</th>
+          <th style="width:34%;">Beetlebulbs Owns</th>
+        </tr>
+
+        <tr>
+          <td>Lead Generation</td>
+          <td>—</td>
+          <td>All platforms, campaigns & traffic sources</td>
+        </tr>
+
+        <tr>
+          <td>Call Flow</td>
+          <td>Basic sales execution</td>
+          <td>Lead routing, call quality & response timing</td>
+        </tr>
+
+        <tr>
+          <td>Lead Quality</td>
+          <td>Feedback sharing</td>
+          <td>Intent filtering & seriousness scoring</td>
+        </tr>
+
+        <tr>
+          <td>Follow-ups</td>
+          <td>Closing conversations</td>
+          <td>Follow-up structure & discipline</td>
+        </tr>
+
+        <tr>
+          <td>Platform Decisions</td>
+          <td>Approvals (when needed)</td>
+          <td>Daily optimisation & execution</td>
+        </tr>
+
+        <tr>
+          <td>Customer Flow</td>
+          <td>Sales closing</td>
+          <td>Predictability & volume stability</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : WHAT CHANGES -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Before Growth Engine</h2>
+        <ul>
+          <li>Founders involved in daily decisions</li>
+          <li>Marketing & sales blame cycles</li>
+          <li>Leads questioned after arrival</li>
+          <li>Revenue depends on constant monitoring</li>
+          <li>Scaling feels risky</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>After Growth Engine</h2>
+        <ul>
+          <li>Single execution owner</li>
+          <li>Sales focuses only on closing</li>
+          <li>Leads arrive with intent clarity</li>
+          <li>Customer flow stabilises</li>
+          <li>Scaling becomes controlled</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        In Growth Engine, your team focuses on sales.
+        Beetlebulbs takes responsibility for leads,
+        calls, and customer flow —
+        so revenue growth does not depend
+        on daily founder intervention.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Clear ownership removes friction,
+        stress, and execution delays.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 4 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Daily Execution Architecture</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Daily Execution Breaks Most Marketing Systems</h2>
+      <p>
+        Most businesses do not fail because of strategy.
+        They fail because execution depends on people remembering,
+        checking dashboards, approving changes,
+        and reacting to problems after damage is done.
+      </p>
+      <p>
+        Growth Engine is designed to run
+        <strong>as a daily operating system</strong>,
+        not a campaign that needs supervision.
+      </p>
+    </div>
+
+    <!-- CORE EXECUTION FLOW -->
+    <div class="section">
+      <h2>How Growth Engine Operates Every Day</h2>
+
+      <table>
+        <tr>
+          <th style="width:22%;">Execution Layer</th>
+          <th style="width:38%;">What Happens Daily</th>
+          <th style="width:40%;">Why It Matters</th>
+        </tr>
+
+        <tr>
+          <td>Traffic Intake</td>
+          <td>Leads arrive from all active paid & organic platforms</td>
+          <td>No single platform dominates or distorts quality</td>
+        </tr>
+
+        <tr>
+          <td>Intent Screening</td>
+          <td>Every enquiry assessed for seriousness & readiness</td>
+          <td>Sales effort aligns with buyer strength</td>
+        </tr>
+
+        <tr>
+          <td>Call Routing</td>
+          <td>Leads routed based on urgency and intent level</td>
+          <td>High-intent buyers are never delayed</td>
+        </tr>
+
+        <tr>
+          <td>Response Timing</td>
+          <td>Follow-ups triggered by intent, not fixed scripts</td>
+          <td>Right message at the right moment</td>
+        </tr>
+
+        <tr>
+          <td>Execution Adjustment</td>
+          <td>Daily optimisation based on conversion signals</td>
+          <td>Problems corrected before scaling spend</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : MANUAL vs ENGINE -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Traditional Execution</h2>
+        <ul>
+          <li>Weekly or monthly reviews</li>
+          <li>Delayed problem visibility</li>
+          <li>Same follow-up for all leads</li>
+          <li>Sales reacts to volume</li>
+          <li>Founders intervene frequently</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Growth Engine Execution</h2>
+        <ul>
+          <li>Daily decision loops</li>
+          <li>Intent-based prioritisation</li>
+          <li>Different paths for different buyers</li>
+          <li>Sales receives filtered demand</li>
+          <li>Founder stays out of daily operations</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine does not wait for reports.
+        It corrects execution daily —
+        so issues are fixed before revenue is affected.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Daily execution discipline
+        creates stability before scale.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 5 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Buyer Intent Classification</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why All Leads Are Not Equal</h2>
+      <p>
+        Most businesses treat every enquiry the same.
+        The same call script, the same follow-up,
+        and the same urgency — regardless of buyer readiness.
+      </p>
+      <p>
+        Growth Engine starts by accepting one truth:
+        <strong>revenue depends on intent strength, not lead count</strong>.
+      </p>
+    </div>
+
+    <!-- INTENT LAYERS TABLE -->
+    <div class="section">
+      <h2>The Three Intent Layers</h2>
+
+      <table>
+        <tr>
+          <th style="width:18%;">Intent Layer</th>
+          <th style="width:32%;">Buyer Behaviour</th>
+          <th style="width:25%;">Typical Signals</th>
+          <th style="width:25%;">Engine Action</th>
+        </tr>
+
+        <tr>
+          <td>Cold Intent</td>
+          <td>Exploring, researching, comparing</td>
+          <td>General questions, low urgency</td>
+          <td>Nurture, education, delayed follow-up</td>
+        </tr>
+
+        <tr>
+          <td>Warm Intent</td>
+          <td>Problem aware, solution curious</td>
+          <td>Pricing interest, feature questions</td>
+          <td>Qualification + guided conversations</td>
+        </tr>
+
+        <tr>
+          <td>Hot Intent</td>
+          <td>Decision-ready, timeline defined</td>
+          <td>Budget clarity, urgency, callbacks</td>
+          <td>Immediate priority routing</td>
+        </tr>
+      </table>
+    </div>
+<!-- INTENT → SALES OUTCOME MAPPING -->
+<div class="section">
+  <h2>How Intent Handling Impacts Revenue</h2>
+
+  <table>
+    <tr>
+      <th style="width:20%;">Intent Type</th>
+      <th style="width:35%;">If Handled Correctly</th>
+      <th style="width:45%;">If Handled Incorrectly</th>
+    </tr>
+
+    <tr>
+      <td>Cold Intent</td>
+      <td>Nurtured until readiness improves</td>
+      <td>Sales time wasted, buyer disengages</td>
+    </tr>
+
+    <tr>
+      <td>Warm Intent</td>
+      <td>Guided toward decision clarity</td>
+      <td>Buyer delays or compares endlessly</td>
+    </tr>
+
+    <tr>
+      <td>Hot Intent</td>
+      <td>Fast closure, higher win probability</td>
+      <td>Delay leads to drop or competitor win</td>
+    </tr>
+  </table>
+</div>
+    <!-- SPLIT : SALES IMPACT -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Happens Without Intent Classification</h2>
+        <ul>
+          <li>Serious buyers wait too long</li>
+          <li>Casual leads consume sales time</li>
+          <li>Follow-ups lose consistency</li>
+          <li>Sales confidence drops</li>
+          <li>Revenue becomes unpredictable</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Changes With Growth Engine</h2>
+        <ul>
+          <li>High-intent buyers get priority</li>
+          <li>Sales effort matches buyer readiness</li>
+          <li>Cold leads are nurtured, not forced</li>
+          <li>Response timing improves</li>
+          <li>Conversion rates stabilise</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine does not ask sales teams
+        to work harder.
+        It ensures sales teams work
+        on the right buyers at the right time.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Intent classification
+        is the foundation of predictable revenue.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 6 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Call Handling & Response Timing</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Calls Decide Revenue, Not Leads</h2>
+      <p>
+        Generating leads is only half the equation.
+        Revenue is created when calls happen
+        at the right time, with the right intent,
+        and with the right conversation control.
+      </p>
+      <p>
+        Most businesses lose customers
+        not because calls don’t happen —
+        but because <strong>calls happen too late,
+        too early, or without context</strong>.
+      </p>
+    </div>
+
+    <!-- RESPONSE TIMING TABLE -->
+    <div class="section">
+      <h2>Response Timing vs Buyer Behaviour</h2>
+
+      <table>
+        <tr>
+          <th style="width:25%;">Response Timing</th>
+          <th style="width:35%;">Buyer Reaction</th>
+          <th style="width:40%;">Revenue Impact</th>
+        </tr>
+
+        <tr>
+          <td>Immediate (Hot Intent)</td>
+          <td>Feels valued and prioritised</td>
+          <td>Highest closure probability</td>
+        </tr>
+
+        <tr>
+          <td>Delayed (Hot Intent)</td>
+          <td>Loses urgency, compares options</td>
+          <td>High drop or competitor win</td>
+        </tr>
+
+        <tr>
+          <td>Immediate (Cold Intent)</td>
+          <td>Feels pressured, disengages</td>
+          <td>Low conversion, wasted effort</td>
+        </tr>
+
+        <tr>
+          <td>Timed Nurture (Cold / Warm)</td>
+          <td>Builds comfort and readiness</td>
+          <td>Future conversion potential</td>
+        </tr>
+      </table>
+    </div>
+<div class="section">
+  <h2>Call Timing Impact on Conversion</h2>
+  <table>
+    <tr>
+      <th>Buyer Intent</th>
+      <th>Call Timing</th>
+      <th>Observed Result</th>
+    </tr>
+    <tr>
+      <td>Hot</td>
+      <td>Within 5 minutes</td>
+      <td>Highest closure likelihood</td>
+    </tr>
+    <tr>
+      <td>Hot</td>
+      <td>After 30–60 minutes</td>
+      <td>Interest starts dropping</td>
+    </tr>
+    <tr>
+      <td>Warm</td>
+      <td>Same day</td>
+      <td>Conversation progresses</td>
+    </tr>
+    <tr>
+      <td>Cold</td>
+      <td>Immediate</td>
+      <td>Resistance & disengagement</td>
+    </tr>
+  </table>
+</div>
+
+    <!-- SPLIT: PROBLEM vs ENGINE -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Common Call Handling Problems</h2>
+        <ul>
+          <li>Same script used for all enquiries</li>
+          <li>No priority routing for serious buyers</li>
+          <li>Delayed callbacks during peak hours</li>
+          <li>Sales teams multitask under pressure</li>
+          <li>No link between intent and call flow</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>How Growth Engine Handles Calls</h2>
+        <ul>
+          <li>Intent-based call prioritisation</li>
+          <li>Hot buyers routed instantly</li>
+          <li>Warm buyers guided, not rushed</li>
+          <li>Cold enquiries nurtured separately</li>
+          <li>Sales focus stays on closing</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine removes randomness from calls.
+        Every conversation happens
+        with context, timing, and intent clarity —
+        so sales effort converts into revenue.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Response timing and call control
+        directly influence closure probability.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 7 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Follow-up Discipline & Conversion Control</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Follow-ups Decide More Than First Calls</h2>
+      <p>
+        Very few customers convert on the first interaction.
+        Most conversions happen because of
+        <strong>timely, relevant, and well-sequenced follow-ups</strong>.
+      </p>
+      <p>
+        Businesses usually lose deals not due to rejection,
+        but due to <strong>missed timing, weak continuity,
+        or follow-up fatigue</strong>.
+      </p>
+    </div>
+
+    <!-- FOLLOW-UP TIMING TABLE -->
+    <div class="section">
+      <h2>Follow-up Timing vs Buyer Response</h2>
+
+      <table>
+        <tr>
+          <th style="width:22%;">Follow-up Pattern</th>
+          <th style="width:38%;">Buyer Perception</th>
+          <th style="width:40%;">Revenue Impact</th>
+        </tr>
+
+        <tr>
+          <td>Immediate & Relevant</td>
+          <td>Feels guided and supported</td>
+          <td>Higher trust and closure rate</td>
+        </tr>
+
+        <tr>
+          <td>Too Frequent</td>
+          <td>Feels pressured or annoyed</td>
+          <td>Drop-off risk increases</td>
+        </tr>
+
+        <tr>
+          <td>Delayed</td>
+          <td>Loses interest or urgency</td>
+          <td>Deal goes cold</td>
+        </tr>
+
+        <tr>
+          <td>No Follow-up</td>
+          <td>Assumes low seriousness</td>
+          <td>Revenue loss without rejection</td>
+        </tr>
+      </table>
+    </div>
+<div class="section">
+  <h2>Follow-up Structure vs Deal Outcome</h2>
+  <table>
+    <tr>
+      <th>Follow-up Style</th>
+      <th>Buyer Reaction</th>
+      <th>Deal Status</th>
+    </tr>
+    <tr>
+      <td>Structured & Timed</td>
+      <td>Feels guided</td>
+      <td>Moves toward closure</td>
+    </tr>
+    <tr>
+      <td>Random & Manual</td>
+      <td>Feels ignored</td>
+      <td>Goes cold</td>
+    </tr>
+    <tr>
+      <td>Over-aggressive</td>
+      <td>Feels pressured</td>
+      <td>Drops permanently</td>
+    </tr>
+    <tr>
+      <td>No follow-up</td>
+      <td>Loses confidence</td>
+      <td>Lost without rejection</td>
+    </tr>
+  </table>
+</div>
+
+    <!-- SPLIT : CHAOS vs ENGINE -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Typical Follow-up Problems</h2>
+        <ul>
+          <li>Sales teams rely on memory</li>
+          <li>No follow-up ownership defined</li>
+          <li>Same cadence for all buyers</li>
+          <li>Cold leads chased aggressively</li>
+          <li>Hot buyers wait unnecessarily</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Growth Engine Follow-up Logic</h2>
+        <ul>
+          <li>Intent-based follow-up frequency</li>
+          <li>Clear ownership per lead stage</li>
+          <li>Sequenced touchpoints, not random calls</li>
+          <li>Hot buyers escalated immediately</li>
+          <li>Warm buyers nurtured with structure</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine treats follow-ups
+        as a revenue system, not a reminder task.
+        Every touchpoint is designed
+        to move the buyer one step closer to decision.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Consistent follow-up discipline
+        converts interest into revenue.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 8 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Multi-Channel Orchestration</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Channels Fail When Run in Isolation</h2>
+      <p>
+        Businesses often run Google Ads, Meta, portals, video,
+        email and WhatsApp as separate efforts.
+        Each platform reports success, yet revenue stays unclear.
+      </p>
+      <p>
+        Growth Engine aligns all channels
+        to a single goal: <strong>qualified customers, not activity</strong>.
+      </p>
+    </div>
+
+    <!-- ORCHESTRATION TABLE -->
+    <div class="section">
+      <h2>Channel Role Clarity</h2>
+
+      <table>
+        <tr>
+          <th style="width:22%;">Channel</th>
+          <th style="width:38%;">Primary Role</th>
+          <th style="width:40%;">Engine Control</th>
+        </tr>
+
+        <tr>
+          <td>Search Ads</td>
+          <td>Capture active demand</td>
+          <td>Intent filtering & priority routing</td>
+        </tr>
+
+        <tr>
+          <td>Social / Performance</td>
+          <td>Create scale & awareness</td>
+          <td>Signal testing before scale</td>
+        </tr>
+
+        <tr>
+          <td>Portals</td>
+          <td>Ready traffic</td>
+          <td>Price-bias risk management</td>
+        </tr>
+
+        <tr>
+          <td>Video</td>
+          <td>Recall & trust</td>
+          <td>Assist conversion journeys</td>
+        </tr>
+
+        <tr>
+          <td>Email / WhatsApp</td>
+          <td>Nurture & follow-up</td>
+          <td>Timing & message discipline</td>
+        </tr>
+      </table>
+    </div>
+<div class="section">
+  <h2>Channel Management Impact</h2>
+  <table>
+    <tr>
+      <th>Execution Style</th>
+      <th>What Happens</th>
+      <th>Business Impact</th>
+    </tr>
+    <tr>
+      <td>Isolated Channels</td>
+      <td>Duplicate & mixed leads</td>
+      <td>Attribution confusion</td>
+    </tr>
+    <tr>
+      <td>Platform-wise Optimisation</td>
+      <td>Conflicting success metrics</td>
+      <td>Wrong scaling decisions</td>
+    </tr>
+    <tr>
+      <td>Unified Orchestration</td>
+      <td>Single customer journey view</td>
+      <td>Clear ROI visibility</td>
+    </tr>
+    <tr>
+      <td>Intent-based Alignment</td>
+      <td>Channels support each other</td>
+      <td>Higher conversion efficiency</td>
+    </tr>
+  </table>
+</div>
+
+    <!-- SPLIT : CHAOS vs ENGINE -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Typical Multi-Channel Problems</h2>
+        <ul>
+          <li>Duplicate leads across platforms</li>
+          <li>Conflicting attribution reports</li>
+          <li>Spend decisions driven by clicks</li>
+          <li>No visibility on assist channels</li>
+          <li>Revenue credit disputes</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Growth Engine Control Layer</h2>
+        <ul>
+          <li>Unified lead & call intake</li>
+          <li>Cross-channel intent comparison</li>
+          <li>Assist vs close attribution clarity</li>
+          <li>Spend adjusted by conversion signals</li>
+          <li>Single customer outcome view</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine does not judge channels by clicks.
+        It evaluates how each channel
+        contributes to customer decisions and revenue.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Channel alignment
+        eliminates spend confusion and improves ROI clarity.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 9 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Tracking & Revenue Visibility</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Most Tracking Fails Founders</h2>
+      <p>
+        Dashboards today are full of numbers —
+        impressions, clicks, CTR, CPC, and leads.
+        Yet founders still struggle to answer one question:
+        <strong>“Is this actually producing customers?”</strong>
+      </p>
+      <p>
+        Growth Engine replaces activity tracking
+        with outcome visibility.
+      </p>
+    </div>
+
+    <!-- TRACKING COMPARISON TABLE -->
+    <div class="section">
+      <h2>Traditional Tracking vs Growth Engine Tracking</h2>
+
+      <table>
+        <tr>
+          <th style="width:30%;">Tracking Focus</th>
+          <th style="width:35%;">Traditional View</th>
+          <th style="width:35%;">Growth Engine View</th>
+        </tr>
+
+        <tr>
+          <td>Primary Metric</td>
+          <td>Clicks & leads</td>
+          <td>Customers & intent quality</td>
+        </tr>
+
+        <tr>
+          <td>Lead Evaluation</td>
+          <td>Count-based</td>
+          <td>Seriousness & readiness</td>
+        </tr>
+
+        <tr>
+          <td>Sales Visibility</td>
+          <td>After-the-fact</td>
+          <td>Real-time intent movement</td>
+        </tr>
+
+        <tr>
+          <td>Revenue Insight</td>
+          <td>Lagging indicator</td>
+          <td>Linked to every channel</td>
+        </tr>
+
+        <tr>
+          <td>Decision Timing</td>
+          <td>Monthly / delayed</td>
+          <td>Daily correction loops</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : CONFUSION vs CLARITY -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Founders Usually See</h2>
+        <ul>
+          <li>Multiple dashboards with conflicting data</li>
+          <li>Platform-specific success stories</li>
+          <li>No clear revenue attribution</li>
+          <li>Sales complaints without proof</li>
+          <li>Decisions based on instinct</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Growth Engine Shows</h2>
+        <ul>
+          <li>Single view of customer flow</li>
+          <li>Intent movement across stages</li>
+          <li>Channel-wise revenue contribution</li>
+          <li>Early warning of quality drops</li>
+          <li>Clear confidence to scale or pause</li>
+        </ul>
+      </div>
+
+    </div>
+<div class="section">
+  <h2>Founder Questions vs Tracking Reality</h2>
+  <table>
+    <tr>
+      <th>Founder Question</th>
+      <th>Traditional Reports</th>
+      <th>Growth Engine View</th>
+    </tr>
+    <tr>
+      <td>Is marketing working?</td>
+      <td>Clicks & leads</td>
+      <td>Customer creation rate</td>
+    </tr>
+    <tr>
+      <td>Which channel works best?</td>
+      <td>Platform-wise CTR</td>
+      <td>Revenue contribution</td>
+    </tr>
+    <tr>
+      <td>Can we scale?</td>
+      <td>Spend efficiency</td>
+      <td>Intent consistency</td>
+    </tr>
+    <tr>
+      <td>Where is leakage?</td>
+      <td>Not visible</td>
+      <td>Stage-wise drop analysis</td>
+    </tr>
+  </table>
+</div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine tracking exists
+        so founders never have to guess.
+        Every decision is backed by
+        clear visibility into customers, not clicks.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Visibility creates confidence.
+        Confidence enables scale.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 10 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Spend Control & ROAS Reality</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Scaling Spend Too Early Destroys ROAS</h2>
+      <p>
+        Most businesses increase budgets
+        when dashboards look busy.
+        More clicks, more leads, more reach —
+        assumed to mean growth.
+      </p>
+      <p>
+        In reality, scaling before fixing intent,
+        call handling, and follow-ups
+        only multiplies inefficiency.
+      </p>
+    </div>
+
+    <!-- ROAS REALITY TABLE -->
+    <div class="section">
+      <h2>ROAS: Reported vs Real</h2>
+
+      <table>
+        <tr>
+          <th style="width:28%;">Spend Decision</th>
+          <th style="width:36%;">Reported View</th>
+          <th style="width:36%;">Actual Outcome</th>
+        </tr>
+
+        <tr>
+          <td>Increase daily budget</td>
+          <td>Lower average CPC</td>
+          <td>More low-intent enquiries</td>
+        </tr>
+
+        <tr>
+          <td>Expand keywords / audiences</td>
+          <td>Higher reach</td>
+          <td>Quality dilution</td>
+        </tr>
+
+        <tr>
+          <td>Add new platforms</td>
+          <td>Diversified traffic</td>
+          <td>Fragmented attribution</td>
+        </tr>
+
+        <tr>
+          <td>Optimise creatives only</td>
+          <td>Better engagement</td>
+          <td>No sales improvement</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : RISK vs ENGINE -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Common Scaling Mistakes</h2>
+        <ul>
+          <li>Spend increases before quality stabilises</li>
+          <li>ROAS judged by platform reports</li>
+          <li>Sales strain ignored</li>
+          <li>No pause mechanism in place</li>
+          <li>Losses justified as “testing”</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>How Growth Engine Controls Spend</h2>
+        <ul>
+          <li>Scale only after intent consistency</li>
+          <li>Budget linked to customer outcomes</li>
+          <li>Early signals stop waste fast</li>
+          <li>Channels paused without hesitation</li>
+          <li>ROAS judged by customers, not clicks</li>
+        </ul>
+      </div>
+
+    </div>
+<div class="section">
+  <h2>When Spend Should (and Should Not) Scale</h2>
+  <table>
+    <tr>
+      <th>Signal</th>
+      <th>Meaning</th>
+      <th>Action</th>
+    </tr>
+    <tr>
+      <td>More leads only</td>
+      <td>Volume without quality</td>
+      <td>Do not scale</td>
+    </tr>
+    <tr>
+      <td>Higher intent ratio</td>
+      <td>Buyer readiness improving</td>
+      <td>Prepare to scale</td>
+    </tr>
+    <tr>
+      <td>Sales conversion stable</td>
+      <td>System consistency</td>
+      <td>Controlled scaling</td>
+    </tr>
+    <tr>
+      <td>ROAS volatility</td>
+      <td>Leakages present</td>
+      <td>Pause & fix</td>
+    </tr>
+  </table>
+</div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine treats ad spend
+        like capital, not experimentation.
+        Money is scaled only
+        when customer flow proves stability.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: True ROAS comes from
+        disciplined scaling, not aggressive spending.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 11 : GROWTH ENGINE ================= -->
+<div class="page page-11">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Sales Enablement & Confidence Restoration</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Sales Teams Lose Confidence</h2>
+      <p>
+        Sales teams are expected to close revenue,
+        but are often handed mixed-quality enquiries
+        without context, prioritisation, or clarity.
+      </p>
+      <p>
+        Over time, this creates friction:
+        marketing blames sales,
+        sales blames lead quality,
+        and founders sit in the middle.
+      </p>
+    </div>
+
+    <!-- SALES REALITY TABLE -->
+    <div class="section">
+      <h2>Sales Reality: Before vs After Growth Engine</h2>
+
+      <table>
+        <tr>
+          <th style="width:30%;">Sales Environment</th>
+          <th style="width:35%;">Without Growth Engine</th>
+          <th style="width:35%;">With Growth Engine</th>
+        </tr>
+
+        <tr>
+          <td>Lead Intake</td>
+          <td>All enquiries treated equally</td>
+          <td>Intent-based prioritisation</td>
+        </tr>
+
+        <tr>
+          <td>Call Pressure</td>
+          <td>High volume, low seriousness</td>
+          <td>Focused, meaningful conversations</td>
+        </tr>
+
+        <tr>
+          <td>Follow-up Load</td>
+          <td>Chasing unqualified leads</td>
+          <td>Structured follow-up paths</td>
+        </tr>
+
+        <tr>
+          <td>Closing Confidence</td>
+          <td>Low and inconsistent</td>
+          <td>Higher clarity and momentum</td>
+        </tr>
+
+        <tr>
+          <td>Sales Morale</td>
+          <td>Frustration and burnout</td>
+          <td>Predictable performance</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : SALES PAIN vs ENGINE SUPPORT -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Common Sales Complaints</h2>
+        <ul>
+          <li>“Leads are not serious”</li>
+          <li>“Buyers are just comparing”</li>
+          <li>“We waste time on follow-ups”</li>
+          <li>“Marketing doesn’t understand ground reality”</li>
+          <li>“Closures feel random”</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>How Growth Engine Supports Sales</h2>
+        <ul>
+          <li>Delivers prioritised, intent-tagged leads</li>
+          <li>Removes low-quality noise early</li>
+          <li>Aligns call timing with buyer readiness</li>
+          <li>Creates consistency in follow-ups</li>
+          <li>Restores trust between sales and marketing</li>
+        </ul>
+      </div>
+
+    </div>
+<div class="section">
+  <h2>Sales Effort: Before vs After Growth Engine</h2>
+  <table>
+    <tr>
+      <th>Sales Time Use</th>
+      <th>Without Engine</th>
+      <th>With Engine</th>
+    </tr>
+    <tr>
+      <td>Lead qualification</td>
+      <td>High effort</td>
+      <td>Minimal</td>
+    </tr>
+    <tr>
+      <td>Chasing follow-ups</td>
+      <td>Manual & inconsistent</td>
+      <td>System-driven</td>
+    </tr>
+    <tr>
+      <td>Actual selling</td>
+      <td>Limited time</td>
+      <td>Primary focus</td>
+    </tr>
+    <tr>
+      <td>Confidence level</td>
+      <td>Low</td>
+      <td>High & predictable</td>
+    </tr>
+  </table>
+</div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine does not replace sales teams.
+        It removes friction so sales teams
+        can focus purely on closing
+        instead of qualifying, chasing, and firefighting.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Sales performance improves
+        when effort aligns with buyer readiness.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= PAGE 12 : GROWTH ENGINE ================= -->
+<div class="page page-12">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Customer Journey Control</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Customers Drop Without Warning</h2>
+      <p>
+        Most customer journeys break silently.
+        There is no rejection, no complaint —
+        the buyer simply disappears.
+      </p>
+      <p>
+        Growth Engine maps and controls
+        every step where intent can weaken,
+        ensuring customers do not drop
+        due to delays, confusion, or friction.
+      </p>
+    </div>
+
+    <!-- JOURNEY TABLE -->
+    <div class="section">
+      <h2>Customer Journey: Leak Points vs Engine Control</h2>
+
+      <table>
+        <tr>
+          <th style="width:22%;">Journey Stage</th>
+          <th style="width:38%;">Common Leak Point</th>
+          <th style="width:40%;">Growth Engine Control</th>
+        </tr>
+
+        <tr>
+          <td>Ad / Visibility</td>
+          <td>Wrong expectations set</td>
+          <td>Message aligned to buyer readiness</td>
+        </tr>
+
+        <tr>
+          <td>Lead Capture</td>
+          <td>Low-intent enquiries mixed</td>
+          <td>Intent tagging at entry</td>
+        </tr>
+
+        <tr>
+          <td>First Contact</td>
+          <td>Delayed or generic response</td>
+          <td>Intent-based routing & timing</td>
+        </tr>
+
+        <tr>
+          <td>Sales Conversation</td>
+          <td>Unclear next steps</td>
+          <td>Guided conversation structure</td>
+        </tr>
+
+        <tr>
+          <td>Follow-up</td>
+          <td>Inconsistent or forgotten</td>
+          <td>System-led follow-up discipline</td>
+        </tr>
+
+        <tr>
+          <td>Decision Stage</td>
+          <td>Buyer uncertainty</td>
+          <td>Clarity-focused nudges</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : CHAOS vs CONTROL -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Without Journey Control</h2>
+        <ul>
+          <li>Buyers disappear without explanation</li>
+          <li>Sales teams guess next steps</li>
+          <li>Follow-ups lack continuity</li>
+          <li>Revenue depends on luck</li>
+          <li>Founders intervene too late</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>With Growth Engine Control</h2>
+        <ul>
+          <li>Every buyer has a defined path</li>
+          <li>Intent decides next action</li>
+          <li>Sales moves with clarity</li>
+          <li>Revenue becomes predictable</li>
+          <li>Founder oversight stays minimal</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ADDITIONAL TABLE -->
+    <div class="section">
+      <h2>Journey Stability Indicators</h2>
+      <table>
+        <tr>
+          <th>Signal</th>
+          <th>What It Indicates</th>
+          <th>Engine Response</th>
+        </tr>
+        <tr>
+          <td>Drop after first call</td>
+          <td>Weak intent or poor timing</td>
+          <td>Adjust routing & messaging</td>
+        </tr>
+        <tr>
+          <td>Repeated follow-ups</td>
+          <td>Decision confusion</td>
+          <td>Clarify value & next step</td>
+        </tr>
+        <tr>
+          <td>Delayed closure</td>
+          <td>Process friction</td>
+          <td>Simplify journey path</td>
+        </tr>
+        <tr>
+          <td>Sudden inactivity</td>
+          <td>Lost urgency</td>
+          <td>Re-engagement trigger</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine owns the journey,
+        not just the lead.
+        When every step is controlled,
+        customers do not disappear —
+        they decide.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Customer journey control
+        eliminates silent revenue loss.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 13 : GROWTH ENGINE ================= -->
+<div class="page page-13">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Ownership & Responsibility Model</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Responsibility Confusion Kills Growth</h2>
+      <p>
+        In most organisations, no one truly owns
+        customer acquisition outcomes.
+        Agencies manage ads, teams manage sales,
+        platforms manage data — and founders manage stress.
+      </p>
+      <p>
+        Growth Engine removes ambiguity
+        by assigning <strong>clear ownership
+        of leads, calls, and customer flow</strong>.
+      </p>
+    </div>
+
+    <!-- OWNERSHIP TABLE -->
+    <div class="section">
+      <h2>Traditional Model vs Growth Engine Model</h2>
+
+      <table>
+        <tr>
+          <th style="width:28%;">Area</th>
+          <th style="width:36%;">Traditional Setup</th>
+          <th style="width:36%;">Growth Engine Setup</th>
+        </tr>
+
+        <tr>
+          <td>Lead Generation</td>
+          <td>Agency / platform dependent</td>
+          <td>Owned and engineered by Beetlebulbs</td>
+        </tr>
+
+        <tr>
+          <td>Lead Quality</td>
+          <td>No clear owner</td>
+          <td>Actively monitored and controlled</td>
+        </tr>
+
+        <tr>
+          <td>Call Flow</td>
+          <td>Sales responsibility only</td>
+          <td>Intent-based routing & timing owned</td>
+        </tr>
+
+        <tr>
+          <td>Follow-ups</td>
+          <td>Manual, inconsistent</td>
+          <td>System-driven discipline</td>
+        </tr>
+
+        <tr>
+          <td>Customer Flow</td>
+          <td>Fragmented accountability</td>
+          <td>Single outcome ownership</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : FOUNDER vs ENGINE -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Founder Reality Without Growth Engine</h2>
+        <ul>
+          <li>Daily monitoring of campaigns</li>
+          <li>Sales complaints about lead quality</li>
+          <li>Frequent calls with agencies</li>
+          <li>Unclear accountability</li>
+          <li>Stress-driven decisions</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Founder Reality With Growth Engine</h2>
+        <ul>
+          <li>No daily marketing supervision</li>
+          <li>Sales works on serious buyers</li>
+          <li>Clear visibility, minimal intervention</li>
+          <li>One accountable execution layer</li>
+          <li>Focus shifts to revenue & growth</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- RESPONSIBILITY SPLIT TABLE -->
+    <div class="section">
+      <h2>Clear Responsibility Split</h2>
+      <table>
+        <tr>
+          <th>Responsibility</th>
+          <th>Growth Engine</th>
+          <th>Your Team</th>
+        </tr>
+        <tr>
+          <td>Lead & Call Generation</td>
+          <td>✔ Full ownership</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Lead Quality & Intent Control</td>
+          <td>✔ Managed daily</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Sales Conversations</td>
+          <td>—</td>
+          <td>✔ Closing & negotiation</td>
+        </tr>
+        <tr>
+          <td>Customer Conversion</td>
+          <td>✔ Flow responsibility</td>
+          <td>✔ Final closure</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        With Growth Engine,
+        your team focuses on selling.
+        Beetlebulbs takes ownership of
+        leads, calls, and customer flow —
+        so growth no longer depends on daily management.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Clear ownership
+        removes friction and restores confidence.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 14 : GROWTH ENGINE ================= -->
+<div class="page page-14">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Timelines & Ramp-Up Phases</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Clear Timelines Matter</h2>
+      <p>
+        Most marketing engagements fail because expectations
+        are vague and timelines are undefined.
+        Founders expect instant results,
+        while systems need structured time to stabilise.
+      </p>
+      <p>
+        Growth Engine follows a disciplined ramp-up
+        so quality improves before scale is applied.
+      </p>
+    </div>
+
+    <!-- RAMP-UP TABLE -->
+    <div class="section">
+      <h2>Growth Engine Ramp-Up Phases</h2>
+
+      <table>
+        <tr>
+          <th style="width:18%;">Phase</th>
+          <th style="width:32%;">Primary Focus</th>
+          <th style="width:30%;">What We Do</th>
+          <th style="width:20%;">What You See</th>
+        </tr>
+
+        <tr>
+          <td>Days 1–30</td>
+          <td>Foundation & Signal Control</td>
+          <td>
+            Channel setup, intent tagging,
+            call routing, response timing,
+            leakage identification
+          </td>
+          <td>
+            Cleaner leads,
+            fewer distractions,
+            early intent clarity
+          </td>
+        </tr>
+
+        <tr>
+          <td>Days 31–60</td>
+          <td>Stability & Conversion Discipline</td>
+          <td>
+            Follow-up structure,
+            multi-channel alignment,
+            spend control,
+            sales coordination
+          </td>
+          <td>
+            Improved conversations,
+            higher seriousness,
+            predictable sales flow
+          </td>
+        </tr>
+
+        <tr>
+          <td>Days 61–90</td>
+          <td>Scale Readiness</td>
+          <td>
+            Budget expansion,
+            channel optimisation,
+            ROAS validation,
+            performance hardening
+          </td>
+          <td>
+            Confident scaling,
+            consistent closures,
+            revenue visibility
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : EXPECTATION vs REALITY -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Unrealistic Expectations</h2>
+        <ul>
+          <li>Immediate ROI in week one</li>
+          <li>Scaling before quality stabilises</li>
+          <li>Judging performance by volume</li>
+          <li>Frequent execution changes</li>
+          <li>Founder-led micromanagement</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Growth Engine Reality</h2>
+        <ul>
+          <li>Quality before scale</li>
+          <li>Signals validated before expansion</li>
+          <li>Revenue consistency over speed</li>
+          <li>Structured decisions, not reactions</li>
+          <li>Founder oversight, not involvement</li>
+        </ul>
+      </div>
+
+    </div>
+<!-- ================= GROWTH ENGINE OWNERSHIP TABLE ================= -->
+<div class="section">
+  <h2>What Changes When Growth Engine Takes Ownership</h2>
+
+  <table>
+    <tr>
+      <th style="width:30%;">Area</th>
+      <th style="width:35%;">Before Growth Engine</th>
+      <th style="width:35%;">With Growth Engine</th>
+    </tr>
+
+    <tr>
+      <td>Daily Marketing Decisions</td>
+      <td>
+        Founder or team monitors platforms,
+        asks agencies, checks reports
+      </td>
+      <td>
+        Beetlebulbs manages execution,
+        optimisation, and decisions end-to-end
+      </td>
+    </tr>
+
+    <tr>
+      <td>Lead & Call Flow</td>
+      <td>
+        Mixed-quality enquiries,
+        unpredictable seriousness
+      </td>
+      <td>
+        Intent-filtered leads,
+        prioritised call routing
+      </td>
+    </tr>
+
+    <tr>
+      <td>Team Focus</td>
+      <td>
+        Sales spends time qualifying,
+        chasing, and re-explaining
+      </td>
+      <td>
+        Sales focuses only on
+        closing ready buyers
+      </td>
+    </tr>
+
+    <tr>
+      <td>Founder Stress</td>
+      <td>
+        Constant platform confusion,
+        fear of wasting money
+      </td>
+      <td>
+        Single accountable execution partner,
+        reduced mental load
+      </td>
+    </tr>
+
+    <tr>
+      <td>Customer Predictability</td>
+      <td>
+        Revenue feels accidental
+        and inconsistent
+      </td>
+      <td>
+        Structured inflow of
+        leads, calls, and customers
+      </td>
+    </tr>
+  </table>
+</div>
+
+     
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Timelines create trust.
+        Discipline creates scalable growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 15 : GROWTH ENGINE ================= -->
+<div class="page page-15">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Commercials, Scope & Disclaimers</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Commercial Clarity Matters</h2>
+      <p>
+        Long-term partnerships fail
+        when commercials, responsibilities,
+        and expectations are not clearly defined.
+      </p>
+      <p>
+        Growth Engine operates with
+        transparent scope boundaries
+        so execution remains clean
+        and accountability remains fair.
+      </p>
+    </div>
+
+    <!-- COMMERCIAL STRUCTURE TABLE -->
+    <div class="section">
+      <h2>Growth Engine Commercial Structure</h2>
+
+      <table>
+        <tr>
+          <th style="width:30%;">Component</th>
+          <th style="width:70%;">Commercial Treatment</th>
+        </tr>
+
+        <tr>
+          <td>Growth Engine Fee</td>
+          <td>
+            Fixed monthly professional fee
+            for lead, call, and customer acquisition ownership
+          </td>
+        </tr>
+
+        <tr>
+          <td>Advertising Spend</td>
+          <td>
+            Paid directly by the client
+            to platforms (Google, Meta, portals, etc.)
+          </td>
+        </tr>
+
+        <tr>
+          <td>Influencer / Media Costs</td>
+          <td>
+            Charged separately
+            based on creator, platform, and scope
+          </td>
+        </tr>
+
+        <tr>
+          <td>Tools & Software</td>
+          <td>
+            Third-party tools, if required,
+            are billed separately or client-managed
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= SCOPE BOUNDARIES (LEFT–RIGHT SPLIT) ================= -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+  <!-- LEFT : INCLUDED -->
+  <div class="section">
+    <h2>What Growth Engine Includes</h2>
+    <ul>
+      <li>Lead, call, and customer flow ownership</li>
+      <li>Paid & organic channel execution</li>
+      <li>Intent classification & quality control</li>
+      <li>Call routing, response timing & follow-up logic</li>
+      <li>Spend control & ROAS visibility</li>
+      <li>Daily execution monitoring & correction</li>
+    </ul>
+  </div>
+
+  <!-- RIGHT : NOT CONTROLLED -->
+  <div class="section">
+    <h2>What Growth Engine Does Not Control</h2>
+    <ul>
+      <li>Final sales negotiation & pricing decisions</li>
+      <li>Client-side delays in approvals or feedback</li>
+      <li>Product–market fit or pricing competitiveness</li>
+      <li>Platform policy changes or account restrictions</li>
+      <li>External market or seasonal demand shifts</li>
+    </ul>
+  </div>
+
+</div>
+
+
+    <!-- DISCLAIMER TABLE -->
+    <div class="section">
+      <h2>Important Disclaimers</h2>
+
+      <table>
+        <tr>
+          <th style="width:30%;">Scenario</th>
+          <th style="width:70%;">Disclaimer Position</th>
+        </tr>
+
+        <tr>
+          <td>Delayed Approvals</td>
+          <td>
+            Performance timelines may shift
+            if required inputs or approvals
+            are not provided on time
+          </td>
+        </tr>
+
+        <tr>
+          <td>Non-responsive Sales Team</td>
+          <td>
+            Lead conversion depends
+            on timely sales follow-up
+          </td>
+        </tr>
+
+        <tr>
+          <td>Platform Policy Changes</td>
+          <td>
+            Beetlebulbs is not responsible
+            for sudden ad account or policy actions
+          </td>
+        </tr>
+
+        <tr>
+          <td>Market Volatility</td>
+          <td>
+            Demand fluctuations
+            may impact short-term outcomes
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- POSITIONING BLOCK -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine takes full ownership
+        of acquisition execution.
+        Results are maximised when
+        collaboration, approvals,
+        and sales execution remain aligned.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Clear scope and disclaimers
+        protect both execution quality and partnership trust.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 16 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Commercial Structure & Scope Clarity</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Commercial & Scope Clarity Is Non-Negotiable</h2>
+      <p>
+        Growth Engine is an execution-led engagement,
+        not a promise-based service.
+        Clear scope, timelines, and responsibilities
+        protect both the business and execution quality.
+      </p>
+      <p>
+        This clarity ensures expectations remain realistic,
+        outcomes remain measurable,
+        and accountability remains clean.
+      </p>
+    </div>
+
+    <!-- COMMERCIAL BREAKDOWN TABLE -->
+    <div class="section">
+      <h2>Growth Engine — Commercial Breakdown</h2>
+
+      <table>
+        <tr>
+          <th style="width:30%;">Component</th>
+          <th style="width:35%;">Included in Growth Engine</th>
+          <th style="width:35%;">Notes</th>
+        </tr>
+
+        <tr>
+          <td>Execution Fee</td>
+          <td>Monthly fixed engagement</td>
+          <td>
+            Covers strategy, execution,
+            optimisation, monitoring
+          </td>
+        </tr>
+
+        <tr>
+          <td>Advertising Spend</td>
+          <td>Paid directly by client</td>
+          <td>
+            Google, Meta, LinkedIn,
+            portals, YouTube, etc.
+          </td>
+        </tr>
+
+        <tr>
+          <td>Influencer / Creator Cost</td>
+          <td>Paid separately if applicable</td>
+          <td>
+            Based on creator selection
+            and campaign scope
+          </td>
+        </tr>
+
+        <tr>
+          <td>Third-Party Tools</td>
+          <td>Optional / case-based</td>
+          <td>
+            CRM, call tracking,
+            automation tools
+          </td>
+        </tr>
+
+        <tr>
+          <td>Organic Execution</td>
+          <td>Included as part of system</td>
+          <td>
+            SEO, content alignment,
+            trust assets (scope-based)
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : RESPONSIBILITY -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Beetlebulbs Owns</h2>
+        <ul>
+          <li>Lead, call, and customer acquisition execution</li>
+          <li>Multi-platform ad management</li>
+          <li>Intent filtering & routing logic</li>
+          <li>Follow-up structure & optimisation</li>
+          <li>Performance monitoring & correction</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What the Client Owns</h2>
+        <ul>
+          <li>Timely approvals and inputs</li>
+          <li>Ad account access & payments</li>
+          <li>Product pricing & offer decisions</li>
+          <li>Sales team availability & discipline</li>
+          <li>CRM or internal process cooperation</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- DISCLAIMER BLOCK -->
+    <div class="section" style="
+      background:#fff7ed;
+      border-left:4px solid #b45309;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <h2 style="font-size:15.5px;">Important Disclaimer</h2>
+      <p style="font-size:13.6px;line-height:1.55;margin-bottom:0;">
+        Growth Engine performance depends on timely approvals,
+        accurate information, platform stability,
+        and market conditions.
+        Delays, withheld inputs, pricing changes,
+        or platform policy shifts
+        can directly impact outcomes.
+        Beetlebulbs does not guarantee results,
+        but guarantees disciplined execution.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Clear scope protects execution quality
+        and long-term results.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 17 : GROWTH ENGINE ================= -->
+<div class="page page-17">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Final Summary & Execution Confidence</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- EXECUTIVE SUMMARY -->
+    <div class="section">
+      <h2>What Growth Engine Ultimately Delivers</h2>
+      <p>
+        Growth Engine is built for businesses that no longer want to
+        manage daily marketing execution, platform decisions,
+        lead quality problems, or follow-up uncertainty.
+      </p>
+      <p>
+        It centralises responsibility for lead generation,
+        call flow, and customer acquisition —
+        so your internal team can focus exclusively on
+        closing sales and growing revenue.
+      </p>
+    </div>
+
+    <!-- CORE VALUE SPLIT -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Changes for Your Business</h2>
+        <ul>
+          <li>Leads arrive with clearer intent</li>
+          <li>Calls are prioritised by seriousness</li>
+          <li>Sales teams stop re-qualifying noise</li>
+          <li>Follow-ups become disciplined and timed</li>
+          <li>Customer flow becomes visible and predictable</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Your Team No Longer Carries</h2>
+        <ul>
+          <li>Daily ad platform decisions</li>
+          <li>Channel coordination confusion</li>
+          <li>Lead quality firefighting</li>
+          <li>Marketing vs sales blame cycles</li>
+          <li>Constant performance anxiety</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- AUTHORITY STATEMENT -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin:0;font-weight:600;">
+        In Growth Engine engagements,
+        leads, calls, and customer acquisition
+        become Beetlebulbs’ responsibility.
+        Your responsibility is simple —
+        convert prepared opportunities into revenue.
+      </p>
+    </div>
+
+    <!-- DECISION CLOSURE -->
+    <div class="section">
+      <h2>Who Growth Engine Is Built For</h2>
+      <ul>
+        <li>Businesses already spending on ads or growth</li>
+        <li>Founders tired of managing execution chaos</li>
+        <li>Teams ready to separate execution from sales</li>
+        <li>Companies prioritising customers over dashboards</li>
+        <li>Organisations seeking long-term acquisition stability</li>
+      </ul>
+    </div>
+<!-- ================= EXECUTION OWNERSHIP SNAPSHOT ================= -->
+<div class="section">
+  <h2>Execution Responsibility — At a Glance</h2>
+
+  <table>
+    <tr>
+      <th style="width:40%;">Area</th>
+      <th style="width:60%;">Growth Engine Responsibility</th>
+    </tr>
+
+    <tr>
+      <td>Lead & Call Generation</td>
+      <td>Owned end-to-end by Beetlebulbs across all active channels</td>
+    </tr>
+
+    <tr>
+      <td>Lead Quality & Intent</td>
+      <td>Filtered, classified, and prioritised before sales interaction</td>
+    </tr>
+
+    <tr>
+      <td>Daily Execution Decisions</td>
+      <td>Managed by Beetlebulbs to reduce internal load and confusion</td>
+    </tr>
+
+    <tr>
+      <td>Sales Team Focus</td>
+      <td>Closing prepared opportunities and driving revenue</td>
+    </tr>
+  </table>
+</div>
+
+    <!-- FINAL NOTE -->
+    <div class="section" style="
+      background:#fff7ed;
+      border-left:4px solid #b45309;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        Growth Engine is not a short-term experiment.
+        It is an execution partnership designed
+        to remove uncertainty from customer acquisition —
+        while respecting market realities and platform dynamics.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Final Insight: When execution is owned end-to-end,
+        growth becomes manageable instead of stressful.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 18 : GROWTH ENGINE ================= -->
+<div class="page page-18">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Onboarding & Execution Timeline</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>What Happens After You Start</h2>
+      <p>
+        Growth Engine onboarding is structured to minimise delays,
+        remove ambiguity, and move quickly from planning
+        into controlled execution.
+      </p>
+      <p>
+        The goal is not speed for appearance —
+        but speed with stability.
+      </p>
+    </div>
+
+    <!-- ONBOARDING TIMELINE TABLE -->
+    <div class="section">
+      <h2>Growth Engine — Onboarding Timeline</h2>
+
+      <table>
+        <tr>
+          <th style="width:25%;">Phase</th>
+          <th style="width:25%;">Timeline</th>
+          <th style="width:50%;">What Happens</th>
+        </tr>
+
+        <tr>
+          <td>Kickoff & Alignment</td>
+          <td>Week 1</td>
+          <td>
+            Business understanding, goal alignment,
+            access collection, and success definition
+          </td>
+        </tr>
+
+        <tr>
+          <td>System Setup</td>
+          <td>Week 1–2</td>
+          <td>
+            Channel mapping, intent logic,
+            call routing, tracking, and structure design
+          </td>
+        </tr>
+
+        <tr>
+          <td>Execution Launch</td>
+          <td>Week 2–3</td>
+          <td>
+            Paid & organic execution goes live
+            under controlled budgets
+          </td>
+        </tr>
+
+        <tr>
+          <td>Stabilisation Phase</td>
+          <td>Week 3–6</td>
+          <td>
+            Quality tuning, response optimisation,
+            follow-up correction, and leakage control
+          </td>
+        </tr>
+
+        <tr>
+          <td>Performance Expansion</td>
+          <td>Ongoing</td>
+          <td>
+            Spend scaling, channel expansion,
+            and predictable customer flow building
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : CLIENT vs BEETLEBULBS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Your Role During Onboarding</h2>
+        <ul>
+          <li>Provide timely access and approvals</li>
+          <li>Share accurate product and pricing details</li>
+          <li>Align sales team availability</li>
+          <li>Maintain response discipline</li>
+          <li>Trust execution once live</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Beetlebulbs’ Role</h2>
+        <ul>
+          <li>Design and manage execution flow</li>
+          <li>Run paid & organic channels</li>
+          <li>Control lead quality and intent routing</li>
+          <li>Monitor performance daily</li>
+          <li>Correct issues before scale</li>
+        </ul>
+      </div>
+
+    </div>
+<!-- ================= EXECUTION CHECKPOINTS ================= -->
+<div class="section">
+  <h2>Execution Checkpoints & Reviews</h2>
+
+  <table>
+    <tr>
+      <th style="width:25%;">Checkpoint</th>
+      <th style="width:25%;">When</th>
+      <th style="width:50%;">Focus Area</th>
+    </tr>
+
+    <tr>
+      <td>Initial Review</td>
+      <td>Week 2</td>
+      <td>
+        Lead quality signals, call response flow,
+        early intent patterns
+      </td>
+    </tr>
+
+    <tr>
+      <td>Stability Review</td>
+      <td>Week 4</td>
+      <td>
+        Conversion discipline, follow-up timing,
+        leakage identification
+      </td>
+    </tr>
+
+    <tr>
+      <td>Scale Readiness</td>
+      <td>Week 6</td>
+      <td>
+        Spend control, ROAS visibility,
+        customer predictability check
+      </td>
+    </tr>
+
+    <tr>
+      <td>Ongoing Reviews</td>
+      <td>Monthly</td>
+      <td>
+        Channel optimisation, expansion decisions,
+        long-term performance alignment
+      </td>
+    </tr>
+  </table>
+</div>
+
+    <!-- AUTHORITY NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine is designed to build momentum carefully.
+        Short-term fluctuations are normal.
+        Stability and predictability are the primary objectives.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Strong onboarding prevents long-term execution failure.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 19 : GROWTH ENGINE ================= -->
+<div class="page page-19">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Performance Tracking & Reporting</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Tracking Fails Without the Right Lens</h2>
+      <p>
+        Most reporting focuses on platform metrics —
+        clicks, impressions, CPC, or lead counts.
+        These numbers explain activity,
+        but rarely explain revenue movement.
+      </p>
+      <p>
+        Growth Engine tracking is built to answer
+        one core question:
+        <strong>Are leads and calls converting into customers predictably?</strong>
+      </p>
+    </div>
+
+    <!-- TRACKING LAYERS TABLE -->
+    <div class="section">
+      <h2>Growth Engine — What Is Actually Tracked</h2>
+
+      <table>
+        <tr>
+          <th style="width:30%;">Tracking Layer</th>
+          <th style="width:35%;">What Is Measured</th>
+          <th style="width:35%;">Why It Matters</th>
+        </tr>
+
+        <tr>
+          <td>Lead Quality</td>
+          <td>Intent strength, seriousness signals</td>
+          <td>Prevents sales time waste</td>
+        </tr>
+
+        <tr>
+          <td>Call Behaviour</td>
+          <td>Response timing, engagement depth</td>
+          <td>Protects hot buyers from delays</td>
+        </tr>
+
+        <tr>
+          <td>Follow-up Discipline</td>
+          <td>Consistency, timing gaps</td>
+          <td>Reduces leakage silently killing revenue</td>
+        </tr>
+
+        <tr>
+          <td>Channel Contribution</td>
+          <td>Customer-quality by source</td>
+          <td>Stops scaling weak channels</td>
+        </tr>
+
+        <tr>
+          <td>Customer Conversion</td>
+          <td>Lead-to-sale movement</td>
+          <td>True growth visibility</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : REPORTING -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Founders Receive</h2>
+        <ul>
+          <li>Clear visibility on customer flow</li>
+          <li>Intent-based performance insights</li>
+          <li>Channel-wise quality comparison</li>
+          <li>Early warning signs before loss</li>
+          <li>Actionable insights, not noise</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Is Avoided</h2>
+        <ul>
+          <li>Vanity metrics without outcomes</li>
+          <li>Conflicting platform reports</li>
+          <li>Delayed performance surprises</li>
+          <li>Over-scaling weak traffic</li>
+          <li>Sales vs marketing blame cycles</li>
+        </ul>
+      </div>
+
+    </div>
+<!-- ================= REPORTING OUTPUT CLARITY ================= -->
+<div class="section">
+  <h2>How Performance Is Interpreted</h2>
+
+  <table>
+    <tr>
+      <th style="width:35%;">What Is Reviewed</th>
+      <th style="width:65%;">How Decisions Are Taken</th>
+    </tr>
+
+    <tr>
+      <td>Lead Volume Changes</td>
+      <td>
+        Checked against intent quality,
+        not treated as success alone
+      </td>
+    </tr>
+
+    <tr>
+      <td>Call Conversion Drops</td>
+      <td>
+        Response timing, routing,
+        and seriousness analysed first
+      </td>
+    </tr>
+
+    <tr>
+      <td>Channel Performance</td>
+      <td>
+        Evaluated by customer contribution,
+        not CPC or reach
+      </td>
+    </tr>
+
+    <tr>
+      <td>Revenue Fluctuations</td>
+      <td>
+        Traced back to intent mix,
+        follow-up gaps, or market shifts
+      </td>
+    </tr>
+  </table>
+</div>
+
+    <!-- AUTHORITY NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine reporting exists to support decisions —
+        not to justify activity.
+        If something is not converting,
+        it is identified early and corrected.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Visibility without decision clarity
+        creates false confidence.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 20 : GROWTH ENGINE ================= -->
+<div class="page page-20">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Risk, Dependency & Expectation Control</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Risk Awareness Is Critical in Customer Acquisition</h2>
+      <p>
+        Customer acquisition does not operate in isolation.
+        It depends on platforms, market behaviour,
+        internal responsiveness, and timing.
+      </p>
+      <p>
+        Ignoring these dependencies creates false expectations.
+        Growth Engine is built to manage execution —
+        not to deny reality.
+      </p>
+    </div>
+
+    <!-- RISK CATEGORIES TABLE -->
+    <div class="section">
+      <h2>Key Risk Categories in Growth Execution</h2>
+
+      <table>
+        <tr>
+          <th style="width:30%;">Risk Area</th>
+          <th style="width:35%;">What Can Happen</th>
+          <th style="width:35%;">How Growth Engine Responds</th>
+        </tr>
+
+        <tr>
+          <td>Ad Platform Changes</td>
+          <td>
+            Policy updates, account reviews,
+            algorithm shifts
+          </td>
+          <td>
+            Budget control, channel diversification,
+            compliance-led execution
+          </td>
+        </tr>
+
+        <tr>
+          <td>Market Behaviour</td>
+          <td>
+            Seasonal demand drops,
+            price sensitivity shifts
+          </td>
+          <td>
+            Spend pacing, intent recalibration,
+            offer positioning updates
+          </td>
+        </tr>
+
+        <tr>
+          <td>Client Response Delays</td>
+          <td>
+            Slow approvals,
+            delayed follow-ups
+          </td>
+          <td>
+            Visibility reporting,
+            execution adjustment windows
+          </td>
+        </tr>
+
+        <tr>
+          <td>Sales Process Gaps</td>
+          <td>
+            Missed calls,
+            inconsistent handling
+          </td>
+          <td>
+            Call-flow optimisation,
+            priority routing for hot intent
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : CONTROL VS UNCONTROLLED -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Growth Engine Actively Controls</h2>
+        <ul>
+          <li>Execution structure & discipline</li>
+          <li>Lead intent filtering</li>
+          <li>Channel allocation & pacing</li>
+          <li>Follow-up timing logic</li>
+          <li>Early issue detection</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Remains Outside Direct Control</h2>
+        <ul>
+          <li>Platform algorithm decisions</li>
+          <li>Market sentiment or competition pricing</li>
+          <li>Client-side delays or non-compliance</li>
+          <li>Sales team execution quality</li>
+          <li>External economic conditions</li>
+        </ul>
+      </div>
+
+    </div>
+<!-- ================= EXPECTATION MANAGEMENT MATRIX ================= -->
+<div class="section">
+  <h2>Expectation vs Execution Reality</h2>
+
+  <table>
+    <tr>
+      <th style="width:35%;">Common Expectation</th>
+      <th style="width:65%;">Growth Engine Reality</th>
+    </tr>
+
+    <tr>
+      <td>More spend = more customers</td>
+      <td>
+        Spend scales only after
+        intent quality stabilises
+      </td>
+    </tr>
+
+    <tr>
+      <td>Platforms guarantee results</td>
+      <td>
+        Platforms deliver traffic,
+        execution converts outcomes
+      </td>
+    </tr>
+
+    <tr>
+      <td>All leads deserve equal effort</td>
+      <td>
+        Effort prioritised by
+        buyer readiness and seriousness
+      </td>
+    </tr>
+
+    <tr>
+      <td>Short-term results prove success</td>
+      <td>
+        Stability and predictability
+        define long-term performance
+      </td>
+    </tr>
+  </table>
+</div>
+
+    <!-- EXPECTATION NOTE -->
+    <div class="section" style="
+      background:#fff7ed;
+      border-left:4px solid #b45309;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        Growth Engine reduces risk through structure,
+        monitoring, and disciplined execution.
+        It does not eliminate uncertainty —
+        it manages it responsibly.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Controlled expectations protect
+        long-term execution success.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 21 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Continuous Optimisation & Learning Loop</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Execution Must Improve Over Time</h2>
+      <p>
+        Customer acquisition does not remain static.
+        Buyer behaviour evolves, platforms change,
+        and market conditions shift.
+      </p>
+      <p>
+        Growth Engine is designed to learn continuously —
+        so execution quality improves with time,
+        not degrades with scale.
+      </p>
+    </div>
+
+    <!-- LEARNING LOOP TABLE -->
+    <div class="section">
+      <h2>Growth Engine Learning Loop</h2>
+
+      <table>
+        <tr>
+          <th style="width:25%;">Input Signal</th>
+          <th style="width:35%;">What Is Analysed</th>
+          <th style="width:40%;">How Execution Improves</th>
+        </tr>
+
+        <tr>
+          <td>Lead Behaviour</td>
+          <td>
+            Intent strength, drop-off points,
+            enquiry seriousness
+          </td>
+          <td>
+            Better filtering, refined targeting,
+            improved qualification
+          </td>
+        </tr>
+
+        <tr>
+          <td>Call Outcomes</td>
+          <td>
+            Response timing, engagement depth,
+            call success patterns
+          </td>
+          <td>
+            Priority routing, timing correction,
+            follow-up discipline
+          </td>
+        </tr>
+
+        <tr>
+          <td>Channel Performance</td>
+          <td>
+            Customer contribution by source,
+            not volume alone
+          </td>
+          <td>
+            Budget reallocation to
+            higher-quality channels
+          </td>
+        </tr>
+
+        <tr>
+          <td>Customer Conversions</td>
+          <td>
+            Lead-to-sale movement,
+            closure timelines
+          </td>
+          <td>
+            Scaling decisions backed
+            by conversion stability
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : COMPOUNDING -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Improves With Time</h2>
+        <ul>
+          <li>Lead quality consistency</li>
+          <li>Buyer intent clarity</li>
+          <li>Call prioritisation accuracy</li>
+          <li>Follow-up timing precision</li>
+          <li>Customer predictability</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Reduces Over Time</h2>
+        <ul>
+          <li>Wasted ad spend</li>
+          <li>Low-intent conversations</li>
+          <li>Sales team fatigue</li>
+          <li>Execution guesswork</li>
+          <li>Performance surprises</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- AUTHORITY NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine compounds execution quality.
+        Each cycle strengthens decision accuracy,
+        reduces waste, and improves customer outcomes.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Sustainable growth
+        comes from learning faster than the market.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 22 : GROWTH ENGINE ================= -->
+<div class="page page-22">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Scaling Logic & Expansion Control</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Most Businesses Scale Too Early</h2>
+      <p>
+        Scaling fails when spend is increased
+        before execution stability is achieved.
+        More budget without control
+        amplifies inefficiencies instead of revenue.
+      </p>
+      <p>
+        Growth Engine follows a disciplined scaling model —
+        expansion happens only when quality signals are stable.
+      </p>
+    </div>
+
+    <!-- SCALING CONDITIONS TABLE -->
+    <div class="section">
+      <h2>Conditions Required Before Scaling</h2>
+
+      <table>
+        <tr>
+          <th style="width:30%;">Signal</th>
+          <th style="width:35%;">What Is Verified</th>
+          <th style="width:35%;">Why It Matters</th>
+        </tr>
+
+        <tr>
+          <td>Lead Intent Stability</td>
+          <td>
+            Consistent serious enquiries
+            across multiple cycles
+          </td>
+          <td>
+            Prevents scaling low-quality demand
+          </td>
+        </tr>
+
+        <tr>
+          <td>Call Handling Discipline</td>
+          <td>
+            Timely responses,
+            prioritised routing
+          </td>
+          <td>
+            Protects hot buyers from delays
+          </td>
+        </tr>
+
+        <tr>
+          <td>Follow-up Conversion</td>
+          <td>
+            Predictable movement
+            from enquiry to sale
+          </td>
+          <td>
+            Confirms execution readiness
+          </td>
+        </tr>
+
+        <tr>
+          <td>Sales Capacity</td>
+          <td>
+            Team availability
+            matches incoming demand
+          </td>
+          <td>
+            Prevents pipeline overload
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : HOW SCALING HAPPENS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>How Growth Engine Scales</h2>
+        <ul>
+          <li>Incremental budget increases</li>
+          <li>Channel-by-channel expansion</li>
+          <li>Quality-first spend allocation</li>
+          <li>Performance validation at each step</li>
+          <li>Rollback if quality drops</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Growth Engine Avoids</h2>
+        <ul>
+          <li>Sudden budget spikes</li>
+          <li>Blind channel duplication</li>
+          <li>Volume-led decision making</li>
+          <li>Scaling based on vanity metrics</li>
+          <li>Revenue pressure-driven expansion</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- CHANNEL MULTIPLICATION TABLE -->
+    <div class="section">
+      <h2>Channel Expansion Approach</h2>
+
+      <table>
+        <tr>
+          <th style="width:35%;">Channel Type</th>
+          <th style="width:65%;">How Expansion Is Handled</th>
+        </tr>
+
+        <tr>
+          <td>High-Performing Channels</td>
+          <td>
+            Budget increased gradually
+            after quality confirmation
+          </td>
+        </tr>
+
+        <tr>
+          <td>New Channels</td>
+          <td>
+            Tested with controlled spend
+            before serious investment
+          </td>
+        </tr>
+
+        <tr>
+          <td>Organic Support Channels</td>
+          <td>
+            Used to stabilise trust
+            and improve conversion confidence
+          </td>
+        </tr>
+
+        <tr>
+          <td>Experimental Campaigns</td>
+          <td>
+            Run in isolation
+            without risking core performance
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- AUTHORITY NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine scales only what is proven.
+        Expansion follows discipline —
+        not pressure.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Sustainable scale
+        comes from control, not speed.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 23 : GROWTH ENGINE ================= -->
+<div class="page page-23">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Long-Term Partnership & Maturity</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Sustainable Growth Requires Continuity</h2>
+      <p>
+        Customer acquisition matures over time.
+        As execution stabilises, patterns emerge —
+        about buyer behaviour, channel reliability,
+        and sales effectiveness.
+      </p>
+      <p>
+        Growth Engine is designed as a long-term partnership
+        so learnings compound and performance strengthens
+        instead of resetting every quarter.
+      </p>
+    </div>
+
+    <!-- PARTNERSHIP VALUE TABLE -->
+    <div class="section">
+      <h2>Partnership Value Over Time</h2>
+
+      <table>
+        <tr>
+          <th style="width:25%;">Phase</th>
+          <th style="width:35%;">Primary Focus</th>
+          <th style="width:40%;">Value Created</th>
+        </tr>
+
+        <tr>
+          <td>Initial Months</td>
+          <td>Stability & leakage control</td>
+          <td>
+            Reduced waste, clearer intent,
+            controlled execution
+          </td>
+        </tr>
+
+        <tr>
+          <td>Mid-Term</td>
+          <td>Consistency & predictability</td>
+          <td>
+            Reliable customer flow,
+            disciplined follow-ups
+          </td>
+        </tr>
+
+        <tr>
+          <td>Long-Term</td>
+          <td>Efficiency & scale readiness</td>
+          <td>
+            Higher ROAS,
+            smoother scaling decisions
+          </td>
+        </tr>
+
+        <tr>
+          <td>Maturity Stage</td>
+          <td>Optimised acquisition engine</td>
+          <td>
+            Stable growth with
+            reduced operational stress
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : RETENTION LOGIC -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Why Clients Continue</h2>
+        <ul>
+          <li>Execution becomes predictable</li>
+          <li>Sales teams gain confidence</li>
+          <li>Spend decisions feel controlled</li>
+          <li>Customer quality improves steadily</li>
+          <li>Less firefighting, more planning</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Maturity Looks Like</h2>
+        <ul>
+          <li>Channels behave consistently</li>
+          <li>Intent signals are clearly understood</li>
+          <li>Scaling decisions are data-backed</li>
+          <li>Revenue volatility reduces</li>
+          <li>Growth planning becomes confident</li>
+        </ul>
+      </div>
+
+    </div>
+<!-- ================= PARTNERSHIP MATURITY SNAPSHOT ================= -->
+<div class="section">
+  <h2>How Growth Engine Matures With Time</h2>
+
+  <table>
+    <tr>
+      <th style="width:30%;">Area</th>
+      <th style="width:35%;">Early Engagement</th>
+      <th style="width:35%;">Mature Partnership</th>
+    </tr>
+
+    <tr>
+      <td>Execution Stability</td>
+      <td>
+        Monitoring, correction,
+        leakage identification
+      </td>
+      <td>
+        Predictable flow
+        with fewer corrections
+      </td>
+    </tr>
+
+    <tr>
+      <td>Lead & Call Quality</td>
+      <td>
+        Mixed intent,
+        active filtering
+      </td>
+      <td>
+        Consistent seriousness
+        with clearer intent signals
+      </td>
+    </tr>
+
+    <tr>
+      <td>Sales Experience</td>
+      <td>
+        Adjustment phase,
+        learning buyer patterns
+      </td>
+      <td>
+        Confident handling
+        of prepared opportunities
+      </td>
+    </tr>
+
+    <tr>
+      <td>Decision Making</td>
+      <td>
+        Cautious, validation-driven
+      </td>
+      <td>
+        Faster, data-backed
+        and low-stress
+      </td>
+    </tr>
+
+    <tr>
+      <td>Growth Direction</td>
+      <td>
+        Stabilisation focused
+      </td>
+      <td>
+        Expansion-ready
+        with controlled scale
+      </td>
+    </tr>
+  </table>
+</div>
+
+    <!-- AUTHORITY NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine partnerships succeed
+        because execution knowledge compounds.
+        Each month builds on the last —
+        instead of starting over.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Long-term continuity
+        turns execution into an advantage.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 24 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Engagement Commitment & Renewal</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Commitment Length Matters</h2>
+      <p>
+        Customer acquisition stabilises through repetition,
+        learning cycles, and execution maturity.
+        Short commitments interrupt momentum
+        and reset learning.
+      </p>
+      <p>
+        Growth Engine is structured to protect outcomes
+        through realistic engagement durations.
+      </p>
+    </div>
+
+    <!-- DURATION OPTIONS TABLE -->
+    <div class="section">
+      <h2>Engagement Duration Options</h2>
+
+      <table>
+        <tr>
+          <th style="width:25%;">Duration</th>
+          <th style="width:35%;">Best For</th>
+          <th style="width:40%;">Expected Outcome Focus</th>
+        </tr>
+
+        <tr>
+          <td>3 Months</td>
+          <td>Initial stabilisation</td>
+          <td>
+            Leakage control, intent clarity,
+            execution baseline
+          </td>
+        </tr>
+
+        <tr>
+          <td>6 Months</td>
+          <td>Consistency building</td>
+          <td>
+            Predictable flow,
+            disciplined scaling
+          </td>
+        </tr>
+
+        <tr>
+          <td>12 Months</td>
+          <td>Growth maturity</td>
+          <td>
+            Compounded learning,
+            higher ROAS stability
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : RENEWAL -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>When Renewal Makes Sense</h2>
+        <ul>
+          <li>Execution quality is stable</li>
+          <li>Lead intent signals are consistent</li>
+          <li>Sales handling aligns with volume</li>
+          <li>Scaling opportunities are visible</li>
+          <li>Customer flow is predictable</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>When Re-Evaluation Is Recommended</h2>
+        <ul>
+          <li>Delayed approvals or inputs persist</li>
+          <li>Sales follow-up discipline breaks</li>
+          <li>Market or pricing shifts materially</li>
+          <li>Platform restrictions limit reach</li>
+          <li>Internal priorities change</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- RENEWAL LOGIC TABLE -->
+    <div class="section">
+      <h2>Renewal Decision Logic</h2>
+
+      <table>
+        <tr>
+          <th style="width:35%;">Review Area</th>
+          <th style="width:65%;">What Is Evaluated</th>
+        </tr>
+
+        <tr>
+          <td>Execution Stability</td>
+          <td>
+            Consistency of lead quality,
+            call handling, and follow-ups
+          </td>
+        </tr>
+
+        <tr>
+          <td>Performance Trend</td>
+          <td>
+            Improvement direction,
+            not short-term spikes
+          </td>
+        </tr>
+
+        <tr>
+          <td>Sales Alignment</td>
+          <td>
+            Readiness to handle
+            scaled customer flow
+          </td>
+        </tr>
+
+        <tr>
+          <td>Growth Opportunity</td>
+          <td>
+            Feasibility of expansion
+            without quality loss
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- AUTHORITY NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Engine commitments are designed
+        to protect execution integrity —
+        not to lock businesses into uncertainty.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Long-term clarity
+        creates stronger outcomes.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 25 : GROWTH ENGINE ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Engine — Final Close & Next Steps</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Engine</div>
+
+    <!-- FINAL SUMMARY -->
+    <div class="section">
+      <h2>What Growth Engine Ultimately Solves</h2>
+      <p>
+        Growth Engine is built for businesses that want
+        predictable customer acquisition
+        without managing daily marketing execution,
+        platform decisions, or lead quality uncertainty.
+      </p>
+      <p>
+        It centralises responsibility for leads, calls,
+        and customer flow — so internal teams
+        focus on sales execution and revenue.
+      </p>
+    </div>
+
+    <!-- VALUE SNAPSHOT TABLE -->
+    <div class="section">
+      <h2>Growth Engine — Value Snapshot</h2>
+
+      <table>
+        <tr>
+          <th style="width:35%;">Area</th>
+          <th style="width:65%;">What Changes</th>
+        </tr>
+
+        <tr>
+          <td>Execution Ownership</td>
+          <td>
+            Beetlebulbs manages lead, call,
+            and customer acquisition end-to-end
+          </td>
+        </tr>
+
+        <tr>
+          <td>Team Focus</td>
+          <td>
+            Sales teams focus on closing,
+            not filtering or firefighting
+          </td>
+        </tr>
+
+        <tr>
+          <td>Decision Confidence</td>
+          <td>
+            Spend, scale, and channel decisions
+            backed by intent-quality visibility
+          </td>
+        </tr>
+
+        <tr>
+          <td>Growth Stability</td>
+          <td>
+            Reduced volatility,
+            improved predictability over time
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : WHO SHOULD PROCEED -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Who Should Proceed</h2>
+        <ul>
+          <li>Businesses already investing in growth</li>
+          <li>Founders seeking execution ownership</li>
+          <li>Teams ready to separate sales from marketing</li>
+          <li>Companies prioritising customers over clicks</li>
+          <li>Organisations aiming for long-term stability</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Who Should Reconsider</h2>
+        <ul>
+          <li>Businesses expecting instant guarantees</li>
+          <li>Teams unwilling to follow process discipline</li>
+          <li>Organisations delaying approvals or inputs</li>
+          <li>Short-term experimentation mindset</li>
+          <li>Unclear product or pricing fundamentals</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- NEXT STEPS -->
+    <div class="section">
+      <h2>Next Steps to Begin</h2>
+      <ol style="margin-left:18px;font-size:13.8px;">
+        <li>Confirm engagement duration and scope</li>
+        <li>Complete onboarding and access setup</li>
+        <li>Align sales team availability</li>
+        <li>Launch controlled execution phase</li>
+        <li>Review early signals and stabilise flow</li>
+      </ol>
+    </div>
+
+    <!-- AUTHORITY CLOSE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:16px 18px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        In Growth Engine engagements,
+        Beetlebulbs carries the responsibility
+        of generating leads, calls, and customer flow.
+        Your responsibility is to convert prepared opportunities
+        into revenue — with confidence and focus.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Final Insight: When execution ownership is clear,
+        growth becomes manageable and scalable.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= PAGE NUMBER SCRIPT ================= -->
+<script>
+(function () {
+  const pages = document.querySelectorAll('.page');
+  const totalPages = pages.length;
+
+  pages.forEach((page, index) => {
+    const el = page.querySelector('.page-no');
+    if (el) {
+      el.textContent = `Page ${index + 1} / ${totalPages}`;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

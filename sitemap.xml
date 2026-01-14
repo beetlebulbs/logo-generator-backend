@@ -151,11 +151,7 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  <url>
-    <loc>https://beetlebulbs.com/blog/bbbb</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
+  
   <url>
     <loc>https://beetlebulbs.com/blog/behavior-signatures-2025-brand-micro-behavior-trust-framework</loc>
     <changefreq>weekly</changefreq>
@@ -621,14 +617,5 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  <url>
-    <loc>https://beetlebulbs.com/blog/vcvcv</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://beetlebulbs.com/blog/vvvv</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
+  
 </urlset>

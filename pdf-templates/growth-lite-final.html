@@ -1,0 +1,2678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Growth Lite — Base Layout</title>
+
+<style>
+@page { margin: 0; }
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+}
+
+/* ================= A4 PAGE ================= */
+.page {
+  height: 1123px;
+  min-height: 1123px;
+  position: relative;
+  page-break-after: always;
+  background: #fff;
+}
+
+/* ================= WATERMARK (PER PAGE, TRUE CENTER) ================= */
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 44px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.08);
+  white-space: nowrap;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ================= HEADER ================= */
+.header {
+  background: linear-gradient(135deg, #000, #1a1a1a);
+  color: #fff;
+  padding: 26px 32px;
+  position: relative;
+  z-index: 3;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.header-left img {
+  height: 36px;
+  background: #fff;
+  padding: 6px 8px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.sub {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.header-right {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* ================= CONTENT ================= */
+.content {
+  padding: 26px 32px 60px; /* footer space reserved */
+  position: relative;
+  z-index: 2;
+}
+
+/* Dummy section styling (for testing only) */
+.section {
+  margin-bottom: 18px;
+}
+
+.section h2 {
+  font-size: 16.5px;
+  border-bottom: 2px solid #000;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.section p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ================= FOOTER (PERMANENT FIX) ================= */
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-top: 1px solid #ddd;
+  padding: 6px 28px;
+  font-size: 12px;
+  line-height: 1.25;
+  background: #fff;
+  z-index: 4;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: flex-start;
+}
+
+.footer-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-no {
+  min-width: 120px;
+  text-align: left;
+  font-weight: 700;
+  color: #000;
+}
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  color: #111;
+}
+
+/* Headings */
+.section h2 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  margin-bottom: 6px;
+}
+
+/* Body text */
+.section p {
+  font-size: 14.2px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* Lists */
+li {
+  font-size: 13.8px;
+  line-height: 1.6;
+}
+
+/* Tables */
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+th {
+  background: #000;
+  color: #fff;
+  text-align: left;
+}
+/* tighter spacing only for page 1 */
+.page.page-1 .section {
+  margin-bottom: 14px;
+}
+
+.page.page-1 h2 {
+  margin-bottom: 4px;
+}
+
+.page.page-1 p {
+  margin-bottom: 6px;
+}
+.page.page-3 .section {
+  margin-bottom: 12px;   /* pehle 22px tha */
+}
+
+.page.page-3 h2 {
+  margin-bottom: 4px;
+}
+
+.page.page-3 p {
+  margin-bottom: 6px;
+}
+
+.page.page-3 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-3 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-3 table td,
+.page.page-3 table th {
+  padding: 3px 4px;
+}
+.page.page-4 table td,
+.page.page-4 table th {
+  padding: 3px 4px;
+}
+.page.page-4 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-4 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-6 table td,
+.page.page-6 table th {
+  padding: 3px 4px;
+}
+.page.page-6 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-6 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-7 table td,
+.page.page-7 table th {
+  padding: 3px 4px;
+}
+.page.page-7 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-7 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-8 table td,
+.page.page-8 table th {
+  padding: 3px 4px;
+}
+.page.page-8 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-8 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-9 table td,
+.page.page-9 table th {
+  padding: 3px 4px;
+}
+.page.page-9 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-9 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-10 table td,
+.page.page-10 table th {
+  padding: 3px 4px;
+}
+.page.page-10 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-10 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-11 table td,
+.page.page-11 table th {
+  padding: 4px 5px;
+}
+.page.page-11 table {
+  margin-top: 4px;
+  page-break-inside: auto !important;
+}
+.page.page-11 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-13 table td,
+.page.page-13 table th {
+  padding: 4px 5px;
+}
+.page.page-13 table {
+  margin-top: 4px;
+  page-break-inside: auto !important;
+}
+.page.page-13 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-14 table td,
+.page.page-14 table th {
+  padding: 4px 5px;
+}
+.page.page-14 table {
+  margin-top: 4px;
+  page-break-inside: auto !important;
+}
+.page.page-14 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= PAGE 1 (TEST) ================= -->
+<div class="page page-1">
+
+   
+
+  <!-- HEADER (EXACT AS REQUESTED) -->
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left">
+        <img src="http://localhost:3001/pdf-assets/Tmlogo.png" />
+        <div>
+          <h1>Growth Lite</h1>
+          <div class="sub">
+            Lead & Call Foundation — Engineered by Beetlebulbs®
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        Generated on {{GENERATED_DATE}}
+      </div>
+    </div>
+  </div>
+
+ <div class="content">
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <!-- EXECUTIVE CONTEXT -->
+  <div class="section">
+    <h2>Executive Reality — Why Customer Acquisition Feels Unstable</h2>
+    <p>
+      Most businesses today are actively marketing.
+      Ads are running, agencies are engaged, platforms are live,
+      and enquiries are being generated.
+      Yet customer flow remains inconsistent and difficult to predict.
+    </p>
+    <p>
+      The issue is not visibility.
+      The issue is that <strong>lead activity does not convert into reliable customer outcomes</strong>.
+      This gap becomes visible only after spend has already scaled.
+    </p>
+  </div>
+
+  <!-- DATA + INSIGHT -->
+  <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:20px;">
+
+    <div class="section">
+      <h2>Industry Snapshot — After Ads Go Live</h2>
+      <table>
+        <tr>
+          <th>Stage</th>
+          <th>Expectation</th>
+          <th>Observed Reality</th>
+        </tr>
+        <tr>
+          <td>Lead Generation</td>
+          <td>Ready buyers</td>
+          <td>High enquiry volume</td>
+        </tr>
+        <tr>
+          <td>Initial Contact</td>
+          <td>Strong conversations</td>
+          <td>35–45% response rate</td>
+        </tr>
+        <tr>
+          <td>Sales Calls</td>
+          <td>Buying intent</td>
+          <td>Exploratory discussions</td>
+        </tr>
+        <tr>
+          <td>Customers</td>
+          <td>Revenue growth</td>
+          <td>0–2 per 100 leads</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>What This Clearly Indicates</h2>
+      <ul>
+        <li>Lead generation works at surface level</li>
+        <li>Conversion reliability remains weak</li>
+        <li>Sales teams handle mixed intent enquiries</li>
+        <li>Revenue lags far behind activity</li>
+        <li>Scaling spend increases inefficiency</li>
+      </ul>
+      <p style="font-weight:600;">
+        Lead numbers look healthy.
+        Customer outcomes do not.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOUNDER PAIN vs ROOT CAUSE -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+    <div class="section">
+      <h2>Founder Pain (Ground Reality)</h2>
+      <ul>
+        <li>Leads arrive, but closing feels uncertain</li>
+        <li>Sales teams complain about seriousness</li>
+        <li>Marketing reports activity, not customers</li>
+        <li>Platforms show conflicting success stories</li>
+        <li>Customer predictability stays low</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Why This Problem Persists</h2>
+      <ul>
+        <li>Platforms optimise clicks, not readiness</li>
+        <li>Leads are counted, not filtered</li>
+        <li>All enquiries enter the same pipeline</li>
+        <li>Intent strength is not tracked</li>
+        <li>Revenue impact shows up late</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- BUYER COMPRESSION -->
+  <div class="section">
+    <h2>100 Leads Reality — Buyer Intent Compression</h2>
+    <table>
+      <tr>
+        <th>Lead Behaviour</th>
+        <th>Approx. Count</th>
+        <th>Business Impact</th>
+      </tr>
+      <tr>
+        <td>Research / Information Seeking</td>
+        <td>50–55</td>
+        <td>No buying timeline</td>
+      </tr>
+      <tr>
+        <td>Price Comparison</td>
+        <td>25–30</td>
+        <td>Margin pressure</td>
+      </tr>
+      <tr>
+        <td>Delayed Intent</td>
+        <td>10–12</td>
+        <td>Long follow-up cycles</td>
+      </tr>
+      <tr>
+        <td>Serious Buyers</td>
+        <td>2–3</td>
+        <td>Actual revenue</td>
+      </tr>
+    </table>
+    
+  </div>
+</div>
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Growth Lite — Customer acquisition engineered for clarity, control and confidence.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+
+ 
+<!-- ================= PAGE 2 ================= -->
+<div class="page">
+
+    <!-- HEADER -->
+  <div class="header">
+    <h1>Paid & Organic Advertising — The Reality Gap</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+<!-- WATERMARK -->
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+    <!-- ================= TOP CONTEXT ================= -->
+    <div class="section">
+      <h2>What Businesses Assume vs What Actually Happens</h2>
+      <p>
+        Most businesses believe that combining paid advertising
+        with organic visibility automatically improves results.
+        In practice, activity increases faster than customer reliability.
+      </p>
+      <p>
+        Ads create reach. Organic creates familiarity.
+        Neither guarantees buying seriousness without intent control.
+      </p>
+    </div>
+
+    <!-- ================= DATA SNAPSHOT ================= -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>Area</th>
+          <th>Common Expectation</th>
+          <th>Ground Reality</th>
+        </tr>
+        <tr>
+          <td>Paid Ads</td>
+          <td>Immediate customers</td>
+          <td>High enquiry volume</td>
+        </tr>
+        <tr>
+          <td>Organic Channels</td>
+          <td>Trust-driven sales</td>
+          <td>Low urgency traffic</td>
+        </tr>
+        <tr>
+          <td>Combined Effort</td>
+          <td>Stable growth</td>
+          <td>Mixed-quality pipelines</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= SPLIT: ORGANIC vs PAID ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT: ORGANIC -->
+      <div class="section">
+        <h2>Organic Channels — What They Actually Deliver</h2>
+        <ul>
+          <li>Brand familiarity over time</li>
+          <li>Trust through repetition</li>
+          <li>Research-stage engagement</li>
+          <li>Long decision consideration</li>
+          <li>Low immediate buying intent</li>
+        </ul>
+        <p>
+          Organic builds confidence,
+          not conversion urgency.
+        </p>
+      </div>
+
+      <!-- RIGHT: PAID -->
+      <div class="section">
+        <h2>Paid Channels — What They Actually Deliver</h2>
+        <ul>
+          <li>Speed and visibility</li>
+          <li>High enquiry velocity</li>
+          <li>Intent mixed with curiosity</li>
+          <li>Price-driven comparisons</li>
+          <li>Low commitment consistency</li>
+        </ul>
+        <p>
+          Paid accelerates demand —
+          but does not qualify it.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ================= BOTTOM SPLIT ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT: FAILURE LOGIC -->
+      <div class="section">
+        <h2>Why Paid + Organic Still Fail Together</h2>
+        <ul>
+          <li>Both channels feed the same unfiltered pipeline</li>
+          <li>No separation between curiosity and readiness</li>
+          <li>Sales teams treat all enquiries equally</li>
+          <li>High-intent buyers face delays</li>
+          <li>Low-intent leads consume effort</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT: BEETLEBULBS LENS -->
+      <div class="section">
+        <h2>How Beetlebulbs Looks at Channel Performance</h2>
+        <table>
+          <tr>
+            <th>Traditional View</th>
+            <th>Beetlebulbs View</th>
+          </tr>
+          <tr>
+            <td>Traffic & reach</td>
+            <td>Buyer readiness signals</td>
+          </tr>
+          <tr>
+            <td>Cost per lead</td>
+            <td>Cost per serious enquiry</td>
+          </tr>
+          <tr>
+            <td>Channel volume</td>
+            <td>Intent consistency</td>
+          </tr>
+          <tr>
+            <td>Platform reports</td>
+            <td>Customer predictability</td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Combining paid and organic increases activity, not customer reliability, without intent filtration.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= PAGE 3 ================= -->
+<div class="page page-3">
+
+  <!-- WATERMARK -->
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Paid Channels Deep Dive — Where Money Actually Goes</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ================= TOP CONTEXT ================= -->
+    <div class="section">
+      <h2>The Paid Advertising Misunderstanding</h2>
+      <p>
+        Paid advertising is often treated as a customer-generation system.
+        In practice, paid platforms are distribution engines —
+        they deliver exposure and enquiries, not buying decisions.
+      </p>
+      <p>
+        The spend-to-sales gap appears when intent strength
+        is assumed instead of measured.
+      </p>
+    </div>
+
+    <!-- ================= DATA SNAPSHOT ================= -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>Paid Signal</th>
+          <th>Reported as Success</th>
+          <th>Founder Outcome</th>
+        </tr>
+        <tr>
+          <td>Lower CPC</td>
+          <td>Cost efficiency</td>
+          <td>No lift in conversions</td>
+        </tr>
+        <tr>
+          <td>More Leads</td>
+          <td>Scaling achieved</td>
+          <td>Sales bandwidth stretched</td>
+        </tr>
+        <tr>
+          <td>Higher Reach</td>
+          <td>Visibility</td>
+          <td>No buying urgency</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= SEARCH vs SOCIAL ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- SEARCH ADS -->
+      <div class="section">
+        <h2>Search Ads (Google · Bing · Yahoo)</h2>
+        <p>
+          Search ads capture users already exploring solutions.
+          This creates perceived intent, not guaranteed readiness.
+        </p>
+
+        <table>
+          <tr>
+            <th>Strength</th>
+            <th>Ground Reality</th>
+          </tr>
+          <tr>
+            <td>Demand capture</td>
+            <td>Vendor comparison traffic</td>
+          </tr>
+          <tr>
+            <td>Clear keywords</td>
+            <td>High price sensitivity</td>
+          </tr>
+          <tr>
+            <td>Fast enquiries</td>
+            <td>Low brand loyalty</td>
+          </tr>
+        </table>
+
+        <p>
+          Most search leads evaluate
+          multiple vendors simultaneously.
+        </p>
+      </div>
+
+      <!-- SOCIAL ADS -->
+      <div class="section">
+        <h2>Social & Performance Ads (Meta · Display)</h2>
+        <p>
+          Social platforms scale by interrupting attention,
+          not by matching buying timelines.
+        </p>
+
+        <table>
+          <tr>
+            <th>Strength</th>
+            <th>Ground Reality</th>
+          </tr>
+          <tr>
+            <td>Mass reach</td>
+            <td>Curiosity-driven clicks</td>
+          </tr>
+          <tr>
+            <td>Creative testing</td>
+            <td>Low purchase clarity</td>
+          </tr>
+          <tr>
+            <td>Algorithm learning</td>
+            <td>Engagement bias</td>
+          </tr>
+        </table>
+
+        <p>
+          Volume increases faster than
+          conversion seriousness.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ================= VIDEO vs B2B (COMPRESSED) ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <div class="section">
+        <h2>YouTube & Video Advertising</h2>
+        <ul>
+          <li>Strong recall</li>
+          <li>Delayed responses</li>
+          <li>Attribution confusion</li>
+          <li>Needs retargeting support</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>LinkedIn Ads (B2B Reality)</h2>
+        <ul>
+          <li>High CPC, limited volume</li>
+          <li>Research-stage interest</li>
+          <li>Multiple decision-makers</li>
+          <li>Long follow-up cycles</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ================= PORTALS + FAILURE ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- PORTALS -->
+      <div class="section">
+        <h2>Portals & Listing Ads</h2>
+        <p>
+  Portals deliver ready traffic but force
+  aggressive price-based comparisons.
+</p>
+
+        <table>
+  <tr>
+    <th>Advantage</th>
+    <th>Risk</th>
+  </tr>
+  <tr>
+    <td>Immediate enquiries</td>
+    <td>Lowest price bias</td>
+  </tr>
+  <tr>
+    <td>Buyer intent traffic</td>
+    <td>Margin erosion</td>
+  </tr>
+  <tr>
+    <td>Fast visibility</td>
+    <td>No differentiation</td>
+  </tr>
+</table>
+
+      </div>
+
+      <!-- FAILURE -->
+      <div class="section">
+        <h2>Why Paid Channels Underperform</h2>
+        <ul>
+          <li>Platforms optimise delivery, not outcomes</li>
+          <li>Metrics focus on efficiency, not readiness</li>
+          <li>All enquiries treated equally</li>
+          <li>Sales inherits unfiltered intent</li>
+          <li>Spend scales before leaks are fixed</li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Paid channels generate exposure and enquiries — customer outcomes depend on intent engineering.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= PAGE 4 ================= -->
+<div class="page page-4">
+
+  <!-- WATERMARK -->
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Lead Quality vs Lead Quantity — Where Businesses Bleed</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ================= TOP CONTEXT ================= -->
+    <div class="section">
+      <h2>The Costliest Misinterpretation in Marketing</h2>
+      <p>
+        Most businesses chase lead volume assuming
+        that higher numbers will eventually convert into revenue.
+        In reality, low-quality leads increase effort, delay response,
+        and weaken sales confidence.
+      </p>
+      <p>
+        Lead quantity keeps dashboards busy.
+        Lead quality decides whether sales pipelines stay healthy.
+      </p>
+    </div>
+
+    <!-- ================= DATA SNAPSHOT ================= -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>From 100 Leads Generated</th>
+          <th>Observed Outcome</th>
+        </tr>
+        <tr>
+          <td>Leads successfully contacted</td>
+          <td>35–45</td>
+        </tr>
+        <tr>
+          <td>Relevant conversations</td>
+          <td>10–15</td>
+        </tr>
+        <tr>
+          <td>Serious buying intent</td>
+          <td>2–4</td>
+        </tr>
+        <tr>
+          <td>Closed customers</td>
+          <td>0–2</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= QUANTITY vs QUALITY ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- QUANTITY -->
+      <div class="section">
+        <h2>What Lead Quantity Creates</h2>
+        <ul>
+          <li>High enquiry count</li>
+          <li>Sales team overload</li>
+          <li>Delayed response times</li>
+          <li>Lower call confidence</li>
+          <li>Rising internal frustration</li>
+        </ul>
+        <p>
+          Volume hides inefficiency
+          until conversion drops.
+        </p>
+      </div>
+
+      <!-- QUALITY -->
+      <div class="section">
+        <h2>What Lead Quality Creates</h2>
+        <ul>
+          <li>Focused enquiries</li>
+          <li>Shorter decision cycles</li>
+          <li>Higher call-to-sale ratio</li>
+          <li>Better sales morale</li>
+          <li>More predictable revenue</li>
+        </ul>
+        <p>
+          Quality reduces effort
+          before increasing revenue.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ================= WHY QUALITY BREAKS ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Why Most Leads Are Low Quality</h2>
+        <ul>
+          <li>Ads optimise clicks, not seriousness</li>
+          <li>Forms capture interest, not readiness</li>
+          <li>No intent qualification layer</li>
+          <li>Same follow-up for all enquiries</li>
+          <li>Buyers mixed with price shoppers</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Business Impact of Poor Lead Quality</h2>
+        <ul>
+          <li>Sales time lost on non-buyers</li>
+          <li>High-intent leads face delays</li>
+          <li>Inconsistent follow-up discipline</li>
+          <li>Rising cost per customer</li>
+          <li>Falling confidence in ad spend</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ================= BEETLEBULBS VIEW ================= -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 14px;
+      margin-bottom:0;
+    ">
+      <h2 style="font-size:15.8px;">How Beetlebulbs Looks at Lead Quality</h2>
+      <table>
+        <tr>
+          <th>Traditional Tracking</th>
+          <th>Beetlebulbs Tracking</th>
+        </tr>
+        <tr>
+          <td>Cost per lead</td>
+          <td>Cost per serious enquiry</td>
+        </tr>
+        <tr>
+          <td>Lead volume</td>
+          <td>Intent concentration</td>
+        </tr>
+        <tr>
+          <td>Traffic source</td>
+          <td>Buyer readiness signal</td>
+        </tr>
+        <tr>
+          <td>Campaign success</td>
+          <td>Customer predictability</td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: More leads increase activity — better leads reduce sales effort and customer acquisition cost.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PAGE 5 ================= -->
+<div class="page page-5">
+
+  <!-- WATERMARK -->
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Call & Enquiry Reality — Why Calls Don’t Convert</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ================= TOP CONTEXT ================= -->
+    <div class="section">
+      <h2>The Conversion Drop After Lead Generation</h2>
+      <p>
+        For most businesses, lead generation is not the breaking point.
+        Conversion drops after the enquiry arrives —
+        during call handling, response timing, and follow-up behaviour.
+      </p>
+      <p>
+        Two businesses can receive the same lead.
+        One converts it.
+        The other loses it silently.
+      </p>
+    </div>
+
+    <!-- ================= DATA SNAPSHOT ================= -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>Call Stage</th>
+          <th>Observed Industry Pattern</th>
+        </tr>
+        <tr>
+          <td>First response time</td>
+          <td>15–60 minutes</td>
+        </tr>
+        <tr>
+          <td>Calls actually connected</td>
+          <td>35–45%</td>
+        </tr>
+        <tr>
+          <td>Meaningful conversations</td>
+          <td>10–15%</td>
+        </tr>
+        <tr>
+          <td>Calls leading to next step</td>
+          <td>2–4%</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= SPLIT: WHAT BREAKS vs WHAT WORKS ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Why Calls Fail to Convert</h2>
+        <ul>
+          <li>Delayed response after enquiry</li>
+          <li>Scripted, rushed conversations</li>
+          <li>No understanding of buyer stage</li>
+          <li>Same pitch for all callers</li>
+          <li>Lack of structured follow-up</li>
+        </ul>
+        <p>
+          Most calls focus on information delivery,
+          not decision progression.
+        </p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What High-Converting Calls Do Differently</h2>
+        <ul>
+          <li>Fast first response</li>
+          <li>Stage-based conversation flow</li>
+          <li>Buyer intent assessment</li>
+          <li>Clear next-step alignment</li>
+          <li>Disciplined follow-up timing</li>
+        </ul>
+        <p>
+          Conversion improves when calls
+          match buyer readiness.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ================= CALL BEHAVIOUR BREAKDOWN ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Common Call Behaviour Issues</h2>
+        <ul>
+          <li>Sales teams chase volume, not seriousness</li>
+          <li>Buyers treated as leads, not decision-makers</li>
+          <li>No separation between enquiry types</li>
+          <li>Calls end without defined outcomes</li>
+          <li>Follow-ups depend on memory, not systems</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Impact on Revenue & Teams</h2>
+        <ul>
+          <li>High-intent buyers drop silently</li>
+          <li>Sales morale declines</li>
+          <li>Marketing blamed for weak leads</li>
+          <li>Founders lose visibility</li>
+          <li>Revenue becomes unpredictable</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ================= BEETLEBULBS VIEW ================= -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 14px;
+      margin-bottom:0;
+    ">
+      <h2 style="font-size:15.8px;">How Beetlebulbs Looks at Calls</h2>
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        Beetlebulbs evaluates calls as conversion checkpoints.
+        Response speed, intent alignment, conversation flow,
+        and follow-up discipline are measured together —
+        not in isolation.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Leads create opportunity — calls decide whether revenue actually happens.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 6 ================= -->
+<div class="page page-6">
+
+  <!-- WATERMARK -->
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Buyer Intent Layers — Cold, Warm & Hot Explained</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ================= TOP CONTEXT ================= -->
+    <div class="section">
+      <h2>Why All Leads Should Not Be Treated the Same</h2>
+      <p>
+        Most businesses route every enquiry into a single sales pipeline.
+        This assumes that all leads arrive with similar readiness.
+        In reality, buyers move through distinct intent stages.
+      </p>
+      <p>
+        Conversion breaks when sales conversations
+        ignore where the buyer actually stands.
+      </p>
+    </div>
+
+    <!-- ================= INTENT LAYER TABLE ================= -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>Intent Layer</th>
+          <th>Buyer Behaviour</th>
+          <th>Sales Reality</th>
+        </tr>
+        <tr>
+          <td>Cold Intent</td>
+          <td>Exploring, gathering information</td>
+          <td>Low seriousness, high questions</td>
+        </tr>
+        <tr>
+          <td>Warm Intent</td>
+          <td>Comparing options, shortlisting</td>
+          <td>Delayed decisions</td>
+        </tr>
+        <tr>
+          <td>Hot Intent</td>
+          <td>Decision-ready, timing aligned</td>
+          <td>High conversion probability</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= SPLIT: COLD vs WARM ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- COLD -->
+      <div class="section">
+        <h2>Cold Intent — Early Exploration</h2>
+        <ul>
+          <li>Research-focused enquiries</li>
+          <li>Broad questions, unclear timelines</li>
+          <li>Low urgency</li>
+          <li>Price curiosity without commitment</li>
+          <li>High drop-off probability</li>
+        </ul>
+        <p>
+          Cold intent requires education,
+          not sales pressure.
+        </p>
+      </div>
+
+      <!-- WARM -->
+      <div class="section">
+        <h2>Warm Intent — Evaluation Stage</h2>
+        <ul>
+          <li>Active vendor comparison</li>
+          <li>Clearer requirements</li>
+          <li>Internal discussions ongoing</li>
+          <li>Budget consideration begins</li>
+          <li>Decision timeline forming</li>
+        </ul>
+        <p>
+          Warm intent needs structured follow-up,
+          not repeated pitching.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ================= HOT INTENT ================= -->
+    <!-- ================= HOT INTENT + BEETLEBULBS VIEW ================= -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+  <!-- LEFT: HOT INTENT -->
+  <div class="section">
+    <h2>Hot Intent — Decision-Ready Buyers</h2>
+    <ul>
+      <li>Defined problem and solution clarity</li>
+      <li>Budget approval aligned</li>
+      <li>Urgency driven by timing</li>
+      <li>Clear next-step expectations</li>
+      <li>Highest conversion likelihood</li>
+    </ul>
+    <p>
+      Hot intent converts when friction is removed,
+      not when persuasion is increased.
+    </p>
+  </div>
+
+  <!-- RIGHT: BEETLEBULBS INTENT LOGIC -->
+  <div class="section" style="
+    background:#f8fafc;
+    border-left:4px solid #000;
+    padding:10px 14px;
+    margin-bottom:0;
+  ">
+    <h2 style="font-size:15.8px;">How Beetlebulbs Uses Intent Layers</h2>
+    <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+      Beetlebulbs classifies every enquiry by intent strength.
+      Cold, warm, and hot buyers follow different paths,
+      response timing, and conversion logic —
+      ensuring sales effort matches buyer readiness.
+    </p>
+  </div>
+
+</div>
+
+    <!-- ================= WHY INTENT GETS MISSED ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Why Businesses Miss Intent Signals</h2>
+        <ul>
+          <li>All leads treated as equal</li>
+          <li>No intent scoring or tagging</li>
+          <li>Sales teams optimised for volume</li>
+          <li>No visibility into buyer readiness</li>
+          <li>Conversion tracked too late</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Impact on Sales & Revenue</h2>
+        <ul>
+          <li>Hot buyers get delayed</li>
+          <li>Cold buyers get pressured</li>
+          <li>Sales confidence drops</li>
+          <li>Follow-ups lose discipline</li>
+          <li>Revenue becomes unpredictable</li>
+        </ul>
+      </div>
+
+    </div> 
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Conversion improves when sales effort aligns with buyer intent, not lead volume.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= PAGE 7 ================= -->
+<div class="page page-7">
+
+  <!-- WATERMARK -->
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Customer Journey Mapping — Ad → Call → Sale</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ================= TOP CONTEXT ================= -->
+    <div class="section">
+      <h2>Why Most Customer Journeys Break Silently</h2>
+      <p>
+        Businesses track campaigns, leads, and calls as separate activities.
+        Customers experience them as one continuous journey.
+        Conversion drops when this journey is not aligned internally.
+      </p>
+      <p>
+        Revenue instability is usually a journey problem —
+        not a channel problem.
+      </p>
+    </div>
+
+    <!-- ================= JOURNEY FLOW TABLE ================= -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>Journey Stage</th>
+          <th>What Marketing Delivers</th>
+          <th>What Sales Receives</th>
+          <th>What Actually Happens</th>
+        </tr>
+        <tr>
+          <td>Ad Click</td>
+          <td>Traffic & attention</td>
+          <td>No visibility</td>
+          <td>Intent unknown</td>
+        </tr>
+        <tr>
+          <td>Enquiry / Lead</td>
+          <td>Form filled / call triggered</td>
+          <td>Mixed seriousness</td>
+          <td>No intent classification</td>
+        </tr>
+        <tr>
+          <td>Sales Call</td>
+          <td>Connection attempt</td>
+          <td>Single pitch approach</td>
+          <td>Buyer stage mismatch</td>
+        </tr>
+        <tr>
+          <td>Decision</td>
+          <td>Reported as follow-up</td>
+          <td>Delayed closure</td>
+          <td>Revenue leakage</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= SPLIT: WHERE JOURNEY BREAKS ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Where the Journey Commonly Breaks</h2>
+        <ul>
+          <li>Ad intent not passed to sales</li>
+          <li>Same follow-up for all buyers</li>
+          <li>No context from previous touchpoints</li>
+          <li>Response timing not prioritised</li>
+          <li>Sales reacts instead of guiding</li>
+        </ul>
+        <p>
+          Each break looks small —
+          combined, they kill conversions.
+        </p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Founders Usually See</h2>
+        <ul>
+          <li>Leads coming regularly</li>
+          <li>Sales team under pressure</li>
+          <li>Unclear drop-off reasons</li>
+          <li>Reports without answers</li>
+          <li>Spend increasing without confidence</li>
+        </ul>
+        <p>
+          Activity looks healthy.
+          Outcomes feel unstable.
+        </p>
+      </div>
+
+    </div>
+<!-- ================= RESPONSE TIMING IMPACT TABLE ================= -->
+<div class="section">
+  <h2>Response Timing vs Conversion Reality</h2>
+
+  <table>
+    <tr>
+      <th>Response Time</th>
+      <th>Buyer Mindset</th>
+      <th>Observed Conversion Impact</th>
+    </tr>
+    <tr>
+      <td>Within 5 minutes</td>
+      <td>High attention, active intent</td>
+      <td>Highest conversion probability</td>
+    </tr>
+    <tr>
+      <td>5–30 minutes</td>
+      <td>Interest cooling</td>
+      <td>Moderate conversion</td>
+    </tr>
+    <tr>
+      <td>30–120 minutes</td>
+      <td>Distraction phase</td>
+      <td>Low conversion</td>
+    </tr>
+    <tr>
+      <td>Same day follow-up</td>
+      <td>Recalled partially</td>
+      <td>Weak intent recovery</td>
+    </tr>
+    <tr>
+      <td>Next day or later</td>
+      <td>Intent mostly lost</td>
+      <td>Near-zero conversion</td>
+    </tr>
+  </table>
+
+  <p style="font-weight:600;margin-top:6px;">
+    Conversion loss often happens due to timing,
+    not due to lack of demand.
+  </p>
+</div>
+
+    <!-- ================= BEETLEBULBS JOURNEY VIEW ================= -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 14px;
+      margin-bottom:0;
+    ">
+      <h2 style="font-size:15.8px;">How Beetlebulbs Engineers the Customer Journey</h2>
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        Beetlebulbs treats acquisition as a single connected system.
+        Ad intent, enquiry behaviour, call timing, and buyer readiness
+        are aligned so each stage prepares the next —
+        reducing friction and improving conversion reliability.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Customer journeys convert when every stage prepares the next, not when stages operate independently.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 8 ================= -->
+<div class="page page-8">
+
+  <!-- WATERMARK -->
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Follow-up & Response Timing — The Hidden Revenue Killer</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ================= TOP CONTEXT ================= -->
+    <div class="section">
+      <h2>Why Speed Matters More Than Most Businesses Realise</h2>
+      <p>
+        When a lead arrives, buyer attention is at its peak.
+        Every minute of delay reduces seriousness and recall.
+        Most revenue loss happens before the second follow-up.
+      </p>
+      <p>
+        Ads generate opportunity.
+        Timing decides outcome.
+      </p>
+    </div>
+
+    <!-- ================= TIMING IMPACT TABLE ================= -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>Response Window</th>
+          <th>Buyer State</th>
+          <th>Business Outcome</th>
+        </tr>
+        <tr>
+          <td>0–5 minutes</td>
+          <td>High attention</td>
+          <td>Maximum conversion probability</td>
+        </tr>
+        <tr>
+          <td>5–15 minutes</td>
+          <td>Intent intact</td>
+          <td>Strong engagement possible</td>
+        </tr>
+        <tr>
+          <td>15–60 minutes</td>
+          <td>Attention shifting</td>
+          <td>Drop in seriousness</td>
+        </tr>
+        <tr>
+          <td>Same day follow-up</td>
+          <td>Partial recall</td>
+          <td>Lower close rate</td>
+        </tr>
+        <tr>
+          <td>Next day or later</td>
+          <td>Intent lost</td>
+          <td>Near-zero conversion</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= SPLIT: COMMON FAILURES ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Where Follow-up Commonly Breaks</h2>
+        <ul>
+          <li>Leads routed manually</li>
+          <li>No urgency prioritisation</li>
+          <li>Sales capacity mismatched with lead volume</li>
+          <li>Missed calls not re-attempted quickly</li>
+          <li>No ownership of response timing</li>
+        </ul>
+        <p>
+          Delays compound silently.
+        </p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Founders Usually Experience</h2>
+        <ul>
+          <li>Leads look strong initially</li>
+          <li>Sales reports “not picking up”</li>
+          <li>Follow-ups stretch over days</li>
+          <li>Conversion ratios keep falling</li>
+          <li>More spend demanded to compensate</li>
+        </ul>
+        <p>
+          More leads are used to hide delay.
+        </p>
+      </div>
+
+    </div>
+<!-- ================= FOLLOW-UP STRUCTURE TABLE ================= -->
+<div class="section">
+  <h2>Follow-up Structure vs Conversion Outcome</h2>
+
+  <table>
+    <tr>
+      <th>Follow-up Pattern</th>
+      <th>Sales Behaviour</th>
+      <th>Observed Result</th>
+    </tr>
+    <tr>
+      <td>No defined structure</td>
+      <td>Random calls & messages</td>
+      <td>Low recall, weak conversions</td>
+    </tr>
+    <tr>
+      <td>Same script for all leads</td>
+      <td>Generic pitching</td>
+      <td>Buyer disengagement</td>
+    </tr>
+    <tr>
+      <td>Delayed follow-ups</td>
+      <td>Reactive chasing</td>
+      <td>Intent loss</td>
+    </tr>
+    <tr>
+      <td>Intent-based follow-up</td>
+      <td>Context-aware conversation</td>
+      <td>Higher conversion consistency</td>
+    </tr>
+    <tr>
+      <td>Structured follow-up windows</td>
+      <td>Planned response discipline</td>
+      <td>Predictable customer flow</td>
+    </tr>
+  </table>
+
+  <p style="font-weight:600;margin-top:6px;">
+    Follow-up quality determines whether interest
+    turns into revenue or disappears silently.
+  </p>
+</div>
+
+    <!-- ================= BEETLEBULBS METHOD ================= -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 14px;
+      margin-bottom:0;
+    ">
+      <h2 style="font-size:15.8px;">How Beetlebulbs Fixes Response & Follow-up</h2>
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        Beetlebulbs engineers response timing into the acquisition system.
+        High-intent enquiries are prioritised,
+        response windows are defined,
+        and follow-ups are structured —
+        so buying momentum is captured before it fades.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Faster response protects buyer intent more effectively than increasing lead volume.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 9 ================= -->
+<div class="page page-9">
+
+  <!-- WATERMARK -->
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Tracking That Matters — Customers, Not Clicks</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ================= TOP CONTEXT ================= -->
+    <div class="section">
+      <h2>Why Most Dashboards Fail Founders</h2>
+      <p>
+        Marketing dashboards are designed to show activity,
+        not business outcomes.
+        Clicks, impressions, and leads look impressive,
+        yet customer flow remains unstable.
+      </p>
+      <p>
+        The gap is not data availability.
+        The gap is data relevance.
+      </p>
+    </div>
+
+    <!-- ================= METRICS GAP TABLE ================= -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>Commonly Tracked</th>
+          <th>What It Indicates</th>
+          <th>What It Misses</th>
+        </tr>
+        <tr>
+          <td>Clicks / Impressions</td>
+          <td>Reach & visibility</td>
+          <td>Buyer seriousness</td>
+        </tr>
+        <tr>
+          <td>CPC / CPM</td>
+          <td>Cost efficiency</td>
+          <td>Revenue impact</td>
+        </tr>
+        <tr>
+          <td>Leads Count</td>
+          <td>Campaign activity</td>
+          <td>Conversion reliability</td>
+        </tr>
+        <tr>
+          <td>ROAS (reported)</td>
+          <td>Platform attribution</td>
+          <td>Actual customer value</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= CUSTOMER-CENTRIC METRICS ================= -->
+    <div class="section">
+      <h2>Metrics That Actually Reflect Business Health</h2>
+      <table>
+        <tr>
+          <th>Metric</th>
+          <th>What It Reveals</th>
+        </tr>
+        <tr>
+          <td>Cost per serious buyer</td>
+          <td>Spend efficiency at intent level</td>
+        </tr>
+        <tr>
+          <td>Call-to-sale ratio</td>
+          <td>Sales effectiveness</td>
+        </tr>
+        <tr>
+          <td>Response-time conversion</td>
+          <td>Operational discipline</td>
+        </tr>
+        <tr>
+          <td>Repeat enquiry quality</td>
+          <td>Buyer confidence</td>
+        </tr>
+        <tr>
+          <td>Customer predictability</td>
+          <td>Revenue stability</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= SPLIT: WHERE TRACKING BREAKS ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Why Traditional Tracking Breaks</h2>
+        <ul>
+          <li>Platforms report on their own success</li>
+          <li>Agencies optimise platform KPIs</li>
+          <li>Sales outcomes sit outside dashboards</li>
+          <li>Attribution ignores buyer timelines</li>
+          <li>Revenue impact shows up too late</li>
+        </ul>
+        <p>
+          Numbers increase.
+          Confidence does not.
+        </p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Founders Usually Experience</h2>
+        <ul>
+          <li>Different reports from different teams</li>
+          <li>Strong metrics, weak closures</li>
+          <li>ROAS discussions without customer clarity</li>
+          <li>Decisions based on partial visibility</li>
+          <li>Spend increased to compensate uncertainty</li>
+        </ul>
+        <p>
+          Tracking creates noise,
+          not direction.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ================= BEETLEBULBS TRACKING VIEW ================= -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 14px;
+      margin-bottom:0;
+    ">
+      <h2 style="font-size:15.8px;">How Beetlebulbs Tracks What Matters</h2>
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        Beetlebulbs aligns tracking with customer outcomes.
+        Every lead is mapped to intent strength,
+        response timing, and sales progression —
+        so decisions are driven by revenue behaviour,
+        not surface-level activity.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Metrics only matter when they explain why customers convert or don’t.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 10 ================= -->
+<div class="page page-10">
+
+  <!-- WATERMARK -->
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Channel-wise Leak Map — Where Money Is Lost</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ================= TOP CONTEXT ================= -->
+    <div class="section">
+      <h2>Why Adding More Channels Rarely Fixes Growth</h2>
+      <p>
+        Most businesses respond to weak results
+        by adding more platforms, more agencies,
+        or more budget.
+        In reality, existing channels already leak revenue.
+      </p>
+      <p>
+        Without identifying these leaks,
+        scale multiplies waste.
+      </p>
+    </div>
+
+    <!-- ================= LEAK MAP TABLE ================= -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>Channel</th>
+          <th>What It Delivers</th>
+          <th>Primary Leak Point</th>
+        </tr>
+        <tr>
+          <td>Search Ads</td>
+          <td>High-intent enquiries</td>
+          <td>Price-driven comparison traffic</td>
+        </tr>
+        <tr>
+          <td>Meta / Display Ads</td>
+          <td>Volume & reach</td>
+          <td>Low buying readiness</td>
+        </tr>
+        <tr>
+          <td>YouTube / Video</td>
+          <td>Recall & awareness</td>
+          <td>Delayed or untracked conversions</td>
+        </tr>
+        <tr>
+          <td>Portals / Listings</td>
+          <td>Ready traffic</td>
+          <td>Margin erosion & commoditisation</td>
+        </tr>
+        <tr>
+          <td>Organic (SEO / GMB)</td>
+          <td>Trust & visibility</td>
+          <td>Weak urgency signals</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= SPLIT: LEAK BEHAVIOUR ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>How Leaks Appear in Daily Operations</h2>
+        <ul>
+          <li>High lead volume, low closure</li>
+          <li>Sales chasing unqualified enquiries</li>
+          <li>Delayed response to serious buyers</li>
+          <li>Inconsistent follow-ups across channels</li>
+          <li>Revenue spread thin across platforms</li>
+        </ul>
+        <p>
+          Leaks feel operational,
+          but originate in acquisition design.
+        </p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Founders Usually Assume</h2>
+        <ul>
+          <li>Channel performance is the issue</li>
+          <li>Agency execution needs change</li>
+          <li>Budget needs to increase</li>
+          <li>More reach will fix conversion</li>
+          <li>Time will improve results</li>
+        </ul>
+        <p>
+          These assumptions delay correction.
+        </p>
+      </div>
+
+    </div>
+<!-- ================= LEAK STAGE IMPACT TABLE ================= -->
+<div class="section">
+  <h2>Leak Stage vs Business Impact</h2>
+
+  <table>
+    <tr>
+      <th>Leak Stage</th>
+      <th>What Breaks</th>
+      <th>Business Impact</th>
+    </tr>
+    <tr>
+      <td>Before enquiry</td>
+      <td>Wrong intent traffic</td>
+      <td>Spend wasted on non-buyers</td>
+    </tr>
+    <tr>
+      <td>After enquiry</td>
+      <td>No intent filtering</td>
+      <td>Sales overload</td>
+    </tr>
+    <tr>
+      <td>During follow-up</td>
+      <td>Delayed response</td>
+      <td>Lost hot buyers</td>
+    </tr>
+    <tr>
+      <td>Before closure</td>
+      <td>No prioritisation</td>
+      <td>Unpredictable revenue</td>
+    </tr>
+  </table>
+</div>
+
+    <!-- ================= BEETLEBULBS LEAK CONTROL ================= -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 14px;
+      margin-bottom:0;
+    ">
+      <h2 style="font-size:15.8px;">How Beetlebulbs Identifies & Stops Channel Leaks</h2>
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        Beetlebulbs maps every channel to buyer intent,
+        response timing, and sales outcome.
+        Leaks are fixed at the system level —
+        so existing spend delivers stronger customer output
+        before any scale decisions are made.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Growth improves when leaks are fixed before new channels are added.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 11 ================= -->
+<div class="page page-11">
+
+  <!-- WATERMARK -->
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Stabilising Customer Flow — Before Scaling Spend</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ================= TOP CONTEXT ================= -->
+    <div class="section">
+      <h2>Why Scaling Spend Before Stability Increases Risk</h2>
+      <p>
+        Most businesses attempt to fix weak results
+        by increasing budgets or expanding channels.
+        Without stabilising customer flow,
+        this approach magnifies inconsistency.
+      </p>
+      <p>
+        Predictable growth starts with control —
+        not with scale.
+      </p>
+    </div>
+
+    <!-- ================= STABILITY TABLE ================= -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>Without Stability</th>
+          <th>With Stabilised Flow</th>
+        </tr>
+        <tr>
+          <td>Unpredictable closures</td>
+          <td>Consistent conversion patterns</td>
+        </tr>
+        <tr>
+          <td>Sales firefighting</td>
+          <td>Structured conversations</td>
+        </tr>
+        <tr>
+          <td>Spend-driven decisions</td>
+          <td>Data-backed confidence</td>
+        </tr>
+        <tr>
+          <td>Revenue fluctuations</td>
+          <td>Controlled customer intake</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= SPLIT: WHAT STABILITY REQUIRES ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Stability Actually Requires</h2>
+        <ul>
+          <li>Clear intent classification</li>
+          <li>Defined response timelines</li>
+          <li>Prioritised follow-up logic</li>
+          <li>Aligned marketing–sales handoff</li>
+          <li>Visibility into buyer readiness</li>
+        </ul>
+        <p>
+          Stability is engineered,
+          not expected.
+        </p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Happens When Stability Is Ignored</h2>
+        <ul>
+          <li>Revenue depends on luck</li>
+          <li>Sales morale declines</li>
+          <li>Marketing confidence erodes</li>
+          <li>Founders hesitate to scale</li>
+          <li>Growth becomes stressful</li>
+        </ul>
+        <p>
+          Instability consumes time and attention.
+        </p>
+      </div>
+
+    </div>
+<!-- ================= STABILITY SIGNALS TABLE ================= -->
+<div class="section">
+  <h2>Stability Signals — Before vs After</h2>
+
+  <table>
+    <tr>
+      <th>Signal</th>
+      <th>Before Stabilisation</th>
+      <th>After Stabilisation</th>
+    </tr>
+    <tr>
+      <td>Daily lead handling</td>
+      <td>Reactive, unplanned</td>
+      <td>Prioritised by intent</td>
+    </tr>
+    <tr>
+      <td>Sales conversations</td>
+      <td>Mixed seriousness</td>
+      <td>Context-aware & focused</td>
+    </tr>
+    <tr>
+      <td>Response behaviour</td>
+      <td>Delayed & inconsistent</td>
+      <td>Time-bound & disciplined</td>
+    </tr>
+    <tr>
+      <td>Founder visibility</td>
+      <td>Activity-heavy reports</td>
+      <td>Customer-flow clarity</td>
+    </tr>
+  </table>
+
+  <p style="font-weight:600;margin-top:6px;">
+    Stability shows up first in behaviour,
+    then in revenue.
+  </p>
+</div>
+
+    <!-- ================= BEETLEBULBS STABILISATION ================= -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 14px;
+      margin-bottom:0;
+    ">
+      <h2 style="font-size:15.8px;">How Growth Lite Stabilises Customer Flow</h2>
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        Growth Lite establishes control before scale.
+        Buyer intent is filtered,
+        response discipline is defined,
+        and sales effort is aligned —
+        creating a reliable customer flow
+        that can be scaled with confidence.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Stable customer flow reduces risk and makes scaling a strategic decision.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 12 ================= -->
+<div class="page page-12">
+
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <div class="header">
+    <h1>Commercials, Timelines & Disclaimers</h1>
+  </div>
+
+  <div class="content">
+
+    <!-- COMMERCIAL OVERVIEW -->
+    <div class="section">
+      <h2>Growth Lite — Commercial Overview</h2>
+      <p>
+        Growth Lite is a diagnostic and stabilisation package.
+        It focuses on fixing intent quality, response discipline,
+        and conversion flow — not on media buying volume.
+      </p>
+    </div>
+
+    <!-- CHARGES TABLE -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>Component</th>
+          <th>Details</th>
+        </tr>
+        <tr>
+          <td>Beetlebulbs Service Fee</td>
+          <td>Fixed professional fee (shared separately)</td>
+        </tr>
+        <tr>
+          <td>Ad Spend</td>
+          <td>Paid directly by client to platforms</td>
+        </tr>
+        <tr>
+          <td>Portal / Influencer Cost</td>
+          <td>Not included, billed separately if applicable</td>
+        </tr>
+        <tr>
+          <td>Tools / CRM / Software</td>
+          <td>Client-owned or billed separately if required</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="section">
+      <h2>Implementation Timeline</h2>
+      <table>
+        <tr>
+          <th>Phase</th>
+          <th>Estimated Time</th>
+        </tr>
+        <tr>
+          <td>Audit & data review</td>
+          <td>5–7 working days</td>
+        </tr>
+        <tr>
+          <td>Intent mapping & diagnostics</td>
+          <td>7–10 working days</td>
+        </tr>
+        <tr>
+          <td>Response & follow-up framework</td>
+          <td>5–7 working days</td>
+        </tr>
+        <tr>
+          <td>Stabilisation report delivery</td>
+          <td>Within 30 days (subject to inputs)</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:12px 14px;
+    ">
+      <h2 style="font-size:15.5px;">Important Disclaimers</h2>
+      <ul style="font-size:13.6px;">
+        <li>Beetlebulbs does not guarantee sales volume or revenue.</li>
+        <li>Results depend on timely approvals, inputs, and response from the client team.</li>
+        <li>Delays in creatives, access, approvals, or data may impact timelines.</li>
+        <li>Platform performance (Google, Meta, etc.) is subject to algorithm, policy, and auction dynamics.</li>
+        <li>Beetlebulbs is not responsible for platform outages, ad account restrictions, or policy changes.</li>
+        <li>Insights are based on available data and observed behaviour during engagement.</li>
+      </ul>
+    </div>
+
+    <!-- NEXT STEP -->
+    <div class="section" style="margin-bottom:0;">
+      <h2>Next Step</h2>
+      <p>
+        Growth Lite is the entry point.
+        Businesses seeking execution depth,
+        scale, and multi-channel control
+        typically upgrade to Growth Plus or Growth Engine.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Clear scope and clear responsibility protect both business outcomes and partnerships.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 13 ================= -->
+<div class="page page-13">
+
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <div class="header">
+    <h1>Growth Plus — Execution & Scale (Overview)</h1>
+  </div>
+
+  <div class="content">
+
+    <!-- INTRO -->
+    <div class="section">
+      <h2>What Growth Plus Is</h2>
+      <p>
+        Growth Plus is designed for businesses
+        that want Beetlebulbs to actively
+        <strong>run, manage, and optimise lead, call,
+        and customer generation campaigns</strong>
+        across multiple platforms.
+      </p>
+      <p>
+        This package moves beyond diagnosis
+        into hands-on execution and scaling.
+      </p>
+    </div>
+
+    <!-- PLATFORM GLANCE -->
+    <div class="section">
+      <h2>Platforms Covered (Growth Plus)</h2>
+      <table>
+        <tr>
+          <th>Category</th>
+          <th>Coverage</th>
+        </tr>
+        <tr>
+          <td>Search Advertising</td>
+          <td>Google Ads, Bing Ads</td>
+        </tr>
+        <tr>
+          <td>Social & Performance Ads</td>
+          <td>Meta (Facebook & Instagram)</td>
+        </tr>
+        <tr>
+          <td>Video Advertising</td>
+          <td>YouTube Ads</td>
+        </tr>
+        <tr>
+          <td>Professional Platforms</td>
+          <td>LinkedIn Ads (where applicable)</td>
+        </tr>
+        <tr>
+          <td>Portals & Listings</td>
+          <td>Industry portals & paid listings</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- WHAT BEETLEBULBS DELIVERS -->
+    <div class="section">
+      <h2>What Beetlebulbs Delivers in Growth Plus</h2>
+      <ul>
+        <li>Active ad campaign execution and optimisation</li>
+        <li>Lead and call quality monitoring</li>
+        <li>Platform-wise performance improvement</li>
+        <li>Basic funnel and follow-up alignment</li>
+        <li>Monthly performance review and insights</li>
+      </ul>
+    </div>
+
+    <!-- WHO IT IS FOR -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 14px;
+    ">
+      <h2 style="font-size:15.8px;">Who Should Choose Growth Plus</h2>
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        Growth Plus is suitable for businesses
+        that already see lead flow,
+        want higher volume,
+        and need a team to actively manage
+        paid and organic execution.
+      </p>
+    </div>
+<div class="section" style="
+  background:#f8fafc;
+  border-left:4px solid #000;
+  padding:10px 14px;
+  margin-bottom:0;
+">
+  <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+    This page provides a high-level overview of Growth Plus.
+    For execution details, platform strategy, timelines,
+    and delivery depth, please refer to the
+    <strong>Growth Plus (17-page) document</strong>.
+  </p>
+</div>
+<p style="font-size:13.6px;font-weight:600;margin-top:6px;">
+  Growth Plus is for businesses that want active execution support,
+  not just advice.
+</p>
+  </div>
+
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Growth Plus focuses on execution and scale, not just analysis.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 14 ================= -->
+<div class="page page-14">
+
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <div class="header">
+    <h1>Growth Engine — Full-Scale Customer Acquisition</h1>
+  </div>
+
+  <div class="content">
+
+    <!-- INTRO -->
+    <div class="section">
+      <h2>What Growth Engine Is</h2>
+      <p>
+        Growth Engine is Beetlebulbs’ most comprehensive offering.
+        It is built for businesses that want
+        <strong>end-to-end lead, call, and customer generation</strong>
+        across all major digital channels.
+      </p>
+      <p>
+        This package involves deeper execution,
+        more platforms, and long-term optimisation.
+      </p>
+    </div>
+
+    <!-- PLATFORM COVERAGE -->
+    <div class="section">
+      <h2>Platforms Covered (Growth Engine)</h2>
+      <table>
+        <tr>
+          <th>Channel Type</th>
+          <th>Platforms & Methods</th>
+        </tr>
+        <tr>
+          <td>Search & Performance</td>
+          <td>Google Ads, Bing Ads, advanced performance campaigns</td>
+        </tr>
+        <tr>
+          <td>Social Advertising</td>
+          <td>Meta Ads, Instagram, Facebook</td>
+        </tr>
+        <tr>
+          <td>Video & Awareness</td>
+          <td>YouTube Ads, video funnels</td>
+        </tr>
+        <tr>
+          <td>Professional & B2B</td>
+          <td>LinkedIn Ads & outreach</td>
+        </tr>
+        <tr>
+          <td>Direct Outreach</td>
+          <td>WhatsApp campaigns, email marketing</td>
+        </tr>
+        <tr>
+          <td>Influencer & App</td>
+          <td>Influencer marketing, app install & engagement</td>
+        </tr>
+        <tr>
+          <td>Portals</td>
+          <td>Premium listings and lead portals</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- DELIVERABLES -->
+    <div class="section">
+      <h2>What Beetlebulbs Delivers in Growth Engine</h2>
+      <ul>
+        <li>Multi-platform lead and customer acquisition</li>
+        <li>Continuous optimisation for quality & conversion</li>
+        <li>Advanced intent and response alignment</li>
+        <li>Regular performance reporting and planning</li>
+        <li>Strategic input for scaling decisions</li>
+      </ul>
+    </div>
+
+    <!-- WHO IT IS FOR -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 14px;
+    ">
+      <h2 style="font-size:15.8px;">Who Should Choose Growth Engine</h2>
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        Growth Engine is suited for businesses
+        that want a long-term acquisition partner,
+        operate at scale,
+        and require consistent customer inflow
+        across multiple platforms.
+      </p>
+    </div>
+<div class="section" style="
+  background:#f8fafc;
+  border-left:4px solid #000;
+  padding:10px 14px;
+  margin-bottom:0;
+">
+  <p style="font-size:13.8px;line-height:1.55;margin-bottom:6px;">
+    This page provides a high-level overview of Growth Engine.
+    For complete scope, platform coverage, execution depth,
+    and delivery structure, please refer to the
+    <strong>Growth Engine (25-page) document</strong>.
+  </p>
+
+  <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+    In Growth Engine, the responsibility of generating
+    quality leads, calls, and customers rests with Beetlebulbs —
+    so your team can focus purely on sales execution
+    and revenue growth.
+  </p>
+</div>
+  </div>
+
+
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Growth Engine focuses on long-term customer acquisition at scale.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PACKAGE COMPARISON PAGE ================= -->
+<div class="page page-comparison">
+
+  <div class="watermark">Beetlebulbs® | Growth Engineering</div>
+
+  <div class="header">
+    <h1>Package Comparison — Choose the Right Growth Level</h1>
+  </div>
+
+  <div class="content">
+
+    <!-- INTRO -->
+    <div class="section">
+      <p>
+        Beetlebulbs offers three levels of customer acquisition services.
+        Each package is designed for a different stage of business growth —
+        from fixing conversion gaps to full-scale lead, call,
+        and customer generation.
+      </p>
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="section">
+      <table>
+        <tr>
+          <th>Capability</th>
+          <th>Growth Lite</th>
+          <th>Growth Plus</th>
+          <th>Growth Engine</th>
+        </tr>
+
+        <tr>
+          <td>Primary Purpose</td>
+          <td>Fix lead & conversion quality</td>
+          <td>Execute & scale campaigns</td>
+          <td>End-to-end customer acquisition</td>
+        </tr>
+
+        <tr>
+          <td>Beetlebulbs Role</td>
+          <td>Diagnosis & stabilisation</td>
+          <td>Active execution partner</td>
+          <td>Full responsibility for acquisition</td>
+        </tr>
+
+        <tr>
+          <td>Lead / Call Generation</td>
+          <td>Analysis & improvement</td>
+          <td>Yes (managed)</td>
+          <td>Yes (fully managed)</td>
+        </tr>
+
+        <tr>
+          <td>Paid Advertising</td>
+          <td>Audit & optimisation guidance</td>
+          <td>Google, Meta, YouTube execution</td>
+          <td>All paid platforms at scale</td>
+        </tr>
+
+        <tr>
+          <td>Organic Channels</td>
+          <td>Gap identification</td>
+          <td>Basic execution</td>
+          <td>Full organic & outreach strategy</td>
+        </tr>
+
+        <tr>
+          <td>Platforms Covered</td>
+          <td>Existing channels only</td>
+          <td>Multiple selected platforms</td>
+          <td>All relevant platforms</td>
+        </tr>
+
+        <tr>
+          <td>Intent & Quality Control</td>
+          <td>Framework & insights</td>
+          <td>Ongoing monitoring</td>
+          <td>Continuous optimisation</td>
+        </tr>
+
+        <tr>
+          <td>Follow-up & Response</td>
+          <td>Process recommendations</td>
+          <td>Aligned with execution</td>
+          <td>Fully integrated with campaigns</td>
+        </tr>
+
+        <tr>
+          <td>Sales Team Dependency</td>
+          <td>High</td>
+          <td>Medium</td>
+          <td>Low (sales-only focus)</td>
+        </tr>
+
+        <tr>
+          <td>Reporting Focus</td>
+          <td>Insights & diagnostics</td>
+          <td>Performance & improvements</td>
+          <td>Customer & revenue outcomes</td>
+        </tr>
+
+        <tr>
+          <td>Best For</td>
+          <td>Businesses fixing inefficiency</td>
+          <td>Businesses scaling acquisition</td>
+          <td>Businesses wanting predictable growth</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- POSITIONING STATEMENT -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:12px 14px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Lite helps you understand what is broken.
+        Growth Plus helps you execute better.
+        Growth Engine takes ownership of generating
+        quality leads, calls, and customers —
+        so your team can focus on sales and revenue.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: The right package depends on how much acquisition responsibility you want to delegate.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= PAGE NUMBER SCRIPT ================= -->
+<script>
+(function () {
+  const pages = document.querySelectorAll('.page');
+  const totalPages = pages.length;
+
+  pages.forEach((page, index) => {
+    const el = page.querySelector('.page-no');
+    if (el) {
+      el.textContent = `Page ${index + 1} / ${totalPages}`;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

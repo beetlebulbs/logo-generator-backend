@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Presence System — Full Digital Infrastructure</title>
+
+<style>
+@page { margin: 0; }
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+}
+
+/* =============== A4 PAGE WRAPPER =============== */
+.page {
+  height: 1123px;
+  position: relative;
+  page-break-after: always;
+  overflow: hidden;
+}
+
+/* =============== WATERMARK (PER PAGE) =============== */
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-22deg);
+  font-size: 72px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.04);
+  white-space: nowrap;
+  z-index: 0;
+}
+
+/* =============== HEADER =============== */
+.header {
+  background: linear-gradient(135deg, #000, #1a1a1a);
+  color: #fff;
+  padding: 26px 32px;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.header-left img {
+  height: 36px;
+  background: #fff;
+  padding: 6px 8px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.sub {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.header-right {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* =============== HERO BLOCK =============== */
+.hero-block {
+  background: linear-gradient(135deg, #111, #1f1f1f);
+  color: #fff;
+  padding: 6px 12px;
+}
+
+.hero-block p {
+  font-size: 14.5px;
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+
+/* =============== CONTENT =============== */
+.content {
+  padding: 24px 32px 160px; /* footer-safe like Presence Plus */
+  position: relative;
+  z-index: 1;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section h2 {
+  font-size: 16.5px;
+  border-bottom: 2px solid #000;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.section p {
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+ul {
+  margin-left: 18px;
+}
+
+li {
+  font-size: 13.8px;
+  margin-bottom: 5px;
+}
+
+/* =============== TABLE =============== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 9px 7px;
+}
+
+th {
+  background: #000;
+  color: #fff;
+  text-align: left;
+}
+
+/* =============== FOOTER (LOCKED) =============== */
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-top: 1px solid #ddd;
+  padding: 14px 32px;
+  font-size: 12.5px;
+  background: #fff;
+  z-index: 20; /* 🔒 CRITICAL */
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+}
+
+.footer-text {
+  flex: 1;
+  color: #333;
+}
+
+.page-no {
+  min-width: 120px;
+  text-align: left;
+  font-weight: 700;
+  color: #000;
+  white-space: nowrap;
+}
+.bullet {
+  position: relative;
+  padding-left: 16px;
+  margin: 4px 0;
+  font-size: 13.8px;
+  line-height: 1.45;
+}
+.bullet::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 900;
+}
+.bullet-dot,
+.bullet-dash,
+.bullet-square {
+  position: relative;
+  padding-left: 18px;
+  margin: 4px 0;
+  font-size: 13.8px;
+  line-height: 1.45;
+}
+
+/* factual points */
+.bullet-dot::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 900;
+}
+
+/* interpretation / questions */
+.bullet-dash::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 700;
+}
+
+/* leadership control outcomes */
+.bullet-square::before {
+  content: "■";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 10px;
+}
+.bullet-dot,
+.bullet-dash,
+.bullet-square {
+  position: relative;
+  padding-left: 18px;
+  margin: 4px 0;
+  font-size: 13.8px;
+  line-height: 1.45;
+}
+
+/* factual observations */
+.bullet-dot::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 900;
+}
+
+/* typical market behavior */
+.bullet-dash::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 700;
+}
+
+/* Presence System outcomes */
+.bullet-square::before {
+  content: "■";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= PAGE 1 ================= -->
+<!-- ================= PAGE 1 : EXECUTIVE CONTEXT ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left">
+        <img src="http://localhost:3001/pdf-assets/Tmlogo.png" />
+        <div>
+          <h1>Presence System</h1>
+          <div class="sub">
+            Full Digital Infrastructure — Prepared by Beetlebulbs®
+          </div>
+        </div>
+      </div>
+      <div class="header-right">Generated on {{GENERATED_DATE}}</div>
+    </div>
+  </div>
+
+  <!-- HERO (SHOCK, NO FLUFF) -->
+  <div class="hero-block">
+    <p style="font-size:22px; font-weight:800;">
+      Your business is already leaking revenue.
+    </p>
+    <p style="opacity:0.9;">
+      Not because traffic is low — but because your digital presence was never
+      designed to operate at scale.
+    </p>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+  <!-- CORE THESIS -->
+  <div class="section">
+    <h2>Executive Context</h2>
+
+    <p>
+      Businesses rarely fail at low scale.
+      They fail at the exact moment growth accelerates
+      and systems fail to keep up.
+    </p>
+
+    <p>
+      Early on, founders compensate manually.
+      They remember leads.
+      They chase follow-ups.
+      They hold everything together by force.
+    </p>
+
+    <p>
+      But once volume crosses a threshold,
+      manual control collapses silently.
+      Revenue may still grow,
+      but clarity, predictability, and confidence disappear.
+    </p>
+  </div>
+
+  <!-- DATA SHOCK (COMPRESSED) -->
+  <div class="section">
+    <h2>What Actually Breaks at Scale</h2>
+
+    <ul>
+      <li><strong>30%+</strong> of inbound leads never receive structured follow-ups</li>
+      <li>Response delays beyond <strong>30 minutes</strong> cut close rates by ~<strong>50%</strong></li>
+      <li>Most teams operate across <strong>7–9 tools</strong> with no shared truth</li>
+      <li>Founders lack real-time visibility into pipeline health</li>
+    </ul>
+
+    <p style="opacity:0.9;">
+      These losses don’t appear as failure.
+      They appear as pressure, firefighting, and unpredictability.
+    </p>
+  </div>
+
+  <!-- VISUAL (KEEP IT) -->
+  <div class="section">
+    <h2>Why Digital Collapses During Growth</h2>
+
+    <svg width="100%" height="160" viewBox="0 0 900 160">
+      <style>
+        .axis { stroke:#000; stroke-width:2; }
+        .curve { fill:none; stroke:#000; stroke-width:3; }
+        .zone { fill:rgba(0,0,0,0.06); }
+        .label { font-size:13px; fill:#000; }
+      </style>
+
+      <line x1="60" y1="20" x2="60" y2="140" class="axis"/>
+      <line x1="60" y1="140" x2="860" y2="140" class="axis"/>
+      <rect x="520" y="30" width="340" height="110" class="zone"/>
+      <path d="M60 130 C260 70, 420 65, 520 65 C660 70, 760 90, 860 115" class="curve"/>
+
+      <text x="20" y="60" transform="rotate(-90 20,60)" class="label">Control</text>
+      <text x="780" y="155" class="label">Growth</text>
+      <text x="585" y="90" class="label">Breakdown Zone</text>
+    </svg>
+  </div>
+
+ <div class="section">
+  <h2>Digital Reality Check</h2>
+
+  <table>
+    <tr>
+      <th>Without a System</th>
+      <th>With Presence System</th>
+    </tr>
+    <tr>
+      <td>Founder-driven firefighting</td>
+      <td>System-driven execution</td>
+    </tr>
+    <tr>
+      <td>Disconnected tools</td>
+      <td>Unified operating infrastructure</td>
+    </tr>
+    <tr>
+      <td>Reactive decisions</td>
+      <td>Predictable, visible operations</td>
+    </tr>
+    
+  </table>
+</div>
+
+
+</div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================= PAGE 2 ================= -->
+<!-- ================= PAGE 2 : DOCUMENT OVERVIEW ================= -->
+<!-- ================= PAGE 2 : DOCUMENT OVERVIEW ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER (NO LOGO, ONLY TITLE) -->
+  <div class="header">
+    <h1>Document Overview</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- PURPOSE -->
+    <div class="section">
+      <h2>Why This Document Exists</h2>
+
+      <p>
+        This document is not a brochure.
+        It is not a feature list.
+        And it is not a sales pitch.
+      </p>
+
+      <p>
+        It is a system-level explanation of how modern businesses
+        must engineer their digital presence
+        once growth introduces complexity.
+      </p>
+
+      <p>
+        Every section that follows is designed to answer one question:
+        <strong>
+          How does a business retain control as volume, teams,
+          and decision pressure increase?
+        </strong>
+      </p>
+    </div>
+
+    <!-- HOW TO READ -->
+    <div class="section">
+      <h2>How to Read This Document</h2>
+
+      <p>
+        Each page builds on the previous one.
+        Skipping sections will reduce clarity.
+      </p>
+
+      <ul>
+        <li>Pages 3–4 diagnose where revenue and control leak</li>
+        <li>Pages 5–7 explain how Presence System is architected</li>
+        <li>Pages 8–9 focus on control, security, and ownership</li>
+        <li>Pages 10–12 define market contrast, commitment, and execution</li>
+      </ul>
+
+      <p>
+        This document assumes the reader is already familiar with
+        digital basics.
+        It intentionally avoids beginner explanations.
+      </p>
+    </div>
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="section">
+      <h2>System Roadmap (Table of Contents)</h2>
+
+      <table>
+        <tr>
+          <th>Page</th>
+          <th>Section</th>
+          <th>What You Will Understand</th>
+        </tr>
+
+        <tr>
+          <td>3</td>
+          <td>Revenue Leakage Problem</td>
+          <td>
+            Where money is silently lost when systems don’t scale
+          </td>
+        </tr>
+
+        <tr>
+          <td>4</td>
+          <td>Presence System Philosophy</td>
+          <td>
+            The principles that separate tools from infrastructure
+          </td>
+        </tr>
+
+        <tr>
+          <td>5</td>
+          <td>Full System Architecture</td>
+          <td>
+            How layers interact to create control, not chaos
+          </td>
+        </tr>
+
+        <tr>
+          <td>6</td>
+          <td>Conversion & UX Engineering</td>
+          <td>
+            Why structure converts better than design
+          </td>
+        </tr>
+
+        <tr>
+          <td>7</td>
+          <td>Automation & Intelligence</td>
+          <td>
+            How execution continues without human dependency
+          </td>
+        </tr>
+
+        <tr>
+          <td>8</td>
+          <td>Data, Dashboards & Control</td>
+          <td>
+            How leadership regains visibility and confidence
+          </td>
+        </tr>
+
+        <tr>
+          <td>9</td>
+          <td>Security & Ownership</td>
+          <td>
+            Why digital must become an asset, not a risk
+          </td>
+        </tr>
+
+        <tr>
+          <td>10</td>
+          <td>Market Comparison</td>
+          <td>
+            Why Presence System is structurally different
+          </td>
+        </tr>
+
+        <tr>
+          <td>11</td>
+          <td>Payment Milestones</td>
+          <td>
+            How execution is staged and protected
+          </td>
+        </tr>
+
+        <tr>
+          <td>12</td>
+          <td>Founder’s Commitment</td>
+          <td>
+            The level of accountability behind the system
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- AUTHORITY CLOSE -->
+    <div class="section">
+      <p>
+        This document does not attempt to convince.
+        It attempts to clarify.Businesses that recognize their reality
+        will see themselves reflected in the pages ahead.
+      </p>
+ 
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================= PAGE 3 ================= -->
+<!-- ================= PAGE 3 : REVENUE LEAKAGE PROBLEM ================= -->
+<!-- ================= PAGE 3 : REVENUE LEAKAGE PROBLEM ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Revenue Leakage Problem</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SECTION 1 -->
+    <div class="section">
+      <h2>Where Businesses Actually Lose Money</h2>
+
+      <p>
+        Revenue leakage is rarely loud.
+        It does not announce itself as failure.
+        It appears as silence.
+      </p>
+
+      <p>
+        A visitor who leaves without acting.
+        A lead that never receives a follow-up.
+        A delayed response that cools intent.
+        A deal that almost closed.
+      </p>
+
+      <p>
+        Individually, these events feel insignificant.
+        Collectively, they compound into measurable loss.
+      </p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section">
+      <h2>What the Data Reveals in Growing Businesses</h2>
+
+      <ul>
+        <li><strong>28–35%</strong> of inbound leads receive no structured follow-up</li>
+        <li>Response delays beyond <strong>30 minutes</strong> reduce conversion probability by <strong>50–60%</strong></li>
+        <li><strong>70%+</strong> of mid-scale teams rely on manual pipeline updates</li>
+        <li>Founders lack real-time visibility into lead stagnation</li>
+      </ul>
+
+      <p style="opacity:0.9;">
+        These are not performance failures.
+        They are system design failures.
+      </p>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section">
+      <h2>Leakage Mathematics (Simplified)</h2>
+
+      <p>
+        Consider a business receiving
+        <strong>1,000 inbound leads per month</strong>.
+      </p>
+
+      <table>
+        <tr>
+          <th>Leak Point</th>
+          <th>Impact</th>
+          <th>Result</th>
+        </tr>
+        <tr>
+          <td>No follow-up on 30% leads</td>
+          <td>300 leads ignored</td>
+          <td>Direct revenue loss</td>
+        </tr>
+        <tr>
+          <td>Delayed responses</td>
+          <td>Intent decay</td>
+          <td>Lower close rates</td>
+        </tr>
+        <tr>
+          <td>Manual tracking</td>
+          <td>Missed handoffs</td>
+          <td>Invisible leakage</td>
+        </tr>
+      </table>
+
+      <p>
+        Even with conservative assumptions,
+        revenue leakage often exceeds
+        <strong>20–30%</strong> before it is noticed.
+      </p>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section">
+      <h2>How Leakage Compounds Over Time</h2>
+
+      <svg width="100%" height="150" viewBox="0 0 900 150">
+        <style>
+          .axis { stroke:#000; stroke-width:2; }
+          .bar { fill:#000; }
+          .label { font-size:13px; fill:#000; }
+        </style>
+
+        <line x1="60" y1="20" x2="60" y2="130" class="axis"/>
+        <line x1="60" y1="130" x2="860" y2="130" class="axis"/>
+
+        <rect x="150" y="80" width="80" height="50" class="bar"/>
+        <rect x="300" y="65" width="80" height="65" class="bar"/>
+        <rect x="450" y="50" width="80" height="80" class="bar"/>
+        <rect x="600" y="35" width="80" height="95" class="bar"/>
+
+        <text x="160" y="145" class="label">Month 1</text>
+        <text x="310" y="145" class="label">Month 3</text>
+        <text x="460" y="145" class="label">Month 6</text>
+        <text x="610" y="145" class="label">Month 12</text>
+
+        <text x="15" y="80" transform="rotate(-90 15,80)" class="label">
+          Revenue Lost
+        </text>
+      </svg>
+
+      <p style="font-size:13.5px; opacity:0.85;">
+        Leakage compounds quietly.
+        By the time it feels painful,
+        the damage is already structural.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PAGE 4 : PRESENCE SYSTEM PHILOSOPHY ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Presence System Philosophy</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SECTION 1 -->
+    <div class="section">
+      <h2>Why Tools Stop Working as Businesses Grow</h2>
+
+      <p>
+        Most businesses do not fail because they lack tools.
+        They fail because tools were never designed
+        to coordinate decisions under pressure.
+      </p>
+
+      <p>
+        In early stages, tools feel powerful.
+        Each solves a narrow problem well.
+      </p>
+
+      <p>
+        Growth introduces volume, parallel execution,
+        and dependency between teams.
+        At this stage, tools stop coordinating.
+        Humans start filling the gaps.
+      </p>
+
+      <p>
+        This is where control quietly collapses.
+      </p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section">
+      <h2>The Hidden Cost of Tool-Based Growth</h2>
+
+      <p>
+        Tool-based setups depend on people to remember,
+        update, communicate, and escalate manually.
+      </p>
+
+      <ul>
+        <li>Follow-ups rely on memory</li>
+        <li>Pipelines rely on manual updates</li>
+        <li>Context transfer relies on conversations</li>
+        <li>Bottlenecks surface only after damage</li>
+      </ul>
+
+      <p style="font-weight:700;">
+        Any system that depends on human memory
+        will eventually leak revenue.
+      </p>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section">
+      <h2>What a System Does That Tools Never Can</h2>
+
+      <p>
+        A system is not software.
+        It is enforced behavior.
+      </p>
+
+      <p>
+        Presence System is designed around
+        three non-negotiable principles:
+      </p>
+
+      <table>
+        <tr>
+          <th>Principle</th>
+          <th>Why It Matters</th>
+        </tr>
+        <tr>
+          <td>Clarity before conversion</td>
+          <td>Decisions happen only when next steps are obvious</td>
+        </tr>
+        <tr>
+          <td>Automation before scale</td>
+          <td>Manual execution collapses under volume</td>
+        </tr>
+        <tr>
+          <td>Visibility before control</td>
+          <td>Leadership cannot manage what it cannot see</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SECTION 4 (COMPRESSED CLOSE) -->
+    <div class="section">
+      <h2>Systems Replace Dependency with Certainty</h2>
+
+      <p>
+        Presence System does not assume ideal behavior.
+        It assumes reality.
+      </p>
+
+      <p style="font-weight:700;">
+        Growth should increase intelligence —
+        not stress.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PAGE 5 : FULL SYSTEM ARCHITECTURE ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Full System Architecture</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SECTION 1 -->
+    <div class="section">
+      <h2>How Presence System Is Engineered</h2>
+
+      <p>
+        Presence System is not built as a single application.
+        It is engineered as a layered digital architecture.
+      </p>
+
+      <p>
+        Each layer performs a specific role.
+        Each layer supports the next.
+        No layer operates in isolation.
+      </p>
+
+      <p style="font-weight:700;">
+        Remove one layer and control weakens.
+        Align all layers and the system compounds.
+      </p>
+    </div>
+
+    <!-- VISUAL ARCHITECTURE -->
+    <div class="section">
+      <h2>Layered Architecture Overview</h2>
+
+      <svg width="100%" height="260" viewBox="0 0 900 260">
+        <style>
+          .layer { fill:#f5f5f5; stroke:#000; stroke-width:1.5; }
+          .title { font-size:15px; font-weight:700; fill:#000; }
+          .desc { font-size:13px; fill:#000; }
+        </style>
+
+        <!-- Layer 1 -->
+        <rect x="120" y="20" width="660" height="40" class="layer"/>
+        <text x="450" y="45" text-anchor="middle" class="title">
+          Perception Layer
+        </text>
+
+        <!-- Layer 2 -->
+        <rect x="120" y="70" width="660" height="40" class="layer"/>
+        <text x="450" y="95" text-anchor="middle" class="title">
+          Interaction Layer
+        </text>
+
+        <!-- Layer 3 -->
+        <rect x="120" y="120" width="660" height="40" class="layer"/>
+        <text x="450" y="145" text-anchor="middle" class="title">
+          Intelligence Layer
+        </text>
+
+        <!-- Layer 4 -->
+        <rect x="120" y="170" width="660" height="40" class="layer"/>
+        <text x="450" y="195" text-anchor="middle" class="title">
+          Automation Layer
+        </text>
+
+        <!-- Layer 5 -->
+        <rect x="120" y="220" width="660" height="40" class="layer"/>
+        <text x="450" y="245" text-anchor="middle" class="title">
+          Control Layer
+        </text>
+      </svg>
+    </div>
+
+    <!-- LAYER EXPLANATION -->
+    <div class="section">
+      <h2>What Each Layer Is Responsible For</h2>
+
+      <table>
+        <tr>
+          <th>Layer</th>
+          <th>Responsibility</th>
+          <th>Failure Without It</th>
+        </tr>
+
+        <tr>
+          <td>Perception</td>
+          <td>Trust, clarity, credibility</td>
+          <td>Users hesitate or exit</td>
+        </tr>
+
+        <tr>
+          <td>Interaction</td>
+          <td>Guided decisions & actions</td>
+          <td>Interest without conversion</td>
+        </tr>
+
+        <tr>
+          <td>Intelligence</td>
+          <td>Tracking, learning, insight</td>
+          <td>Blind decision-making</td>
+        </tr>
+
+        <tr>
+          <td>Automation</td>
+          <td>Execution & follow-through</td>
+          <td>Human dependency & delay</td>
+        </tr>
+
+        <tr>
+          <td>Control</td>
+          <td>Visibility & leadership</td>
+          <td>Reactive management</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SYSTEM LOGIC -->
+    <div class="section">
+  <h2>Why This Structure Scales</h2>
+
+  <p>
+    Growth increases load across perception, interaction,
+    intelligence, automation, and control simultaneously.
+  </p>
+
+  <p>
+    Presence System absorbs this load because decisions are guided,
+    execution is enforced, learning is continuous,
+    and leadership operates with real-time visibility.
+  </p>
+
+  <p style="font-weight:700;">
+    Scale strengthens the system —
+    it does not expose its weaknesses.
+  </p>
+</div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+<!-- ================= PAGE 6 : CONVERSION & UX ENGINEERING ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Conversion & UX Engineering</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SECTION 1 -->
+    <div class="section">
+      <h2>Why Design Alone Never Converts at Scale</h2>
+
+      <p>
+        Most businesses believe conversion is a design problem.
+        Better visuals, better colors, better animations.
+      </p>
+
+      <p>
+        Design attracts attention.
+        It does not resolve uncertainty.
+      </p>
+
+      <p style="font-weight:700;">
+        Conversion fails when users do not know
+        what happens after they click.
+      </p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section">
+      <h2>Conversion Is a Decision Problem</h2>
+
+      <p>
+        Every visitor arrives with intent,
+        but also with hesitation.
+      </p>
+
+      <p>
+        Presence System treats conversion
+        as a sequence of decisions,
+        not a single action.
+      </p>
+
+      <table>
+        <tr>
+          <th>Stage</th>
+          <th>User Question</th>
+          <th>System Responsibility</th>
+        </tr>
+        <tr>
+          <td>Attention</td>
+          <td>Is this relevant?</td>
+          <td>Clear positioning</td>
+        </tr>
+        <tr>
+          <td>Clarity</td>
+          <td>What happens next?</td>
+          <td>Guided flow</td>
+        </tr>
+        <tr>
+          <td>Trust</td>
+          <td>Is this safe?</td>
+          <td>Credibility signals</td>
+        </tr>
+        <tr>
+          <td>Action</td>
+          <td>Is this worth it now?</td>
+          <td>Frictionless execution</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section">
+      <h2>How Presence System Engineers UX</h2>
+
+      <p>
+        Presence System removes decision noise.
+        Not by simplification,
+        but by structure.
+      </p>
+
+      <p>
+        Every page is designed to:
+        reduce choice overload,
+        eliminate ambiguity,
+        and guide momentum forward.
+      </p>
+
+      <p style="font-weight:700;">
+        Conversion becomes repeatable behavior,
+        independent of traffic source.
+      </p>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section">
+      <h2>Why This Matters at Scale</h2>
+
+      <p>
+        As traffic grows,
+        inconsistency compounds.
+      </p>
+
+      <p>
+        Without engineered UX,
+        more visitors simply amplify confusion.
+      </p>
+
+      <p style="font-weight:700;">
+  Conversion becomes repeatable behavior,
+  independent of traffic source.
+</p>
+
+<p style="font-size:13.5px; opacity:0.9;">
+  The system decides what happens next —
+  not the visitor’s mood, device, or timing.
+</p><p style="font-size:13.5px; opacity:0.9;">
+  Outcomes stop being probabilistic.
+  They become system-controlled responses.
+</p>
+
+<p style="font-size:13.5px; opacity:0.9;">
+  This is where marketing ends
+  and digital infrastructure begins.
+</p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+<!-- ================= PAGE 7 : AUTOMATION & INTELLIGENCE ================= -->
+<!-- ================= PAGE 7 : AUTOMATION & INTELLIGENCE ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Automation & Intelligence</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SECTION 1 -->
+    <div class="section">
+      <h2>Why Human-Led Execution Quietly Fails</h2>
+
+      <p>
+        Most businesses rely on people to execute critical steps:
+        follow-ups, handoffs, reminders, and updates.
+      </p>
+
+      <p>
+        This works when volume is low.
+        It fails when pressure increases.
+      </p>
+
+      <div class="bullet">People forget important actions</div>
+      <div class="bullet">Follow-ups get delayed or skipped</div>
+      <div class="bullet">Priorities shift under pressure</div>
+
+      <p style="font-weight:700;">
+        Any execution model dependent on memory
+        will eventually collapse.
+      </p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section">
+      <h2>Automation Is Not Speed. It Is Discipline.</h2>
+
+      <p>
+        Automation is often mistaken for convenience.
+        Its real function is enforcement.
+      </p>
+
+      <div class="bullet">Acknowledgements are triggered automatically</div>
+      <div class="bullet">Follow-ups execute on schedule</div>
+      <div class="bullet">Escalations occur when action is delayed</div>
+
+      <p>
+        Actions happen because the system requires them —
+        not because someone remembered.
+      </p>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section">
+      <h2>What Intelligence Means Inside the System</h2>
+
+      <p>
+        Intelligence is not dashboards.
+        Intelligence is feedback that corrects execution.
+      </p>
+
+      <div class="bullet">Response delays are detected early</div>
+      <div class="bullet">Drop-offs surface before revenue is lost</div>
+      <div class="bullet">Stalled movement becomes visible automatically</div>
+
+      <p>
+        This feedback continuously refines automation rules
+        and strengthens decision paths.
+      </p>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section">
+      <h2>Execution Continues Even When People Change</h2>
+
+      <p>
+        Teams grow. Roles change. People leave.
+      </p>
+
+      <p>
+        Presence System carries intent forward.
+        Processes outlive individuals.
+      </p>
+
+      <div class="bullet">The system remembers what people forget</div>
+      <div class="bullet">Execution continues without supervision</div>
+      <div class="bullet">Consistency is preserved across roles</div>
+      <div class="bullet">Momentum survives team changes</div>
+      <div class="bullet">Critical actions never depend on individuals</div>
+
+      <p style="font-weight:700;">
+        Consistency is no longer a risk.
+        It is engineered.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PAGE 8 : DATA, DASHBOARDS & CONTROL ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Data, Dashboards & Control</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SECTION 1 -->
+    <div class="section">
+      <h2>Why Most Dashboards Fail Leadership</h2>
+
+      <p>
+        Most businesses already have dashboards.
+        Very few have control.
+      </p>
+
+      <p>
+        Traditional dashboards focus on reporting.
+        Presence System dashboards focus on decision-making.
+      </p>
+
+      <div class="bullet-dot">Data arrives late</div>
+      <div class="bullet-dot">Metrics are fragmented across tools</div>
+      <div class="bullet-dot">Reports explain the past, not the present</div>
+
+      <p style="font-weight:700;">
+        Information does not equal visibility.
+      </p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section">
+      <h2>What Real Visibility Actually Means</h2>
+
+      <p>
+        Visibility is the ability to see problems
+        before they become outcomes.
+      </p>
+
+      <div class="bullet-dot">Where leads are entering</div>
+      <div class="bullet-dot">Where intent is dropping</div>
+      <div class="bullet-dot">Where execution is delayed</div>
+
+      <p>
+        Presence System connects activity, intent,
+        and execution into a single operational view.
+      </p>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section">
+      <h2>Dashboards Built for Control, Not Observation</h2>
+
+      <p>
+        Presence System dashboards are engineered
+        around leadership questions:
+      </p>
+
+      <div class="bullet-dash">What is happening right now?</div>
+      <div class="bullet-dash">Where is momentum slowing?</div>
+      <div class="bullet-dash">Which stage needs intervention?</div>
+
+      <p>
+        This eliminates dependency on verbal updates
+        and delayed reporting cycles.
+      </p>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section">
+      <h2>How Control Changes Founder Behavior</h2>
+
+      <p>
+        When visibility improves,
+        leadership behavior changes automatically.
+      </p>
+
+      <div class="bullet-square">Decisions become earlier</div>
+      <div class="bullet-square">Interventions become precise</div>
+      <div class="bullet-square">Firefighting becomes rare</div>
+
+      <p style="font-weight:700;">
+        Control is not authority.
+        Control is clarity.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+ 
+ <!-- ================= PAGE 9 : SECURITY & OWNERSHIP ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Security & Ownership</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SECTION 1 -->
+    <div class="section">
+      <h2>Why Digital Risk Increases with Growth</h2>
+
+      <p>
+        In early stages, digital risk feels invisible.
+        Few users, limited data, simple workflows.
+      </p>
+
+      <p>
+        Growth changes this equation.
+        More users, more data, more access points,
+        and more operational dependency.
+      </p>
+
+      <div class="bullet-dot">More people touch critical systems</div>
+      <div class="bullet-dot">More data flows across tools</div>
+      <div class="bullet-dot">More damage possible from small mistakes</div>
+
+      <p style="font-weight:700;">
+        Security risk grows quietly — just like revenue.
+      </p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section">
+      <h2>Ownership Is the Real Security Layer</h2>
+
+      <p>
+        Most businesses believe security means protection.
+        Presence System treats security as ownership.
+      </p>
+
+      <div class="bullet-dash">Who controls the code?</div>
+      <div class="bullet-dash">Who owns the data?</div>
+      <div class="bullet-dash">Who can access what — and why?</div>
+
+      <p>
+        When ownership is unclear,
+        dependency replaces control.
+      </p>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section">
+      <h2>How Presence System Engineers Ownership</h2>
+
+      <p>
+        Presence System is built with
+        ownership-first architecture.
+      </p>
+
+      <div class="bullet-dot">You retain full code ownership</div>
+      <div class="bullet-dot">You retain full data ownership</div>
+      <div class="bullet-dot">Infrastructure access is role-controlled</div>
+
+      <p>
+        Nothing critical lives in black boxes.
+        Nothing essential is locked behind vendors.
+      </p>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section">
+      <h2>Security Without Operational Friction</h2>
+
+      <p>
+        Security should not slow teams down.
+        It should protect them quietly.
+      </p>
+
+      <div class="bullet-square">Role-based access prevents overreach</div>
+      <div class="bullet-square">Permission hierarchies reduce error</div>
+      <div class="bullet-square">Backups ensure continuity</div>
+
+      <p style="font-weight:700;">
+        Digital presence becomes a durable asset —
+        not a fragile dependency.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PAGE 10 : MARKET COMPARISON ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Market Comparison</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SECTION 1 -->
+    <div class="section">
+      <h2>Why Most Market Solutions Feel Similar</h2>
+
+      <p>
+        The digital services market is crowded.
+        Most offerings look different on the surface,
+        but behave the same underneath.
+      </p>
+
+      <div class="bullet-dot">Websites are treated as projects</div>
+      <div class="bullet-dot">Tools are assembled, not integrated</div>
+      <div class="bullet-dot">Growth is assumed, not engineered</div>
+
+      <p style="font-weight:700;">
+        Outputs are delivered.
+        Control is not.
+      </p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section">
+      <h2>Structural Difference in Approach</h2>
+
+      <table>
+        <tr>
+          <th>Typical Market Approach</th>
+          <th>Presence System</th>
+        </tr>
+
+        <tr>
+          <td>Website as a deliverable</td>
+          <td>Digital infrastructure as a foundation</td>
+        </tr>
+
+        <tr>
+          <td>Tool stack selection</td>
+          <td>System architecture design</td>
+        </tr>
+
+        <tr>
+          <td>Manual follow-ups</td>
+          <td>Automation-enforced execution</td>
+        </tr>
+
+        <tr>
+          <td>Periodic reporting</td>
+          <td>Real-time operational visibility</td>
+        </tr>
+
+        <tr>
+          <td>Founder dependency</td>
+          <td>System continuity</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section">
+      <h2>How Growth Is Treated</h2>
+
+      <p>
+        In most market setups,
+        growth introduces stress.
+      </p>
+
+      <div class="bullet-dash">More leads require more people</div>
+      <div class="bullet-dash">More volume increases errors</div>
+      <div class="bullet-dash">More tools increase fragmentation</div>
+
+      <p>
+        Presence System treats growth differently.
+      </p>
+
+      <div class="bullet-square">Growth increases system intelligence</div>
+      <div class="bullet-square">Volume strengthens automation</div>
+      <div class="bullet-square">Complexity becomes manageable</div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section">
+      <h2>Why Presence System Is Not a Replacement</h2>
+
+      <p>
+        Presence System does not replace agencies,
+        tools, or teams.
+      </p>
+
+      <p>
+        It replaces the gaps between them.
+      </p>
+
+      <p style="font-weight:700;">
+        This is why comparisons based on price,
+        features, or timelines miss the point.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+ <!-- ================= PAGE 11 : PAYMENT MILESTONES ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Payment Milestones</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SECTION 1 -->
+    <div class="section">
+      <h2>Why Milestone-Based Engagement Matters</h2>
+
+      <p>
+        Presence System is not delivered as a single handover.
+        It is built, validated, and stabilized in stages.
+      </p>
+
+      <p>
+        This ensures clarity, accountability,
+        and shared alignment at every phase.
+      </p>
+
+      <div class="bullet-dot">No upfront blind commitment</div>
+      <div class="bullet-dot">Progress tied to real deliverables</div>
+      <div class="bullet-dot">Control maintained on both sides</div>
+
+      <p style="font-weight:700;">
+        Execution is structured.
+        Expectations are explicit.
+      </p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section">
+      <h2>Milestone Structure</h2>
+
+      <table>
+        <tr>
+          <th>Milestone</th>
+          <th>Focus</th>
+          <th>Allocation</th>
+        </tr>
+
+        <tr>
+          <td>Milestone 1</td>
+          <td>Architecture & system blueprint</td>
+          <td>40%</td>
+        </tr>
+
+        <tr>
+          <td>Milestone 2</td>
+          <td>Core system build & integrations</td>
+          <td>40%</td>
+        </tr>
+
+        <tr>
+          <td>Milestone 3</td>
+          <td>Stabilization, testing & handover</td>
+          <td>20%</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section">
+      <h2>What Each Milestone Guarantees</h2>
+
+      <div class="bullet-dash">
+        Architecture Lock — system logic,
+        flow ownership, and technical direction finalized
+      </div>
+
+      <div class="bullet-dash">
+        Core Build — infrastructure, automation,
+        dashboards, and integrations implemented
+      </div>
+
+      <div class="bullet-dash">
+        Stabilization — testing, refinements,
+        and operational readiness ensured
+      </div>
+
+      <p>
+        Each milestone concludes with
+        review, validation, and alignment
+        before moving forward.
+      </p>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section">
+      <h2>Why This Reduces Risk</h2>
+
+      <div class="bullet-square">Progress is visible, not assumed</div>
+      <div class="bullet-square">Decisions are made with context</div>
+      <div class="bullet-square">Execution stays aligned to intent</div>
+
+      <p style="font-weight:700;">
+        This structure protects both sides —
+        and keeps the system honest.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+<!-- ================= PAGE 12 : FOUNDER'S COMMITMENT ================= -->
+<div class="page">
+  <div class="watermark">Beetlebulbs®</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Founder’s Commitment</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SECTION 1 -->
+    <div class="section">
+      <h2>Why This System Exists</h2>
+
+      <p>
+        Presence System was not created to compete
+        in the services market.
+      </p>
+
+      <p>
+        It was created to solve a recurring,
+        deeply operational problem we kept seeing
+        across growing businesses.
+      </p>
+
+      <p>
+        Ambition was never the issue.
+        Execution under scale was.
+      </p>
+
+      <p style="font-weight:700;">
+        This system exists because growth deserves structure.
+      </p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section">
+      <h2>Our Commitment to Execution</h2>
+
+      <p>
+        Presence System engagements are limited
+        by design.
+      </p>
+
+      <div class="bullet-dot">
+        We do not run parallel overload projects
+      </div>
+
+      <div class="bullet-dot">
+        We do not delegate core architecture blindly
+      </div>
+
+      <div class="bullet-dot">
+        We do not compromise system integrity for speed
+      </div>
+
+      <p>
+        Depth matters more than volume.
+      </p>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section">
+      <h2>What You Can Expect</h2>
+
+      <div class="bullet-dash">
+        Direct involvement in system design
+        and architectural decisions
+      </div>
+
+      <div class="bullet-dash">
+        Clear reasoning behind every structural choice
+      </div>
+
+      <div class="bullet-dash">
+        Long-term thinking beyond launch and delivery
+      </div>
+
+      <p>
+        Presence System is not rushed.
+        It is built to last.
+      </p>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section">
+      <h2>What We Expect in Return</h2>
+
+      <p>
+        This system works best
+        with founders who value clarity,
+        discipline, and long-term control.
+      </p>
+
+      <div class="bullet-square">
+        Willingness to align on structure
+      </div>
+
+      <div class="bullet-square">
+        Respect for system logic over impulse
+      </div>
+
+      <div class="bullet-square">
+        Commitment to operate digitally with intent
+      </div>
+
+      <p style="font-weight:700;">
+        This is a partnership in structure —
+        not a transactional delivery.
+      </p>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section">
+      <h2>Closing Thought</h2>
+
+      <p>
+        Growth is inevitable for strong businesses.
+      </p>
+
+      <p>
+        Chaos is optional.
+      </p>
+
+      <p style="font-weight:800;">
+        Presence System exists to make sure
+        your digital presence grows with you —
+        not against you.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Beetlebulbs® — Foundations for serious businesses, digital operating systems for control, continuity, and growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ADD MORE PAGES SAME STRUCTURE ================= -->
+
+<!-- ================= DYNAMIC PAGE NUMBER SCRIPT ================= -->
+<script>
+(function () {
+  const pages = document.querySelectorAll('.page');
+  const totalPages = pages.length;
+
+  pages.forEach((page, index) => {
+    const el = page.querySelector('.page-no');
+    if (el) {
+      el.textContent = `Page ${index + 1} / ${totalPages}`;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Growth Lite — Base Layout</title>
+
+<style>
+@page { margin: 0; }
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+}
+
+/* ================= A4 PAGE ================= */
+.page {
+  height: 1123px;
+  min-height: 1123px;
+  position: relative;
+  page-break-after: always;
+  background: #fff;
+}
+
+/* ================= WATERMARK (PER PAGE, TRUE CENTER) ================= */
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 44px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.08);
+  white-space: nowrap;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ================= HEADER ================= */
+.header {
+  background: linear-gradient(135deg, #000, #1a1a1a);
+  color: #fff;
+  padding: 26px 32px;
+  position: relative;
+  z-index: 3;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.header-left img {
+  height: 36px;
+  background: #fff;
+  padding: 6px 8px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.sub {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.header-right {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* ================= CONTENT ================= */
+.content {
+  padding: 26px 32px 60px; /* footer space reserved */
+  position: relative;
+  z-index: 2;
+}
+
+/* Dummy section styling (for testing only) */
+.section {
+  margin-bottom: 18px;
+}
+
+.section h2 {
+  font-size: 16.5px;
+  border-bottom: 2px solid #000;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.section p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ================= FOOTER (PERMANENT FIX) ================= */
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-top: 1px solid #ddd;
+  padding: 6px 28px;
+  font-size: 12px;
+  line-height: 1.25;
+  background: #fff;
+  z-index: 4;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: flex-start;
+}
+
+.footer-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-no {
+  min-width: 120px;
+  text-align: left;
+  font-weight: 700;
+  color: #000;
+}
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  color: #111;
+}
+
+/* Headings */
+.section h2 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  margin-bottom: 6px;
+}
+
+/* Body text */
+.section p {
+  font-size: 14.2px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* Lists */
+li {
+  font-size: 13.8px;
+  line-height: 1.6;
+}
+
+/* Tables */
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+th {
+  background: #000;
+  color: #fff;
+  text-align: left;
+}
+/* tighter spacing only for page 1 */
+.page.page-1 .section {
+  margin-bottom: 14px;
+}
+
+.page.page-1 h2 {
+  margin-bottom: 4px;
+}
+
+.page.page-1 p {
+  margin-bottom: 6px;
+}
+.page.page-1 table td,
+.page.page-1 table th {
+  padding: 4px 5px;
+}
+.page.page-1 table {
+  margin-top: 4px;
+  page-break-inside: auto !important;
+}
+.page.page-1 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+
+.page.page-3 table td,
+.page.page-3 table th {
+  padding: 2px 2px;
+}
+.page.page-3 table {
+  margin-top: 0px;
+  page-break-inside: auto !important;
+}
+.page.page-3 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.pagepage-1.section {
+  margin-bottom: 10px;
+}
+.page.page-4 table td,
+.page.page-4 table th {
+  padding: 3px 4px;
+}
+.page.page-4 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-4 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-6 table td,
+.page.page-6 table th {
+  padding: 3px 4px;
+}
+.page.page-6 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-6 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-7 table td,
+.page.page-7 table th {
+  padding: 3px 4px;
+}
+.page.page-7 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-7 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-8 table td,
+.page.page-8 table th {
+  padding: 3px 4px;
+}
+.page.page-8 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-8 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-9 table td,
+.page.page-9 table th {
+  padding: 3px 4px;
+}
+.page.page-9 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-9 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-10 table td,
+.page.page-10 table th {
+  padding: 3px 4px;
+}
+.page.page-10 table {
+  margin-top: 3px;
+  page-break-inside: auto !important;
+}
+.page.page-10 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-11 table td,
+.page.page-11 table th {
+  padding: 4px 5px;
+}
+.page.page-11 table {
+  margin-top: 4px;
+  page-break-inside: auto !important;
+}
+.page.page-11 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-12 table td,
+.page.page-12 table th {
+  padding: 4px 5px;
+}
+.page.page-12 table {
+  margin-top: 4px;
+  page-break-inside: auto !important;
+}
+.page.page-12 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-13 table td,
+.page.page-13 table th {
+  padding: 4px 5px;
+}
+.page.page-13 table {
+  margin-top: 4px;
+  page-break-inside: auto !important;
+}
+.page.page-13 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-14 table td,
+.page.page-14 table th {
+  padding: 4px 5px;
+}
+.page.page-14 table {
+  margin-top: 4px;
+  page-break-inside: auto !important;
+}
+.page.page-14 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+.page.page-17 table td,
+.page.page-17 table th {
+  padding: 4px 5px;
+}
+.page.page-17 table {
+  margin-top: 4px;
+  page-break-inside: auto !important;
+}
+.page.page-17 tr {
+  page-break-inside: avoid !important;
+  page-break-after: auto !important;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= PAGE 1 (TEST) ================= -->
+<!-- ================= PAGE 1 : GROWTH PLUS ================= -->
+<div class="page page-1">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left">
+        <img src="http://localhost:3001/pdf-assets/Tmlogo.png" />
+        <div>
+          <h1>Growth Plus</h1>
+          <div class="sub">
+            Multi-Channel Lead, Call & Customer Acquisition — Executed by Beetlebulbs®
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        Generated on {{GENERATED_DATE}}
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO (COMPACT) -->
+  <div class="hero-block">
+  <p style="
+  font-size:20px;
+  line-height:1.3;
+  margin:0;
+  padding-left:32px;
+  padding-right:32px;
+">
+  Marketing activity is already happening. 
+  Growth Plus converts that activity into customers.
+</p>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- EXECUTIVE REALITY (COMPRESSED) -->
+    <div class="section" style="margin-bottom:14px;">
+      <h2>Why Active Marketing Still Feels Unstable</h2>
+      <p style="margin-bottom:0;">
+        Businesses run ads, list on portals, publish content,
+        and invest consistently — yet customer flow stays unpredictable.
+        The issue is not channels,
+        but <strong>execution without coordination and intent control</strong>.
+      </p>
+    </div>
+
+    <!-- SNAPSHOT (COMPACT TABLE) -->
+    <div class="section" style="margin-bottom:16px;">
+      <h2>After Execution Begins — Market Reality</h2>
+      <table>
+        <tr>
+          <th>Area</th>
+          <th>Expectation</th>
+          <th>Reality</th>
+        </tr>
+        <tr>
+          <td>Paid Ads</td>
+          <td>Customers</td>
+          <td>High enquiries</td>
+        </tr>
+        <tr>
+          <td>Multi-Channels</td>
+          <td>Strong pipeline</td>
+          <td>Mixed intent</td>
+        </tr>
+        <tr>
+          <td>Sales Calls</td>
+          <td>Serious buyers</td>
+          <td>Repeated qualification</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- PAIN vs GAP (TIGHT) -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+
+      <div class="section">
+        <h2>Founder & Team Pain</h2>
+        <ul>
+          <li>Confidence stays low</li>
+          <li>Sales doubts lead quality</li>
+          <li>Conflicting platform reports</li>
+          <li>Scaling feels risky</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>The Execution Gap</h2>
+        <ul>
+          <li>Channels work in isolation</li>
+          <li>No intent prioritisation</li>
+          <li>Same follow-up for all</li>
+          <li>Late revenue visibility</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ================= IMPACT TABLE (PAGE 1 CORE) ================= -->
+    <div class="section">
+      <h2>What Growth Plus Changes in Execution</h2>
+
+      <table>
+        <tr>
+          <th style="width:30%;">Execution Area</th>
+          <th style="width:35%;">Before Growth Plus</th>
+          <th style="width:35%;">After Growth Plus</th>
+        </tr>
+
+        <tr>
+          <td>Channel Management</td>
+          <td>Independent platforms</td>
+          <td>Outcome-aligned execution</td>
+        </tr>
+
+        <tr>
+          <td>Paid & Organic</td>
+          <td>Separate goals</td>
+          <td>Single coordinated system</td>
+        </tr>
+
+        <tr>
+          <td>Lead Quality</td>
+          <td>Volume-driven</td>
+          <td>Intent-driven</td>
+        </tr>
+
+        <tr>
+          <td>Call Handling</td>
+          <td>Uniform response</td>
+          <td>Intent-based response</td>
+        </tr>
+
+        <tr>
+          <td>Follow-ups</td>
+          <td>Reactive</td>
+          <td>Structured & timed</td>
+        </tr>
+
+        <tr>
+          <td>Decision Making</td>
+          <td>Clicks & activity</td>
+          <td>Revenue impact</td>
+        </tr>
+
+        <tr>
+          <td>Sales Experience</td>
+          <td>Mixed seriousness</td>
+          <td>Higher clarity</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- POSITIONING NOTE (SHORT) -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 12px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.6px;line-height:1.5;margin-bottom:0;font-weight:600;">
+        Growth Plus restructures execution so leads, calls,
+        and follow-ups translate into predictable customer outcomes —
+        without increasing noise.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Growth Plus introduces execution discipline
+        before aggressive scaling.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 2 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Multi-Channel Execution Overview</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- PAGE CONTEXT -->
+    <div class="section">
+      <h2>Execution, Not Experimentation</h2>
+      <p>
+        Growth Plus is designed for businesses that already understand
+        digital marketing basics and now need
+        <strong>structured execution across multiple channels</strong>.
+      </p>
+      <p>
+        Every channel in Growth Plus has a defined role —
+        generating leads, calls, or customer conversations
+        with measurable seriousness.
+      </p>
+    </div>
+
+    <!-- ================= SPLIT : PAID vs ORGANIC ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT : PAID CHANNELS -->
+      <div class="section">
+        <h2>Paid Channels We Execute</h2>
+        <table>
+          <tr>
+            <th>Platform</th>
+            <th>Primary Role</th>
+          </tr>
+          <tr>
+            <td>Google Search Ads</td>
+            <td>High-intent lead & call generation</td>
+          </tr>
+          <tr>
+            <td>Google Display & Remarketing</td>
+            <td>Recall & follow-up visibility</td>
+          </tr>
+          <tr>
+            <td>Meta Ads (Facebook / Instagram)</td>
+            <td>Volume-based enquiry generation</td>
+          </tr>
+          <tr>
+            <td>YouTube Ads</td>
+            <td>Awareness → assisted conversions</td>
+          </tr>
+          <tr>
+            <td>LinkedIn Ads</td>
+            <td>B2B decision-maker outreach</td>
+          </tr>
+          <tr>
+            <td>Portal Listings & Portal Ads</td>
+            <td>Ready traffic & comparison-stage buyers</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- RIGHT : ORGANIC CHANNELS -->
+      <div class="section">
+        <h2>Organic & Assisted Channels</h2>
+        <table>
+          <tr>
+            <th>Channel</th>
+            <th>Execution Focus</th>
+          </tr>
+          <tr>
+            <td>SEO (On-page & Technical)</td>
+            <td>Search trust & long-term lead support</td>
+          </tr>
+          <tr>
+            <td>Blogs & Content</td>
+            <td>Buyer education & seriousness building</td>
+          </tr>
+          <tr>
+            <td>Social Media (SMO)</td>
+            <td>Brand recall & credibility</td>
+          </tr>
+          <tr>
+            <td>Google Business Profile</td>
+            <td>Local intent & direct calls</td>
+          </tr>
+          <tr>
+            <td>WhatsApp & Email Marketing</td>
+            <td>Nurturing & follow-up reinforcement</td>
+          </tr>
+          <tr>
+            <td>Influencer Collaborations</td>
+            <td>Trust transfer & demand stimulation</td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- ================= EXECUTION LOGIC ================= -->
+    <div class="section">
+      <h2>How These Channels Work Together</h2>
+      <ul>
+        <li>Paid channels create speed and enquiry volume</li>
+        <li>Organic channels build trust and seriousness</li>
+        <li>Remarketing connects early interest to decision stage</li>
+        <li>WhatsApp & email reinforce follow-ups</li>
+        <li>Portals capture ready buyers at comparison stage</li>
+      </ul>
+      <p>
+        Growth Plus does not treat channels separately —
+        execution is aligned to move buyers
+        from discovery to conversation.
+      </p>
+    </div>
+
+    <!-- POSITIONING STRIP -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 12px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.5;margin-bottom:0;font-weight:600;">
+        In Growth Plus, channels are tools —
+        outcomes are the objective.
+        Every platform is judged by
+        lead quality, call seriousness,
+        and contribution to customers.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Growth Plus executes multiple channels
+        with a single focus — customer outcomes.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 3 : GROWTH PLUS ================= -->
+<div class="page page-3">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Paid Channels Deep Dive</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- PAGE CONTEXT -->
+    <div class="section" style="margin-top:-10px;">
+      <h2>Why Paid Advertising Needs Execution Discipline</h2>
+      <p>
+        Paid advertising is often treated as a traffic problem.
+        In reality, it is an <strong>intent management problem</strong>.
+        Money does not get wasted when ads fail —
+        it leaks when execution lacks structure.
+      </p>
+    </div>
+
+    <!-- DATA SNAPSHOT -->
+    <div class="section" style="margin-top:-10px;">
+      <h2>What Founders Expect vs What Actually Happens</h2>
+      <table>
+        <tr>
+          <th>Paid Signal</th>
+          <th>Founder Expectation</th>
+          <th>Observed Reality</th>
+        </tr>
+        <tr>
+          <td>Low CPC</td>
+          <td>Better efficiency</td>
+          <td>No guarantee of serious buyers</td>
+        </tr>
+        <tr>
+          <td>High Lead Count</td>
+          <td>Revenue growth</td>
+          <td>Sales overload</td>
+        </tr>
+        <tr>
+          <td>Wide Reach</td>
+          <td>Brand strength</td>
+          <td>Low buying readiness</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ================= SEARCH vs SOCIAL ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px; margin-top:-10px;">
+
+      <!-- SEARCH ADS -->
+      <div class="section">
+        <h2>Search Ads (Google · Bing · Yahoo)</h2>
+        <p>
+          Search ads capture users already exploring solutions.
+          This creates demand capture — not demand creation.
+        </p>
+
+        <table>
+          <tr>
+            <th>Strength</th>
+            <th>Execution Risk</th>
+          </tr>
+          <tr>
+            <td>Keyword-level intent</td>
+            <td>Comparison-driven traffic</td>
+          </tr>
+          <tr>
+            <td>Immediate enquiries</td>
+            <td>High price sensitivity</td>
+          </tr>
+          <tr>
+            <td>Clear problem statements</td>
+            <td>Low brand loyalty</td>
+          </tr>
+        </table>
+
+        <p>
+          Most search leads evaluate
+          <strong>multiple vendors simultaneously</strong>.
+        </p>
+      </div>
+
+      <!-- SOCIAL & PERFORMANCE -->
+      <div class="section">
+        <h2>Social & Performance Ads (Meta · Display)</h2>
+        <p>
+          Social platforms scale reach by interrupting attention,
+          not by matching buying timelines.
+        </p>
+
+        <table>
+          <tr>
+            <th>Strength</th>
+            <th>Execution Risk</th>
+          </tr>
+          <tr>
+            <td>High volume reach</td>
+            <td>Curiosity clicks</td>
+          </tr>
+          <tr>
+            <td>Creative testing</td>
+            <td>Low purchase clarity</td>
+          </tr>
+          <tr>
+            <td>Algorithm learning</td>
+            <td>Engagement bias</td>
+          </tr>
+        </table>
+
+        <p>
+          Volume increases faster than
+          conversion seriousness.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ================= VIDEO vs B2B ================= -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- VIDEO ADS -->
+      <div class="section">
+        <h2>YouTube & Video Ads</h2>
+        <p>
+          Video ads build recall and familiarity.
+          They rarely trigger immediate buying decisions.
+        </p>
+
+        <ul>
+          <li>Strong recall, weak urgency</li>
+          <li>Delayed conversions</li>
+          <li>Attribution complexity</li>
+          <li>Longer decision cycles</li>
+        </ul>
+      </div>
+
+      <!-- LINKEDIN -->
+      <div class="section">
+        <h2>LinkedIn Ads (B2B Reality)</h2>
+        <p>
+          LinkedIn targets roles and industries —
+          not readiness or urgency.
+        </p>
+
+        <ul>
+          <li>High CPC, controlled volume</li>
+          <li>Research-stage engagement</li>
+          <li>Multiple decision-makers</li>
+          <li>Extended nurturing requirement</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ================= PORTALS ================= -->
+    <div class="section" style="margin-top:-30px;">
+      <h2>Portals & Listing Ads</h2>
+      <p>
+        Portals bring ready traffic,
+        but place businesses inside
+        aggressive comparison environments.
+      </p>
+
+      <table>
+        <tr>
+          <th>Advantage</th>
+          <th>Conversion Risk</th>
+        </tr>
+        <tr>
+          <td>Immediate enquiries</td>
+          <td>Lowest price bias</td>
+        </tr>
+        <tr>
+          <td>Buyer intent</td>
+          <td>Margin erosion</td>
+        </tr>
+        <tr>
+          <td>Fast visibility</td>
+          <td>No differentiation</td>
+        </tr>
+      </table>
+    </div> 
+     
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Paid channels perform best
+        when intent and execution are aligned.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 4 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Lead Quality vs Lead Quantity</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why More Leads Rarely Fix Revenue Problems</h2>
+      <p>
+        In most businesses, lead volume is used as a proxy for growth.
+        Dashboards look healthy, enquiries increase,
+        yet closing ratios remain flat.
+      </p>
+      <p>
+        The issue is not shortage of leads.
+        The issue is <strong>absence of intent control and execution discipline</strong>.
+      </p>
+    </div>
+
+    <!-- DATA SNAPSHOT -->
+    <div class="section">
+      <h2>From 100 Leads Generated — Execution Reality</h2>
+      <table>
+        <tr>
+          <th>Lead Behaviour</th>
+          <th>Approx. Count</th>
+          <th>Execution Impact</th>
+        </tr>
+        <tr>
+          <td>Information seekers</td>
+          <td>45–50</td>
+          <td>No buying timeline</td>
+        </tr>
+        <tr>
+          <td>Price comparison enquiries</td>
+          <td>25–30</td>
+          <td>Margin pressure</td>
+        </tr>
+        <tr>
+          <td>Delayed decision-makers</td>
+          <td>15–18</td>
+          <td>Long follow-up cycles</td>
+        </tr>
+        <tr>
+          <td>Serious buyers</td>
+          <td>2–4</td>
+          <td>Actual revenue</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT: QUANTITY vs QUALITY -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Lead Quantity Creates</h2>
+        <ul>
+          <li>Higher enquiry count</li>
+          <li>Sales team overload</li>
+          <li>Delayed response times</li>
+          <li>Lower confidence conversations</li>
+          <li>Inconsistent follow-up discipline</li>
+        </ul>
+        <p>
+          Quantity increases activity,
+          not certainty.
+        </p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Lead Quality Enables</h2>
+        <ul>
+          <li>Fewer but meaningful conversations</li>
+          <li>Faster decision cycles</li>
+          <li>Higher call-to-sale ratio</li>
+          <li>Improved sales morale</li>
+          <li>Predictable revenue flow</li>
+        </ul>
+        <p>
+          Quality reduces effort
+          before increasing revenue.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- SPLIT: WHY QUALITY BREAKS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Why Lead Quality Breaks at Scale</h2>
+        <ul>
+          <li>Ads optimise clicks, not seriousness</li>
+          <li>Forms capture interest, not readiness</li>
+          <li>No separation between buyer stages</li>
+          <li>All enquiries enter the same pipeline</li>
+          <li>Price shoppers dilute serious demand</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Business Impact of Poor Lead Quality</h2>
+        <ul>
+          <li>Sales time wasted on non-buyers</li>
+          <li>Hot buyers face response delays</li>
+          <li>Follow-ups become inconsistent</li>
+          <li>Marketing confidence drops</li>
+          <li>Cost per customer increases</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- EXECUTION PERSPECTIVE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 12px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.5;margin-bottom:0;font-weight:600;">
+        Growth Plus focuses on filtering seriousness early.
+        Leads are evaluated by intent strength,
+        response timing, and buying readiness —
+        so sales effort aligns with real opportunity.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Lead quality determines sales efficiency
+        long before revenue appears.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 5 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Call & Enquiry Reality</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Calls Decide Revenue More Than Ads</h2>
+      <p>
+        Ads may generate leads, but calls decide outcomes.
+        In most businesses, enquiries arrive —
+        yet conversions depend on timing, seriousness,
+        and how conversations are handled.
+      </p>
+      <p>
+        Poor call handling does not show up in dashboards.
+        It shows up later as <strong>low closing ratios and unstable revenue</strong>.
+      </p>
+    </div>
+
+    <!-- DATA SNAPSHOT -->
+    <div class="section">
+      <h2>From 100 Enquiries — Call Handling Reality</h2>
+      <table>
+        <tr>
+          <th>Call Stage</th>
+          <th>Observed Pattern</th>
+          <th>Revenue Impact</th>
+        </tr>
+        <tr>
+          <td>Initial response</td>
+          <td>Delayed or missed</td>
+          <td>Buyer interest drops</td>
+        </tr>
+        <tr>
+          <td>First conversation</td>
+          <td>Repeated qualification</td>
+          <td>Loss of momentum</td>
+        </tr>
+        <tr>
+          <td>Follow-up calls</td>
+          <td>Inconsistent timing</td>
+          <td>Decision pushed away</td>
+        </tr>
+        <tr>
+          <td>Final discussion</td>
+          <td>Price-focused</td>
+          <td>Lower close rates</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT: SALES PAIN vs EXECUTION GAP -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Sales Team Pain</h2>
+        <ul>
+          <li>Calls arrive without context</li>
+          <li>Same script used for all enquiries</li>
+          <li>Hot buyers mixed with casual callers</li>
+          <li>Pressure to close unready leads</li>
+          <li>Confidence drops after repeated rejections</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Execution Gaps That Hurt Conversion</h2>
+        <ul>
+          <li>No intent-based call prioritisation</li>
+          <li>Response timing not standardised</li>
+          <li>Follow-ups depend on individual discipline</li>
+          <li>No visibility into call seriousness</li>
+          <li>Learning loops not fed back to ads</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- HOW GROWTH PLUS HANDLES CALLS -->
+    <div class="section">
+      <h2>How Growth Plus Improves Call Outcomes</h2>
+      <ul>
+        <li>Enquiries classified by intent before follow-up</li>
+        <li>Response timing aligned to buyer readiness</li>
+        <li>Hot enquiries prioritised immediately</li>
+        <li>Sales teams receive better-quality conversations</li>
+        <li>Call insights fed back into campaign execution</li>
+      </ul>
+    </div>
+
+    <!-- POSITIONING STRIP -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 12px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.5;margin-bottom:0;font-weight:600;">
+        Growth Plus does not replace your sales team.
+        It improves the quality and timing of conversations
+        so sales effort converts into revenue.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Call handling quality
+        directly impacts conversion confidence.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 6 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Buyer Intent Layers</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Treating All Leads the Same Breaks Conversion</h2>
+      <p>
+        Most businesses push every enquiry into the same sales process.
+        This creates confusion, pressure, and lost opportunities.
+        Buyer behaviour varies — execution must vary too.
+      </p>
+      <p>
+        Growth Plus classifies enquiries by <strong>intent strength</strong>
+        before deciding response timing, follow-ups, and sales approach.
+      </p>
+    </div>
+
+    <!-- INTENT TABLE -->
+    <div class="section">
+      <h2>Buyer Intent Classification</h2>
+      <table>
+        <tr>
+          <th>Intent Layer</th>
+          <th>Buyer Behaviour</th>
+          <th>Execution Requirement</th>
+        </tr>
+        <tr>
+          <td>Cold Intent</td>
+          <td>Research, curiosity, exploration</td>
+          <td>Education, light follow-up, nurture</td>
+        </tr>
+        <tr>
+          <td>Warm Intent</td>
+          <td>Problem aware, comparing options</td>
+          <td>Contextual response, guided follow-up</td>
+        </tr>
+        <tr>
+          <td>Hot Intent</td>
+          <td>Decision-ready, urgent requirement</td>
+          <td>Immediate action, priority handling</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT: COLD vs WARM -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- COLD -->
+      <div class="section">
+        <h2>Cold Intent — Early Stage Buyers</h2>
+        <ul>
+          <li>Information-seeking mindset</li>
+          <li>No fixed buying timeline</li>
+          <li>Sensitive to messaging tone</li>
+          <li>Low conversion readiness</li>
+          <li>Requires nurturing, not pressure</li>
+        </ul>
+        <p>
+          Cold intent converts with time,
+          not urgency.
+        </p>
+      </div>
+
+      <!-- WARM -->
+      <div class="section">
+        <h2>Warm Intent — Evaluation Stage Buyers</h2>
+        <ul>
+          <li>Problem clearly identified</li>
+          <li>Comparing solutions or vendors</li>
+          <li>Budget discussions begin</li>
+          <li>Needs reassurance & clarity</li>
+          <li>Responds to structured follow-ups</li>
+        </ul>
+        <p>
+          Warm intent converts with guidance,
+          not generic selling.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- SPLIT: HOT + BEETLEBULBS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- HOT INTENT -->
+      <div class="section">
+        <h2>Hot Intent — Decision-Ready Buyers</h2>
+        <ul>
+          <li>Defined problem and solution clarity</li>
+          <li>Budget approval aligned</li>
+          <li>Urgency driven by timing</li>
+          <li>Clear next-step expectations</li>
+          <li>Highest conversion likelihood</li>
+        </ul>
+        <p>
+          Hot intent converts when friction is removed,
+          not when persuasion is increased.
+        </p>
+      </div>
+
+      <!-- BEETLEBULBS APPROACH -->
+      <div class="section" style="
+        background:#f8fafc;
+        border-left:4px solid #000;
+        padding:10px 14px;
+        margin-bottom:0;
+      ">
+        <h2 style="font-size:15.8px;">How Beetlebulbs Uses Intent Layers</h2>
+        <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+          Beetlebulbs classifies every enquiry by intent strength.
+          Cold, warm, and hot buyers follow different paths,
+          response timing, and conversion logic —
+          ensuring sales effort matches buyer readiness.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Buyer intent clarity improves
+        response timing and conversion confidence.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= PAGE 7 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Customer Journey Mapping</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Most Funnels Break Before Sales</h2>
+      <p>
+        Businesses often measure marketing and sales as separate functions.
+        In reality, customers experience one continuous journey —
+        from first impression to final decision.
+      </p>
+      <p>
+        Growth Plus maps and manages this journey
+        so intent is not lost between steps.
+      </p>
+    </div>
+
+    <!-- JOURNEY TABLE -->
+    <div class="section">
+      <h2>End-to-End Customer Journey</h2>
+      <table>
+        <tr>
+          <th>Journey Stage</th>
+          <th>Customer Behaviour</th>
+          <th>Execution Focus</th>
+        </tr>
+        <tr>
+          <td>Ad Exposure</td>
+          <td>Initial awareness or interest</td>
+          <td>Right message for right intent</td>
+        </tr>
+        <tr>
+          <td>Landing / Click</td>
+          <td>Exploration & validation</td>
+          <td>Clarity, relevance, trust</td>
+        </tr>
+        <tr>
+          <td>Lead Submission</td>
+          <td>Action based on curiosity or need</td>
+          <td>Intent capture & context</td>
+        </tr>
+        <tr>
+          <td>First Contact</td>
+          <td>Expectation of response</td>
+          <td>Speed & relevance</td>
+        </tr>
+        <tr>
+          <td>Sales Conversation</td>
+          <td>Evaluation & comparison</td>
+          <td>Intent-matched dialogue</td>
+        </tr>
+        <tr>
+          <td>Decision / Sale</td>
+          <td>Commitment & closure</td>
+          <td>Friction removal</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT: LEAKS vs CONTROL -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Where Most Businesses Lose Customers</h2>
+        <ul>
+          <li>Ad message doesn’t match landing intent</li>
+          <li>Lead forms capture curiosity, not seriousness</li>
+          <li>Response delays reduce buyer confidence</li>
+          <li>Sales repeats basic qualification</li>
+          <li>Follow-ups lack timing discipline</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>How Growth Plus Controls the Journey</h2>
+        <ul>
+          <li>Message alignment across ads & pages</li>
+          <li>Intent signals captured at lead stage</li>
+          <li>Response timing matched to buyer readiness</li>
+          <li>Sales conversations start with context</li>
+          <li>Follow-ups aligned to decision stage</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- EXECUTION NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 12px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.5;margin-bottom:0;font-weight:600;">
+        Growth Plus does not optimise individual steps.
+        It aligns the entire customer journey
+        so interest turns into conversation,
+        and conversation turns into customers.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Customer journeys fail
+        when intent is lost between steps.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 8 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Response Timing & Follow-Up Discipline</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Speed Alone Does Not Close Sales</h2>
+      <p>
+        Most teams believe faster response automatically improves conversion.
+        In practice, <strong>wrong timing</strong> damages trust
+        just as much as delayed responses.
+      </p>
+      <p>
+        Growth Plus focuses on <strong>when</strong> and <strong>how</strong>
+        responses happen — not just how fast.
+      </p>
+    </div>
+
+    <!-- RESPONSE TIMING TABLE -->
+    <div class="section">
+      <h2>Response Timing vs Buyer Behaviour</h2>
+      <table>
+        <tr>
+          <th>Buyer Intent Level</th>
+          <th>Typical Behaviour</th>
+          <th>Correct Response Strategy</th>
+        </tr>
+        <tr>
+          <td>Hot Intent</td>
+          <td>Ready to decide, expects clarity</td>
+          <td>Immediate response with solution focus</td>
+        </tr>
+        <tr>
+          <td>Warm Intent</td>
+          <td>Evaluating options</td>
+          <td>Contextual follow-up with guidance</td>
+        </tr>
+        <tr>
+          <td>Cold Intent</td>
+          <td>Research or curiosity driven</td>
+          <td>Delayed, educational engagement</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : COMMON FAILURES vs GROWTH PLUS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Common Follow-Up Mistakes</h2>
+        <ul>
+          <li>Same follow-up for every lead</li>
+          <li>Multiple calls without context</li>
+          <li>Pressure on low-intent enquiries</li>
+          <li>Delayed response to serious buyers</li>
+          <li>Sales fatigue and frustration</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Growth Plus Follow-Up Discipline</h2>
+        <ul>
+          <li>Intent-based response timing</li>
+          <li>Structured follow-up intervals</li>
+          <li>Priority handling for serious buyers</li>
+          <li>Reduced noise for sales teams</li>
+          <li>Higher call-to-close confidence</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- IMPACT TABLE -->
+    <div class="section">
+      <h2>Impact on Sales & Revenue</h2>
+      <table>
+        <tr>
+          <th>Without Discipline</th>
+          <th>With Growth Plus</th>
+        </tr>
+        <tr>
+          <td>Hot buyers get delayed</td>
+          <td>Hot buyers handled first</td>
+        </tr>
+        <tr>
+          <td>Cold buyers get pressured</td>
+          <td>Cold buyers nurtured calmly</td>
+        </tr>
+        <tr>
+          <td>Sales confidence drops</td>
+          <td>Sales clarity improves</td>
+        </tr>
+        <tr>
+          <td>Revenue unpredictable</td>
+          <td>Revenue more stable</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- EXECUTION NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 12px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.5;margin-bottom:0;font-weight:600;">
+        Growth Plus does not force faster calls.
+        It aligns response timing with buyer readiness
+        so sales effort produces real outcomes.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Timing and follow-up discipline
+        influence revenue more than ad spend.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 9 : GROWTH PLUS ================= -->
+<div class="page page-9">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Multi-Channel Execution Reality</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Running Multiple Platforms Still Fails</h2>
+      <p>
+        Most businesses run Google Ads, Meta Ads, portals,
+        influencers, WhatsApp campaigns, and organic content
+        at the same time.
+      </p>
+      <p>
+        The issue is not the number of platforms.
+        The issue is <strong>each platform chasing activity,
+        not customer outcomes</strong>.
+      </p>
+    </div>
+
+    <!-- PLATFORM EXPECTATION vs REALITY -->
+    <div class="section">
+      <h2>Platform Expectation vs Ground Reality</h2>
+      <table>
+        <tr>
+          <th>Channel</th>
+          <th>What Businesses Expect</th>
+          <th>What Actually Happens</th>
+        </tr>
+        <tr>
+          <td>Google Search Ads</td>
+          <td>Ready buyers</td>
+          <td>High comparison traffic</td>
+        </tr>
+        <tr>
+          <td>Meta / Performance Ads</td>
+          <td>Volume + conversions</td>
+          <td>Curiosity-driven enquiries</td>
+        </tr>
+        <tr>
+          <td>Portals & Listings</td>
+          <td>Immediate leads</td>
+          <td>Price-focused enquiries</td>
+        </tr>
+        <tr>
+          <td>Influencer Marketing</td>
+          <td>Trust transfer</td>
+          <td>Awareness-heavy, low urgency</td>
+        </tr>
+        <tr>
+          <td>WhatsApp / Email</td>
+          <td>Direct engagement</td>
+          <td>Low response without intent filter</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : DISCONNECTED vs GROWTH PLUS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Disconnected Execution</h2>
+        <ul>
+          <li>Each platform optimised separately</li>
+          <li>Duplicate or conflicting enquiries</li>
+          <li>No visibility on lead seriousness</li>
+          <li>Sales receives mixed-quality traffic</li>
+          <li>Spend increases without clarity</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Growth Plus Execution Approach</h2>
+        <ul>
+          <li>All platforms aligned to lead quality</li>
+          <li>Intent signals tracked across channels</li>
+          <li>Duplicate and low-quality leads filtered</li>
+          <li>Sales receives prioritised enquiries</li>
+          <li>Execution decisions tied to customers</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- FLOW TABLE -->
+    <div class="section">
+      <h2>How Multi-Channel Execution Works in Growth Plus</h2>
+      <table>
+        <tr>
+          <th>Stage</th>
+          <th>Execution Focus</th>
+          <th>Outcome</th>
+        </tr>
+        <tr>
+          <td>Traffic Generation</td>
+          <td>Google, Meta, portals, influencers</td>
+          <td>Consistent enquiry flow</td>
+        </tr>
+        <tr>
+          <td>Lead Handling</td>
+          <td>Intent tagging & quality checks</td>
+          <td>Cleaner pipeline</td>
+        </tr>
+        <tr>
+          <td>Call Prioritisation</td>
+          <td>Hot vs warm vs cold separation</td>
+          <td>Sales efficiency</td>
+        </tr>
+        <tr>
+          <td>Follow-ups</td>
+          <td>Channel-aware messaging</td>
+          <td>Higher seriousness</td>
+        </tr>
+        <tr>
+          <td>Customer Outcome</td>
+          <td>Execution aligned to readiness</td>
+          <td>Predictable conversions</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- POSITIONING NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 14px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Plus does not add more platforms.
+        It ensures every platform contributes
+        to leads, calls, and customers —
+        not just activity reports.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Multi-channel execution works
+        only when intent and outcomes are prioritised.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 10 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Reporting, ROI & Founder Visibility</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Most Marketing Reports Don’t Help Decisions</h2>
+      <p>
+        Most founders receive weekly or monthly reports
+        filled with impressions, clicks, reach, CPC,
+        and lead counts.
+      </p>
+      <p>
+        These numbers explain activity.
+        They rarely explain <strong>why customers are
+        increasing or not increasing</strong>.
+      </p>
+    </div>
+
+    <!-- TRADITIONAL vs GROWTH PLUS -->
+    <div class="section">
+      <h2>Traditional Reporting vs Growth Plus Reporting</h2>
+      <table>
+        <tr>
+          <th>Reporting Focus</th>
+          <th>Traditional Approach</th>
+          <th>Growth Plus Approach</th>
+        </tr>
+        <tr>
+          <td>Primary Metrics</td>
+          <td>CPC, impressions, leads</td>
+          <td>Lead quality, calls, customers</td>
+        </tr>
+        <tr>
+          <td>Lead View</td>
+          <td>All enquiries treated equally</td>
+          <td>Leads segmented by seriousness</td>
+        </tr>
+        <tr>
+          <td>Sales Impact</td>
+          <td>Not clearly visible</td>
+          <td>Directly tracked</td>
+        </tr>
+        <tr>
+          <td>Decision Support</td>
+          <td>Historical activity</td>
+          <td>Actionable next steps</td>
+        </tr>
+        <tr>
+          <td>Founder Confidence</td>
+          <td>Low</td>
+          <td>High</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : WHAT FOUNDERS SEE -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Founders Usually See</h2>
+        <ul>
+          <li>Campaign performance charts</li>
+          <li>Platform-wise spend summaries</li>
+          <li>Lead count growth</li>
+          <li>Promises of improvement over time</li>
+          <li>Unclear revenue linkage</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Founders Need to See</h2>
+        <ul>
+          <li>How many serious enquiries arrived</li>
+          <li>Which channels brought buyers</li>
+          <li>How calls converted into customers</li>
+          <li>Where leads dropped or delayed</li>
+          <li>What to fix before scaling spend</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ROI CLARITY -->
+    <div class="section">
+      <h2>How Growth Plus Connects Spend to Revenue</h2>
+      <table>
+        <tr>
+          <th>Stage</th>
+          <th>What Is Tracked</th>
+          <th>Why It Matters</th>
+        </tr>
+        <tr>
+          <td>Ad Spend</td>
+          <td>Channel-wise investment</td>
+          <td>Controls cost exposure</td>
+        </tr>
+        <tr>
+          <td>Leads</td>
+          <td>Intent & seriousness level</td>
+          <td>Prevents sales overload</td>
+        </tr>
+        <tr>
+          <td>Calls</td>
+          <td>Response timing & outcome</td>
+          <td>Improves conversion chance</td>
+        </tr>
+        <tr>
+          <td>Customers</td>
+          <td>Actual closures</td>
+          <td>Measures true ROI</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- POSITIONING NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:10px 14px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Plus reporting exists to support decisions,
+        not justify activity.
+        Founders see where money works,
+        where it leaks,
+        and what needs correction.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Clear reporting creates confident decisions
+        and controlled growth.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 11 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Execution Timeline & Responsibility Clarity</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- CONTEXT -->
+    <div class="section">
+      <h2>Why Clear Timelines Matter</h2>
+      <p>
+        Lead, call, and customer generation does not
+        become stable on day one.
+        Every channel requires setup, learning,
+        optimisation, and alignment with sales.
+      </p>
+      <p>
+        Growth Plus is structured to deliver results
+        through phased execution —
+        not instant assumptions.
+      </p>
+    </div>
+
+    <!-- EXECUTION TIMELINE -->
+    <div class="section">
+      <h2>Growth Plus Execution Timeline</h2>
+      <table>
+        <tr>
+          <th>Phase</th>
+          <th>Timeline</th>
+          <th>What Happens</th>
+        </tr>
+        <tr>
+          <td>Onboarding & Setup</td>
+          <td>Week 1–2</td>
+          <td>Access, goal clarity, platform setup, tracking alignment</td>
+        </tr>
+        <tr>
+          <td>Initial Execution</td>
+          <td>Week 3–4</td>
+          <td>Campaign launch, lead flow begins, early data capture</td>
+        </tr>
+        <tr>
+          <td>Quality Stabilisation</td>
+          <td>Month 2</td>
+          <td>Intent filtering, call quality improvement, follow-up tuning</td>
+        </tr>
+        <tr>
+          <td>Performance Optimisation</td>
+          <td>Month 3+</td>
+          <td>Spend allocation, serious buyer focus, conversion lift</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : BEETLEBULBS vs CLIENT -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Beetlebulbs Owns</h2>
+        <ul>
+          <li>Paid and organic channel execution</li>
+          <li>Lead and call quality monitoring</li>
+          <li>Intent-based prioritisation</li>
+          <li>Follow-up structure guidance</li>
+          <li>Reporting on leads, calls, customers</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Clients Must Provide</h2>
+        <ul>
+          <li>Timely access to platforms and accounts</li>
+          <li>Clear product, pricing, and service details</li>
+          <li>Sales team availability for follow-ups</li>
+          <li>Response discipline on hot enquiries</li>
+          <li>Feedback on lead quality and closures</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- DEPENDENCY TABLE -->
+    <div class="section">
+      <h2>Key Dependencies That Affect Results</h2>
+      <table>
+        <tr>
+          <th>Dependency</th>
+          <th>Impact if Delayed</th>
+        </tr>
+        <tr>
+          <td>Account access & approvals</td>
+          <td>Execution start gets postponed</td>
+        </tr>
+        <tr>
+          <td>Creative or content inputs</td>
+          <td>Campaign quality suffers</td>
+        </tr>
+        <tr>
+          <td>Sales response timing</td>
+          <td>Hot leads cool down</td>
+        </tr>
+        <tr>
+          <td>Budget release delays</td>
+          <td>Learning phase resets</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- DISCLAIMER NOTE -->
+    <div class="section" style="
+      background:#fff7ed;
+      border-left:4px solid #000;
+      padding:10px 14px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.6px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Plus outcomes depend on timely inputs,
+        approvals, platform policies, and market behaviour.
+        Beetlebulbs is not responsible for delays caused by
+        client-side approvals, response gaps,
+        platform algorithm changes, or external factors.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Clear responsibility and timelines
+        protect results and partnerships.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 12 : GROWTH PLUS ================= -->
+<div class="page page-12">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Commercials, Scope & Next Steps</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- COMMERCIAL OVERVIEW -->
+    <div class="section">
+      <h2>What Growth Plus Covers</h2>
+      <p>
+        Growth Plus is a managed execution package focused on
+        generating quality leads, calls, and customers
+        across selected paid and organic channels.
+      </p>
+    </div>
+
+    <!-- SCOPE TABLE -->
+    <div class="section">
+      <h2>Service Scope — Growth Plus</h2>
+      <table>
+        <tr>
+          <th>Area</th>
+          <th>Included in Growth Plus</th>
+        </tr>
+        <tr>
+          <td>Paid Advertising</td>
+          <td>Google Ads, Meta Ads, Performance campaigns, portals (as applicable)</td>
+        </tr>
+        <tr>
+          <td>Organic Channels</td>
+          <td>SEO basics, content alignment, GMB support, social presence coordination</td>
+        </tr>
+        <tr>
+          <td>Lead Handling</td>
+          <td>Intent tagging, quality monitoring, prioritisation logic</td>
+        </tr>
+        <tr>
+          <td>Calls & Follow-ups</td>
+          <td>Response timing guidance, seriousness-based routing</td>
+        </tr>
+        <tr>
+          <td>Reporting</td>
+          <td>Leads, calls, customers, channel contribution</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- PRICING & AD SPEND -->
+    <div class="section">
+      <h2>Commercial Structure</h2>
+      <table>
+        <tr>
+          <th>Cost Component</th>
+          <th>Responsibility</th>
+        </tr>
+        <tr>
+          <td>Beetlebulbs Service Fee</td>
+          <td>Charged as per agreed Growth Plus plan</td>
+        </tr>
+        <tr>
+          <td>Ad Platform Spend</td>
+          <td>Paid directly by client to Google, Meta, portals, etc.</td>
+        </tr>
+        <tr>
+          <td>Influencer / Portal Charges</td>
+          <td>Separate, based on selection and scope</td>
+        </tr>
+        <tr>
+          <td>Creative / Production (if any)</td>
+          <td>Quoted separately if required</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="section" style="
+      background:#fff7ed;
+      border-left:4px solid #000;
+      padding:12px 14px;
+    ">
+      <h2 style="font-size:15.6px;">Important Disclaimer</h2>
+      <p style="font-size:13.6px;line-height:1.55;margin-bottom:6px;">
+        Beetlebulbs executes campaigns and lead generation
+        based on inputs, approvals, budgets, and platform policies.
+        Results are influenced by market demand,
+        competition, pricing, response timing,
+        and platform algorithm changes.
+      </p>
+      <p style="font-size:13.6px;line-height:1.55;margin-bottom:0;">
+        Beetlebulbs is not responsible for delays or performance impact
+        caused by late approvals, incomplete information,
+        sales response gaps, budget pauses,
+        or external platform restrictions.
+      </p>
+    </div>
+
+    <!-- NEXT STEPS -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:12px 14px;
+      margin-bottom:0;
+    ">
+      <h2 style="font-size:15.8px;">Next Steps</h2>
+      <ul style="margin-bottom:6px;">
+        <li>Confirm Growth Plus engagement & scope</li>
+        <li>Share access to selected platforms</li>
+        <li>Align budgets and priority channels</li>
+        <li>Begin onboarding & execution timeline</li>
+      </ul>
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Plus is built for businesses ready to
+        execute with accountability —
+        while your team focuses on sales and revenue.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Clear scope and accountability
+        create stable execution and long-term results.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 13 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Channel-Wise Execution Depth</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- INTRO -->
+    <div class="section">
+      <h2>Why Every Channel Needs a Different Execution Logic</h2>
+      <p>
+        Most businesses treat all platforms the same —
+        same landing pages, same follow-ups,
+        and same success metrics.
+      </p>
+      <p>
+        Growth Plus executes each channel differently,
+        based on <strong>buyer behaviour, intent level,
+        and conversion readiness</strong>.
+      </p>
+    </div>
+
+    <!-- CHANNEL TABLE -->
+    <div class="section">
+      <h2>Channel-Wise Execution Approach</h2>
+      <table>
+        <tr>
+          <th style="width:20%;">Channel</th>
+          <th style="width:40%;">Common Mistake</th>
+          <th style="width:40%;">Growth Plus Execution</th>
+        </tr>
+
+        <tr>
+          <td>Google Search Ads</td>
+          <td>
+            All keywords treated as ready buyers,
+            leading to price-shopping traffic.
+          </td>
+          <td>
+            Keyword intent segmentation,
+            competitor filtering,
+            priority handling for high-readiness searches.
+          </td>
+        </tr>
+
+        <tr>
+          <td>Meta & Performance Ads</td>
+          <td>
+            Volume-focused campaigns
+            without seriousness checks.
+          </td>
+          <td>
+            Creative + audience alignment,
+            early intent signals,
+            remarketing for warm prospects only.
+          </td>
+        </tr>
+
+        <tr>
+          <td>Portals & Listings</td>
+          <td>
+            Competing only on price
+            inside comparison environments.
+          </td>
+          <td>
+            Selective listing strategy,
+            lead filtering,
+            focus on enquiry quality over volume.
+          </td>
+        </tr>
+
+        <tr>
+          <td>Influencer Marketing</td>
+          <td>
+            Expecting direct sales
+            from awareness-driven traffic.
+          </td>
+          <td>
+            Trust-building campaigns,
+            structured handoff to lead capture,
+            assisted conversion flow.
+          </td>
+        </tr>
+
+        <tr>
+          <td>YouTube & Video Ads</td>
+          <td>
+            Measuring success via views only.
+          </td>
+          <td>
+            Video → remarketing → search alignment,
+            recall-based follow-up,
+            delayed intent handling.
+          </td>
+        </tr>
+
+        <tr>
+          <td>WhatsApp & Email</td>
+          <td>
+            Same message sent to all leads.
+          </td>
+          <td>
+            Intent-based messaging,
+            timing control,
+            seriousness-driven follow-ups.
+          </td>
+        </tr>
+
+        <tr>
+          <td>LinkedIn (B2B)</td>
+          <td>
+            Expecting immediate conversions.
+          </td>
+          <td>
+            Role-based targeting,
+            research-stage nurturing,
+            sales-ready routing only when intent matures.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : RESULT -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Happens Without Channel Discipline</h2>
+        <ul>
+          <li>High enquiry volume, low seriousness</li>
+          <li>Sales teams repeat qualification work</li>
+          <li>Marketing and sales blame each other</li>
+          <li>Ad spend scales before clarity arrives</li>
+          <li>Founders lose confidence in reports</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>What Growth Plus Improves</h2>
+        <ul>
+          <li>Cleaner enquiry pipeline</li>
+          <li>Faster identification of serious buyers</li>
+          <li>Reduced sales fatigue</li>
+          <li>Better use of ad budgets</li>
+          <li>More predictable customer flow</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- POSITIONING NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:12px 14px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Plus does not run channels in isolation.
+        Each platform plays a specific role
+        in generating leads, calls, and customers —
+        aligned to buyer readiness and sales capacity.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Channel-wise execution discipline
+        prevents waste and improves conversion reliability.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 14 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Sales Alignment & Call Handling Reality</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- INTRO -->
+    <div class="section">
+      <h2>Why Even Good Leads Fail to Convert</h2>
+      <p>
+        Many businesses believe that poor sales results
+        automatically mean poor leads.
+        In reality, a large percentage of good leads
+        fail due to <strong>misaligned handling,
+        delayed response, and unclear prioritisation</strong>.
+      </p>
+      <p>
+        Growth Plus focuses on fixing this gap
+        before blaming platforms or people.
+      </p>
+    </div>
+
+    <!-- LEAD TO CUSTOMER FLOW -->
+    <div class="section">
+      <h2>Lead → Call → Customer: Where Breakdowns Happen</h2>
+      <table>
+        <tr>
+          <th>Stage</th>
+          <th>What Usually Happens</th>
+          <th>Impact on Conversion</th>
+        </tr>
+        <tr>
+          <td>Lead Arrival</td>
+          <td>All enquiries treated the same</td>
+          <td>Serious buyers wait or disengage</td>
+        </tr>
+        <tr>
+          <td>First Call</td>
+          <td>Delayed or scripted response</td>
+          <td>Intent drops quickly</td>
+        </tr>
+        <tr>
+          <td>Qualification</td>
+          <td>Repeated basic questions</td>
+          <td>Buyer confidence weakens</td>
+        </tr>
+        <tr>
+          <td>Follow-up</td>
+          <td>No clear priority or timing</td>
+          <td>Opportunities quietly die</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : SALES REALITY -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>Sales Team Reality</h2>
+        <ul>
+          <li>Mixed-quality enquiries in the same queue</li>
+          <li>High call volume, low closure confidence</li>
+          <li>Pressure to close uninterested prospects</li>
+          <li>Hot buyers delayed by low-intent noise</li>
+          <li>Blame cycles between sales and marketing</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Founder Reality</h2>
+        <ul>
+          <li>Marketing reports look positive</li>
+          <li>Sales numbers remain inconsistent</li>
+          <li>Unclear where the breakdown occurs</li>
+          <li>Scaling spend feels risky</li>
+          <li>No single view of lead seriousness</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- GROWTH PLUS ALIGNMENT -->
+    <div class="section">
+      <h2>How Growth Plus Aligns Leads with Sales</h2>
+      <table>
+        <tr>
+          <th>Area</th>
+          <th>Without Alignment</th>
+          <th>With Growth Plus</th>
+        </tr>
+        <tr>
+          <td>Lead Routing</td>
+          <td>First-come handling</td>
+          <td>Intent-based prioritisation</td>
+        </tr>
+        <tr>
+          <td>Response Timing</td>
+          <td>Reactive</td>
+          <td>Time-sensitive for hot enquiries</td>
+        </tr>
+        <tr>
+          <td>Call Focus</td>
+          <td>Generic pitch</td>
+          <td>Context-aware conversation</td>
+        </tr>
+        <tr>
+          <td>Follow-ups</td>
+          <td>Inconsistent</td>
+          <td>Structured & purpose-driven</td>
+        </tr>
+        <tr>
+          <td>Sales Confidence</td>
+          <td>Low</td>
+          <td>Improved through clarity</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- POSITIONING NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:12px 14px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Plus does not replace sales teams.
+        It ensures sales teams receive
+        better-prioritised leads,
+        clearer context,
+        and higher intent conversations —
+        so effort translates into revenue.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Conversion improves when
+        lead quality and sales handling move together.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 15 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Cost Control & Waste Reduction</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- INTRO -->
+    <div class="section">
+      <h2>Why Ad Spend Increases but Results Don’t</h2>
+      <p>
+        In most accounts, budgets increase faster than clarity.
+        Spend scales on the assumption that
+        more traffic will eventually convert.
+      </p>
+      <p>
+        Growth Plus focuses on <strong>controlling waste first</strong>,
+        so every additional rupee works harder.
+      </p>
+    </div>
+
+    <!-- WASTE MAP -->
+    <div class="section">
+      <h2>Common Areas Where Money Leaks</h2>
+      <table>
+        <tr>
+          <th>Leak Area</th>
+          <th>What Usually Happens</th>
+          <th>Cost Impact</th>
+        </tr>
+        <tr>
+          <td>Low-Intent Traffic</td>
+          <td>Broad targeting without seriousness checks</td>
+          <td>High spend, low conversions</td>
+        </tr>
+        <tr>
+          <td>Duplicate Enquiries</td>
+          <td>Same user enters from multiple platforms</td>
+          <td>Inflated lead counts</td>
+        </tr>
+        <tr>
+          <td>Delayed Responses</td>
+          <td>Hot leads contacted late</td>
+          <td>Lost opportunities</td>
+        </tr>
+        <tr>
+          <td>Unfiltered Follow-ups</td>
+          <td>Same effort on all enquiries</td>
+          <td>Sales time wasted</td>
+        </tr>
+        <tr>
+          <td>Premature Scaling</td>
+          <td>Budgets increased before fixing gaps</td>
+          <td>Higher burn, same outcome</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : SCALE vs CONTROL -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>What Happens Without Spend Discipline</h2>
+        <ul>
+          <li>Rising monthly ad budgets</li>
+          <li>No improvement in customer numbers</li>
+          <li>Sales fatigue increases</li>
+          <li>Founders lose trust in reports</li>
+          <li>Pressure to “wait longer” for results</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>Growth Plus Spend Control Approach</h2>
+        <ul>
+          <li>Intent-based traffic prioritisation</li>
+          <li>Early filtering of low-quality enquiries</li>
+          <li>Channel-level budget correction</li>
+          <li>Pause or shift spend when required</li>
+          <li>Scale only after conversion stability</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- DECISION TABLE -->
+    <div class="section">
+      <h2>When to Scale — and When Not To</h2>
+      <table>
+        <tr>
+          <th>Situation</th>
+          <th>Correct Action</th>
+        </tr>
+        <tr>
+          <td>High leads, low seriousness</td>
+          <td>Fix intent filtering before scaling</td>
+        </tr>
+        <tr>
+          <td>Good calls, poor follow-ups</td>
+          <td>Improve response discipline first</td>
+        </tr>
+        <tr>
+          <td>Strong conversions on one channel</td>
+          <td>Gradually scale that channel</td>
+        </tr>
+        <tr>
+          <td>Sales overwhelmed</td>
+          <td>Reduce volume, increase quality</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- POSITIONING NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:12px 14px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Plus treats ad spend as an investment,
+        not an experiment.
+        Budgets are increased only
+        when lead quality and conversions
+        show stability.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Cost control protects margins
+        and builds long-term confidence.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 16 : GROWTH PLUS ================= -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Fitment, Readiness & Expectations</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- INTRO -->
+    <div class="section">
+      <h2>Why Every Business Is Not a Fit for Growth Plus</h2>
+      <p>
+        Growth Plus is an execution-heavy engagement.
+        It works best when businesses are operationally ready
+        to receive, handle, and convert leads and calls.
+      </p>
+      <p>
+        This page helps clarify fitment
+        before expectations and budgets are committed.
+      </p>
+    </div>
+
+    <!-- SPLIT : FIT vs NOT FIT -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT : IDEAL FIT -->
+      <div class="section">
+        <h2>Growth Plus Is Right For You If</h2>
+        <ul>
+          <li>You already invest in marketing or are ready to</li>
+          <li>You want leads, calls, and customers — not just reports</li>
+          <li>You have a sales team or sales process in place</li>
+          <li>You can respond to enquiries without long delays</li>
+          <li>You want clarity before aggressively scaling spend</li>
+          <li>You prefer structured execution over experiments</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT : NOT A FIT -->
+      <div class="section">
+        <h2>Growth Plus Is NOT Right If</h2>
+        <ul>
+          <li>You expect instant results without setup time</li>
+          <li>You want guarantees on customer numbers</li>
+          <li>You cannot respond to leads promptly</li>
+          <li>You frequently delay approvals or inputs</li>
+          <li>You want to test marketing with minimal commitment</li>
+          <li>You expect Beetlebulbs to handle sales closures</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- READINESS CHECK -->
+    <div class="section">
+      <h2>Basic Readiness Checklist</h2>
+      <table>
+        <tr>
+          <th>Requirement</th>
+          <th>Status Needed</th>
+        </tr>
+        <tr>
+          <td>Sales response capability</td>
+          <td>Available during business hours</td>
+        </tr>
+        <tr>
+          <td>Decision-making authority</td>
+          <td>Clear owner for approvals</td>
+        </tr>
+        <tr>
+          <td>Budget commitment</td>
+          <td>Defined monthly range</td>
+        </tr>
+        <tr>
+          <td>Product / service clarity</td>
+          <td>Well-defined offering</td>
+        </tr>
+        <tr>
+          <td>Growth intent</td>
+          <td>Looking to scale responsibly</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- POSITIONING NOTE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:12px 14px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;font-weight:600;">
+        Growth Plus is designed for founders
+        who want predictable execution,
+        cleaner pipelines,
+        and confidence in where money is going —
+        not shortcuts or overnight promises.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Right fit creates better results
+        and stronger partnerships.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+<!-- ================= PAGE 17 : GROWTH PLUS ================= -->
+<div class="page page-17">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Growth Plus — Final Summary & What Comes Next</h1>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WATERMARK -->
+    <div class="watermark">Beetlebulbs® | Growth Plus</div>
+
+    <!-- SUMMARY -->
+    <div class="section">
+      <h2>What Growth Plus Ultimately Delivers</h2>
+      <p>
+        Growth Plus is built for businesses that already market actively
+        and want their spend to translate into
+        <strong>quality leads, meaningful calls, and real customers</strong>.
+      </p>
+      <p>
+        It brings structure to execution, discipline to spend,
+        and clarity to outcomes — without replacing your sales team.
+      </p>
+    </div>
+
+    <!-- SUMMARY TABLE -->
+    <div class="section">
+      <h2>Growth Plus — At a Glance</h2>
+      <table>
+        <tr>
+          <th>Area</th>
+          <th>What You Get</th>
+        </tr>
+        <tr>
+          <td>Channels</td>
+          <td>Google, Meta, portals, influencer support, WhatsApp, email, LinkedIn (as applicable)</td>
+        </tr>
+        <tr>
+          <td>Execution Focus</td>
+          <td>Lead quality, intent strength, response discipline</td>
+        </tr>
+        <tr>
+          <td>Sales Alignment</td>
+          <td>Prioritised enquiries, better call readiness</td>
+        </tr>
+        <tr>
+          <td>Spend Control</td>
+          <td>Waste reduction before scaling</td>
+        </tr>
+        <tr>
+          <td>Reporting</td>
+          <td>Leads, calls, customers — not vanity metrics</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SPLIT : WHEN PLUS IS ENOUGH vs WHEN NOT -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- LEFT -->
+      <div class="section">
+        <h2>When Growth Plus Is Enough</h2>
+        <ul>
+          <li>You have an active sales team</li>
+          <li>You can handle calls and follow-ups internally</li>
+          <li>You want cleaner, more serious enquiries</li>
+          <li>You want visibility before aggressive scaling</li>
+          <li>You prefer shared responsibility over full outsourcing</li>
+        </ul>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="section">
+        <h2>When Growth Plus Is Not Enough</h2>
+        <ul>
+          <li>You want Beetlebulbs to own lead outcomes end-to-end</li>
+          <li>You do not want to manage daily execution decisions</li>
+          <li>Your team should focus only on sales and revenue</li>
+          <li>You want predictable customer flow at scale</li>
+          <li>You want accountability beyond execution</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- GROWTH ENGINE BRIDGE -->
+    <div class="section" style="
+      background:#f8fafc;
+      border-left:4px solid #000;
+      padding:14px 16px;
+    ">
+      <h2 style="font-size:16px;">Introducing Growth Engine — The Next Level</h2>
+      <p style="font-size:13.8px;line-height:1.55;">
+        Growth Engine is designed for businesses that want
+        <strong>leads, calls, and customers to be our responsibility</strong>.
+        Your team focuses on selling.
+        We focus on generating demand, filtering intent,
+        managing execution, and protecting ROI.
+      </p>
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        Growth Plus gives you execution clarity.
+        Growth Engine gives you execution ownership.
+      </p>
+    </div>
+
+    <!-- CTA -->
+    <div class="section" style="
+      background:#fff7ed;
+      border-left:4px solid #000;
+      padding:14px 16px;
+      margin-bottom:0;
+    ">
+      <p style="font-size:14px;line-height:1.55;font-weight:600;margin-bottom:6px;">
+        This page is a summary.
+      </p>
+      <p style="font-size:13.8px;line-height:1.55;margin-bottom:0;">
+        To understand full scope, execution depth,
+        and ownership model,
+        download the <strong>Growth Engine overview</strong>.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        Page Insight: Growth Plus builds execution clarity.
+        Growth Engine delivers execution ownership.
+      </div>
+      <div class="page-no"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= PAGE NUMBER SCRIPT ================= -->
+<script>
+(function () {
+  const pages = document.querySelectorAll('.page');
+  const totalPages = pages.length;
+
+  pages.forEach((page, index) => {
+    const el = page.querySelector('.page-no');
+    if (el) {
+      el.textContent = `Page ${index + 1} / ${totalPages}`;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

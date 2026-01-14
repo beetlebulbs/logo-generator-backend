@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Identity Plus – Beetlebulbs</title>
+
+<style>
+@page { margin: 0; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  color: #111;
+}
+
+/* ================= WATERMARK ================= */
+.watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-22deg);
+  font-size: 72px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.04);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ================= HEADER ================= */
+.header {
+  background: linear-gradient(135deg, #000, #1a1a1a);
+  color: #fff;
+  padding: 26px 32px;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.header-left {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.header img {
+  height: 34px;
+  background: #fff;
+  padding: 6px 8px;
+}
+
+.header h1 {
+  font-size: 26px;
+  margin: 0;
+}
+
+.sub {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.header-right {
+  font-size: 12px;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+/* ================= HERO BLOCK (LIKE LITE) ================= */
+.hero-block {
+  background: linear-gradient(135deg, #111, #1f1f1f);
+  color: #fff;
+  padding: 26px 32px;
+}
+
+.hero-block p {
+  font-size: 14px;
+  line-height: 1.65;
+  margin-bottom: 10px;
+  opacity: 0.95;
+}
+
+/* ================= CONTENT ================= */
+.content {
+  padding: 26px 32px 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.section {
+  margin-bottom: 18px;
+}
+
+.section h2 {
+  font-size: 16px;
+  margin-bottom: 6px;
+  border-bottom: 2px solid #000;
+  display: inline-block;
+}
+
+.section p {
+  font-size: 13.8px;
+  line-height: 1.65;
+  margin-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+th, td {
+  border-bottom: 1px solid #ccc;
+  padding: 8px 6px;
+}
+
+th {
+  background: #f1f1f1;
+}
+
+ul {
+  margin-left: 18px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+.page-break {
+  page-break-before: always;
+}
+/* ================= FOOTER ================= */
+.footer {
+  border-top: 1px solid #ddd;
+  padding: 14px 32px;
+  font-size: 11.5px;
+  color: #444;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer strong {
+  font-weight: 700;
+}
+
+.footer .tagline {
+  opacity: 0.75;
+}.logo {
+  height: 34px;
+  background: #fff;
+  padding: 6px 8px;
+  display: block;
+}
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-right {
+  font-size: 12px;
+  color: #ffffff;
+  opacity: 0.85;
+  text-align: right;
+  white-space: nowrap;
+  margin-top: 4px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="watermark">BEETLEBULBS®</div>
+
+<!-- ================= PAGE 1 ================= -->
+
+<div class="header">
+  <div class="header-row">
+    <div class="header-left">
+      <img
+  src="http://localhost:3001/pdf-assets/Tmlogo.png?v={{GENERATED_DATE}}"
+  alt="Beetlebulbs Logo"
+  class="logo"
+/>
+      <div>
+        <h1>Identity Plus</h1>
+        <div class="sub">Full Brand System — Prepared by Beetlebulbs®</div>
+      </div>
+    </div>
+    <div class="header-right">
+     Generated on {{GENERATED_DATE}}
+    </div>
+  </div>
+</div>
+
+<!-- HERO BLOCK -->
+<div class="hero-block">
+  <p>
+    Identity Plus is built for businesses that are no longer experimenting.
+    It is designed for brands that want clarity, consistency, and confidence
+    across every customer interaction — ads, website, sales calls, and follow-ups.
+  </p>
+  <p>
+    If Identity Lite helps you start right, Identity Plus ensures you scale
+    without brand friction. This package transforms a brand from
+    <strong>“present” to “professionally positioned.”</strong>
+  </p>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <h2>The Real Problem With Growing Brands</h2>
+    <p>
+      As businesses grow, more people interact with the brand — prospects,
+      customers, sales teams, agencies, and platforms. When branding is partial,
+      every interaction introduces inconsistency.
+    </p>
+    <p>
+      This inconsistency silently reduces trust. Customers hesitate, sales cycles
+      slow down, and ad performance drops — not because the offer is weak, but
+      because the brand does not feel fully established.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Why Identity Lite Stops Working at Scale</h2>
+    <p>
+      Identity Lite provides clarity, but clarity alone is not enough when a brand
+      begins to scale. Ads demand consistency. Sales teams need alignment.
+      Customers expect professionalism.
+    </p>
+    <p>
+      Without a system, teams improvise and messaging drifts. Identity Plus
+      replaces improvisation with structure.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Lite vs Plus — Strategic Difference</h2>
+    <table>
+      <tr><th>Area</th><th>Identity Lite</th><th>Identity Plus</th></tr>
+      <tr><td>Purpose</td><td>Start correctly</td><td>Scale professionally</td></tr>
+      <tr><td>Brand Depth</td><td>Basic clarity</td><td>Strategic foundation</td></tr>
+      <tr><td>Consistency</td><td>Limited</td><td>System-driven</td></tr>
+      <tr><td>Sales Confidence</td><td>Medium</td><td>High</td></tr>
+      <tr><td>Ad & Scale Ready</td><td>❌</td><td>✅</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Who Should Choose Identity Plus</h2>
+    <ul>
+      <li>Brands investing in paid advertising</li>
+      <li>Service businesses selling high-ticket offers</li>
+      <li>Founders planning long-term scale</li>
+      <li>Teams needing clarity, control, and consistency</li>
+    </ul>
+    
+  </div>
+</div>
+</div>  <!-- END .content -->
+
+
+
+<!-- ================= PAGE 2 ================= -->
+
+<div class="header">
+  <div class="header-row">
+    <div class="header-left">
+      <h1>What Identity Plus Delivers</h1>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <h2>Strategic Brand Foundation</h2>
+    <p>
+      Identity Plus begins with an in-depth discovery workshop designed to
+      understand your business model, customer psychology, competitors,
+      and long-term vision.
+    </p>
+    <p>
+      This ensures your brand is built on strategy — not assumptions, trends,
+      or personal taste.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Naming & Positioning System</h2>
+    <p>
+      You receive three strategically crafted naming options supported by
+      memorability logic, emotional resonance, and domain availability.
+      This protects your brand from confusion and costly rebranding later.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Complete Visual Identity System</h2>
+    <ul>
+      <li>Primary, horizontal & icon logo formats</li>
+      <li>Structured color system for digital & print</li>
+      <li>Typography for readability & authority</li>
+      <li>Consistent visuals across ads, website & sales material</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Brand Guidelines & Control</h2>
+    <p>
+      A comprehensive 10–18 page brand guideline document ensures long-term
+      consistency even as teams, vendors, or platforms change.
+      Your brand remains controlled and recognizable.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Business Outcomes</h2>
+    <ul>
+      <li>Stronger brand recall</li>
+      <li>Higher ad click-through rates</li>
+      <li>Reduced hesitation during sales calls</li>
+      <li>Premium brand perception</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Timeline & Investment</h2>
+    <p><strong>Timeline:</strong> 4–5 weeks (structured milestones)</p>
+    <p><strong>Investment:</strong> ₹85,000 – ₹2.5L</p>
+    <p>
+      This investment prevents future rebranding costs and improves
+      conversion efficiency across marketing and sales.
+    </p>
+  </div>
+
+</div>
+<div class="footer">
+  <div><strong>Beetlebulbs®</strong></div>
+  <div class="tagline">Building Brands That Grow</div>
+</div>
+</body>
+</html>

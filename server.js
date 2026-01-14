@@ -19,10 +19,28 @@ import { verifyToken } from "./utils/jwt.js"; // optional - used in requireAdmin
 import { lookupGeo } from "./utils/geo.js";
 import { logAdmin } from "./utils/adminLog.js";
 import fileUpload from "express-fileupload";
-
-
-console.log("🔥 SERVER.JS LOADED");
+import invoiceRoutes from "./invoices/invoice.routes.js";
+import billingRoutes from "./billing/billing.routes.js";
+import leadsRoute from "./routes/leads.js";
+import { generatePDF } from "./pdf-templates/pdf.js";
+import { sendPdfEmail } from "./pdf-templates/mailer.js";
+import supabase from "./database/supabase.js";
+import { sendFormLeadEmail } from "./pdf-templates/formLeadMailer.js";
+ 
 // -------- FREE IP LOOKUP --------
+
+const normalizePackage = (pkg) => {
+  if (!pkg) return null;
+
+  const key = pkg.toLowerCase().replace(/\s+/g, "-");
+
+  if (key.includes("lite")) return "lite";
+  if (key.includes("plus")) return "plus";
+  if (key.includes("system")) return "system";
+
+  return null;
+};
+
 async function getLocationFromIP(ip) {
   try {
     const res = await fetch(`https://ipapi.co/${ip}/json/`);
@@ -43,21 +61,52 @@ async function getLocationFromIP(ip) {
   }
 }
 
-
+function pdfExists(fileName) {
+  return fs.existsSync(
+    path.join(process.cwd(), "pdf-templates", "generated", fileName)
+  );
+}
 // ---- __dirname for ESM ----
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const LOG_FILE = path.join(__dirname, "logs", "admin-activity.json");
 // ---- App + config ----
 const app = express();
-app.use(express.json());
+/* ================== GLOBAL CORS (SAFE) ================== */
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://beetlebulbs.com",
+    "https://www.beetlebulbs.com"
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "x-billing-auth"]
+}));
+ 
+
+app.options("*", cors());
+
+app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
+app.use("/api/invoices", invoiceRoutes);
+app.use("/api/billing", billingRoutes);
+app.use("/api/leads", leadsRoute);
+
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
+
 app.use(
   fileUpload({
     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
     useTempFiles: false,
   })
 );
+  
+
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3001;
 
 // ---- Directories ----
@@ -127,18 +176,7 @@ const adminAuthMiddleware = (req, res, next) => {
   next();
 };
 
-// ---- Middleware ----
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://beetlebulbs.com",
-    "https://www.beetlebulbs.com"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
-
+ 
 app.use(compression());
  
 
@@ -524,7 +562,223 @@ app.get('/api/blog/:slug/comments', (req, res) => {
     console.error("GET /api/blog/:slug/comments error", err);
     return res.status(500).json({ error: "Server error" });
   }
+})
+ 
+app.use(
+  "/pdf-assets",
+  express.static(path.join(process.cwd(), "pdf-templates"))
+);
+app.use("/pdf", express.static("pdf-templates/generated"));
+app.use("/pdf-assets", express.static("pdf-templates"));
+
+
+//landingpage server start
+app.post("/api/lead", async (req, res) => {
+  try {
+    console.log("🧪 RAW BODY:", req.body);
+
+    const { name, email, phone, packageType } = req.body;
+    console.log("✅ PARSED:", name, email, phone, packageType);
+
+    /* ================= VALIDATION ================= */
+    if (!name || name.trim().length < 2) {
+      return res.status(400).json({ error: "Valid name is required" });
+    }
+
+    if (!email || !email.includes("@")) {
+      return res.status(400).json({ error: "Valid email is required" });
+    }
+
+    if (!phone || phone.length !== 10) {
+      return res.status(400).json({ error: "Valid 10-digit phone is required" });
+    }
+
+    /* ================= DATE ================= */
+    const today = new Date().toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+
+    /* ================= PACKAGE MAPS ================= */
+
+    const IDENTITY_MAP = {
+      lite: {
+        html: "identity-lite-final.html",
+        pdf: "identity-lite.pdf",
+        label: "Identity Lite"
+      },
+      plus: {
+        html: "identity-plus-final.html",
+        pdf: "identity-plus.pdf",
+        label: "Identity Plus"
+      },
+      system: {
+        html: "identity-system-final.html",
+        pdf: "identity-system.pdf",
+        label: "Identity System"
+      }
+    };
+
+    const DIGITAL_PRESENCE_MAP = {
+      "dp-lite": {
+        html: "presence-lite-final.html",
+        pdf: "presence-lite.pdf",
+        label: "Presence Lite — Website / Landing System"
+      },
+      "dp-plus": {
+        html: "presence-plus-final.html",
+        pdf: "presence-plus.pdf",
+        label: "Presence Plus — Business Platform"
+      },
+      "dp-system": {
+        html: "presence-system-final.html",
+        pdf: "presence-system.pdf",
+        label: "Presence System — Full Digital Infrastructure"
+      }
+    };
+
+    const GROWTH_ENGINE_MAP = {
+      "growth-lite": {
+        html: "growth-lite-final.html",
+        pdf: "growth-lite.pdf",
+        label: "Growth Lite — Funnel & Ads Foundation"
+      },
+      "growth-plus": {
+        html: "growth-plus-final.html",
+        pdf: "growth-plus.pdf",
+        label: "Growth Plus — Revenue System"
+      },
+      "growth-system": {
+        html: "growth-system-final.html",
+        pdf: "growth-system.pdf",
+        label: "Growth Engine — Predictable Scale Blueprint"
+      }
+    };
+
+    /* ================= PACKAGE PICKER ================= */
+    let pkg = null;
+
+    if (packageType.startsWith("dp-")) {
+      pkg = DIGITAL_PRESENCE_MAP[packageType];
+    } else if (packageType.startsWith("growth-")) {
+      pkg = GROWTH_ENGINE_MAP[packageType];
+    } else {
+      pkg = IDENTITY_MAP[packageType];
+    }
+
+    if (!pkg) {
+      return res.status(400).json({ error: "Invalid package type" });
+    }
+
+    /* ================= PDF GENERATION ================= */
+    await generatePDF(pkg.html, pkg.pdf, {
+      generatedDate: today
+    });
+
+    console.log("🚀 SENDING TO MAILER:", name, phone, pkg.label);
+
+    /* ================= EMAIL ================= */
+    await sendPdfEmail({
+      userEmail: email,
+      adminEmail: "betlebulbs@gmail.com", // later → info@
+      pdfPath: `pdf-templates/generated/${pkg.pdf}`,
+      packageName: pkg.label,
+      name,
+      phone
+    });
+    /* ================= RESPONSE ================= */
+    return res.json({
+      success: true,
+      openPdf: `/pdf/${pkg.pdf}`
+    });
+
+  } catch (err) {
+    console.error("LEAD API ERROR:", err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
 });
+
+
+// ✅ SERVE GENERATED PDFs (IMPORTANT)
+app.use(
+  "/pdf",
+  express.static(path.join(process.cwd(), "pdf-templates/generated"))
+);
+//landing page server end
+ app.use((err, req, res, next) => {
+  console.error("🔥 GLOBAL ERROR:", err);
+  res.status(500).json({
+    message: "Internal Server Error",
+    error: err.message || err
+  });
+});
+ 
+app.post("/api/formlead", async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      phone,
+      country,
+      stateRegion,
+      zipCode,
+      businessType,
+      otherBusinessType,
+      marketingSpend,
+      primaryGoal,
+      biggestChallenge
+    } = req.body;
+
+    if (!name || !email) {
+      return res.status(400).json({ error: "Name and email required" });
+    }
+
+    const finalBusinessType =
+      businessType === "other" ? otherBusinessType : businessType;
+
+    /* ================= SAVE TO SUPABASE ================= */
+    const { error } = await supabase.from("formleads").insert([
+      {
+        name,
+        email,
+        phone,
+        country,
+        state_region: stateRegion,
+        zip_code: zipCode,
+        business_type: finalBusinessType,
+        marketing_spend: marketingSpend,
+        primary_goal: primaryGoal,
+        biggest_challenge: biggestChallenge
+      }
+    ]);
+
+    if (error) {
+      console.error("❌ SUPABASE ERROR:", error);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    /* ================= ADMIN EMAIL ================= */
+    await sendFormLeadEmail({
+      name,
+      email,
+      phone,
+      country,
+      stateRegion,
+      zipCode,
+      businessType: finalBusinessType,
+      marketingSpend,
+      primaryGoal,
+      biggestChallenge
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("❌ FORM LEAD ERROR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 
 // ---- START SERVER ----
 app.listen(PORT, () => {

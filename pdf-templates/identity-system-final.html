@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Identity System – Beetlebulbs</title>
+
+<style>
+@page { margin: 0; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  color: #111;
+}
+
+/* ================= WATERMARK ================= */
+.watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-22deg);
+  font-size: 78px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.035);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ================= HEADER ================= */
+.header {
+  background: linear-gradient(135deg, #000, #1a1a1a);
+  color: #fff;
+  padding: 26px 34px;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.header-left {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.header img {
+  height: 34px;
+  background: #fff;
+  padding: 6px 8px;
+}
+
+.header h1 {
+  font-size: 27px;
+  margin: 0;
+}
+
+.sub {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.header-right {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* ================= HERO ================= */
+.hero-block {
+  background: linear-gradient(135deg, #111, #1f1f1f);
+  color: #fff;
+  padding: 28px 34px;
+}
+
+.hero-block p {
+  font-size: 14.6px;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+/* ================= CONTENT ================= */
+.content {
+  padding: 24px 34px;
+  position: relative;
+  z-index: 1;
+}
+
+.section {
+  margin-bottom: 18px;
+}
+
+.section h2 {
+  font-size: 16.5px;
+  margin-bottom: 6px;
+  border-bottom: 2px solid #000;
+  display: inline-block;
+}
+
+.section p {
+  font-size: 14px;
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.8px;
+  margin-top: 10px;
+}
+
+th {
+  background: #000;
+  color: #fff;
+  padding: 10px 8px;
+  text-align: center;
+  font-weight: 700;
+}
+
+td {
+  border-bottom: 1px solid #ccc;
+  padding: 9px 8px;
+  text-align: center;
+}
+
+ul {
+  margin-left: 18px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+.page-break {
+  page-break-before: always;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+  border-top: 1px solid #ddd;
+  padding: 12px 34px;
+  font-size: 11.5px;
+  color: #444;
+  display: flex;
+  justify-content: space-between;
+}
+.logo {
+  height: 64px;
+  background: transparent;
+   
+}
+</style>
+</head>
+
+<body>
+
+<div class="watermark">BEETLEBULBS®</div>
+
+<!-- ================= PAGE 1 ================= -->
+
+<div class="header">
+  <div class="header-row">
+    <div class="header-left">
+       <img
+  src="http://localhost:3001/pdf-assets/Tmlogo.png?v=1"
+  alt="Beetlebulbs Logo"
+  style="height:34px; background:#fff; padding:6px;"
+/>
+      <div>
+        <h1>Identity System</h1>
+        <div class="sub">Complete Brand Blueprint — Prepared by Beetlebulbs®</div>
+      </div>
+    </div>
+    <div class="header-right">
+      Generated on {{GENERATED_DATE}}
+    </div>
+  </div>
+</div>
+
+<div class="hero-block">
+  <p>
+    Identity System is not branding. It is brand engineering — designed for
+    businesses where perception directly impacts revenue, trust, valuation,
+    and long-term growth.
+  </p>
+  <p>
+    This system replaces scattered brand elements with a single,
+    execution-ready architecture that scales across ads, teams,
+    markets, and customer touchpoints.
+  </p>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <h2>Who This Is Designed For</h2>
+    <p>
+      Identity System is built for organizations that can no longer afford
+      inconsistency, guesswork, or perception gaps.
+    </p>
+    <ul>
+      <li>Funded startups preparing for scale or investor scrutiny</li>
+      <li>Enterprise & premium service businesses</li>
+      <li>Brands spending aggressively on paid acquisition</li>
+      <li>Founders building authority, not short-term visibility</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Lite vs Plus vs Identity System</h2>
+    <p>
+      As brands grow, partial branding becomes a liability.
+      Identity System eliminates fragmentation by replacing components
+      with a unified brand operating system.
+    </p>
+
+    <table>
+      <tr>
+        <th>Capability</th>
+        <th>Lite</th>
+        <th>Plus</th>
+        <th>Identity System</th>
+      </tr>
+      <tr>
+        <td>Brand Strategy Depth</td>
+        <td>Basic</td>
+        <td>Advanced</td>
+        <td>Enterprise-grade</td>
+      </tr>
+      <tr>
+        <td>Customer Psychology & Research</td>
+        <td>❌</td>
+        <td>Partial</td>
+        <td>✔ Full-stack</td>
+      </tr>
+      <tr>
+        <td>Naming Architecture</td>
+        <td>Limited</td>
+        <td>Strategic</td>
+        <td>Expansion-safe system</td>
+      </tr>
+      <tr>
+        <td>Visual Ecosystem</td>
+        <td>Basic</td>
+        <td>System-based</td>
+        <td>Scalable framework</td>
+      </tr>
+      <tr>
+        <td>Ads, Scale & Valuation Ready</td>
+        <td>❌</td>
+        <td>✔</td>
+        <td>✔✔</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Why Brands Fail Without a System</h2>
+    <p>
+      Without a structured identity system, brands depend on individuals,
+      agencies, or short-term campaigns. This leads to inconsistency,
+      higher acquisition costs, weaker trust, and brand dilution.
+    </p>
+    <p>
+      Identity System ensures consistency, credibility, and scalability
+      regardless of team size or marketing spend.
+    </p>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div><strong>Beetlebulbs®</strong></div>
+  <div>Engineering Brands for Scale</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ================= PAGE 2 ================= -->
+
+<div class="header">
+  <h1>Research, Strategy & Architecture</h1>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <h2>Market & Customer Intelligence</h2>
+    <p>
+      We begin with deep market research, competitor mapping, and customer
+      psychology analysis to understand how trust is built and decisions
+      are made in your category.
+    </p>
+    <p>
+      This ensures your brand competes on clarity and authority,
+      not discounts or noise.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Customer Decision Mapping</h2>
+    <p>
+      We map the complete customer decision journey — from awareness
+      to trust to conversion — identifying objections, drop-off points,
+      and emotional triggers.
+    </p>
+    <ul>
+      <li>Trust signals & hesitation points</li>
+      <li>Emotional vs logical drivers</li>
+      <li>Decision-stage messaging alignment</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Strategic Positioning Framework</h2>
+    <p>
+      Positioning defines how your brand occupies space in the customer’s mind.
+      We engineer positioning that is defensible, memorable, and scalable.
+    </p>
+    <ul>
+      <li>Clear category definition</li>
+      <li>Value articulation & contrast</li>
+      <li>Competitive white-space ownership</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Advanced Naming Architecture</h2>
+    <p>
+      Naming is treated as infrastructure, not creativity.
+      The focus is longevity, recall, and expansion safety.
+    </p>
+    <ul>
+      <li>5–7 globally viable naming options</li>
+      <li>Linguistic & emotional testing</li>
+      <li>Domain, trademark & multi-class direction</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Visual Ecosystem Engineering</h2>
+    <p>
+      Visual identity is engineered as a system, not isolated assets,
+      ensuring adaptability across platforms, markets, and formats.
+    </p>
+    <ul>
+      <li>Complete logo family & symbol logic</li>
+      <li>Iconography, grid & pattern systems</li>
+      <li>Design language for ads, products & platforms</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div><strong>Beetlebulbs®</strong></div>
+  <div>Engineering Brands for Scale</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ================= PAGE 3 ================= -->
+
+<div class="header">
+  <h1>Launch, Scale & Measurement</h1>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <h2>From Strategy to Execution</h2>
+    <p>
+      Identity System does not stop at strategy decks.
+      We translate decisions into execution frameworks
+      that teams and agencies can follow without confusion.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Sales & Marketing Alignment</h2>
+    <p>
+      Branding directly impacts sales performance.
+      We align brand messaging with sales conversations,
+      pitch decks, and confidence-building cues.
+    </p>
+    <ul>
+      <li>Sales narrative & positioning</li>
+      <li>Pitch deck structure & messaging</li>
+      <li>Trust-driven brand cues</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Advertising & Funnel Readiness</h2>
+    <p>
+      Identity System ensures your brand is ad-ready before
+      significant spend begins — improving CTR, reducing CPA,
+      and increasing conversion quality.
+    </p>
+    <ul>
+      <li>Ad messaging consistency</li>
+      <li>Landing page trust signals</li>
+      <li>Creative scalability</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Governance & Brand Control</h2>
+    <p>
+      As teams grow, brand control weakens.
+      We establish rules, guardrails, and documentation
+      that protect brand integrity long-term.
+    </p>
+    <ul>
+      <li>Vendor & agency alignment</li>
+      <li>Internal usage standards</li>
+      <li>Long-term brand protection</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Timeline & Investment</h2>
+    <p><strong>Timeline:</strong> 6–8 weeks (customized)</p>
+    <p><strong>Investment:</strong> ₹3L+</p>
+    <p>
+      You are not purchasing assets.
+      You are investing in a system that increases trust,
+      efficiency, and long-term brand equity.
+    </p>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div><strong>Beetlebulbs®</strong></div>
+  <div>Engineering Brands for Scale</div>
+</div>
+
+</body>
+</html>

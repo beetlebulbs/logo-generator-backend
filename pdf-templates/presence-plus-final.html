@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Presence Plus — Business Platform</title>
+
+<style>
+@page { margin: 0; }
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+}
+
+/* =============== A4 PAGE WRAPPER =============== */
+.page {
+  height: 1123px;              /* A4 height */
+  position: relative;
+  page-break-after: always;
+  overflow: hidden;
+}
+
+/* =============== WATERMARK =============== */
+.watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-22deg);
+  font-size: 72px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.04);
+  white-space: nowrap;
+  z-index: 0;
+}
+
+/* =============== HEADER =============== */
+.header {
+  background: linear-gradient(135deg, #000, #1a1a1a);
+  color: #fff;
+  padding: 26px 32px;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.header-left img {
+  height: 36px;
+  background: #fff;
+  padding: 6px 8px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.sub {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.header-right {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* =============== HERO BLOCK =============== */
+.hero-block {
+  background: linear-gradient(135deg, #111, #1f1f1f);
+  color: #fff;
+  padding: 26px 32px;
+}
+
+.hero-block p {
+  font-size: 14.4px;
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+
+/* =============== CONTENT =============== */
+.content {
+  padding: 24px 32px 90px; /* footer-safe */
+  position: relative;
+  z-index: 1;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section h2 {
+  font-size: 16.5px;
+  border-bottom: 2px solid #000;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.section p {
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+ul {
+  margin-left: 18px;
+}
+
+li {
+  font-size: 13.8px;
+  margin-bottom: 5px;
+}
+
+/* =============== TABLE =============== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 9px 7px;
+}
+
+th {
+  background: #000;
+  color: #fff;
+  text-align: left;
+}
+
+/* =============== FOOTER =============== */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid #ddd;
+  padding: 14px 32px;
+  font-size: 12.5px;
+  background: #fff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="watermark">Beetlebulbs®</div>
+
+<!-- ================= PAGE 1 ================= -->
+<div class="page">
+
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left">
+        <img src="http://localhost:3001/pdf-assets/Tmlogo.png" />
+        <div>
+          <h1>Presence Plus</h1>
+          <div class="sub">Business Platform — Prepared by Beetlebulbs®</div>
+        </div>
+      </div>
+      <div class="header-right">Generated on {{GENERATED_DATE}}</div>
+    </div>
+  </div>
+
+  <div class="hero-block">
+    <p>Presence Plus is built for businesses that have already achieved traction — but now face a more complex challenge: <strong>scaling without losing control</strong>.</p>
+    <p>At this stage, growth fails not because of lack of leads, but because systems break under pressure. Presence Plus transforms your digital presence into a <strong>central business operating platform</strong>.</p>
+    <p>Founders here are no longer solving marketing problems — they are solving coordination, accountability, and visibility problems.</p>
+  </div>
+
+  <div class="content">
+    <div class="section">
+      <h2>Why This Stage Feels Unstable</h2>
+      <p>More tools don’t fix this stage. More people don’t fix this stage. Only systems do.</p>
+      <p>Presence Plus creates a single source of truth where leads, sales activity, follow-ups, and performance are visible and controlled in real time.</p>
+    </div>
+
+    <div class="section">
+      <h2>The Shift Presence Plus Creates</h2>
+      <p>Growth stops being emotional and reactive and starts becoming operational, measurable, and predictable.</p>
+    </div>
+
+    <div class="section">
+      <h2>What Changes Day-to-Day</h2>
+      <p>Decisions are no longer driven by urgency or gut feeling. Teams operate with clarity. Founders stop firefighting and start steering.</p>
+      <p>Presence Plus replaces reactive problem-solving with planned execution — where ownership is clear and outcomes are consistently tracked.</p>
+    </div>
+
+    <div class="section">
+      <h2>From Growth Stress to Growth Control</h2>
+      <p>Growth no longer creates pressure. It creates leverage. More volume strengthens systems instead of exposing weaknesses.</p>
+      <h2>Growth Becomes an Asset, Not a Risk</h2>
+<p>
+Each increase in demand improves system intelligence.
+Instead of breaking processes,
+growth sharpens execution, visibility, and decision quality.
+</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    Beetlebulbs® — Designing digital systems that support growth, reduce dependency, and maintain operational control.
+  </div>
+</div>
+
+<!-- ================= PAGE 2 ================= -->
+<div class="page">
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left"><h1>What We Engineer</h1></div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="section">
+      <h2>1️⃣ Digital Platform Architecture</h2>
+      <p>We engineer the complete digital flow of your business — from first interaction to closed deal and beyond.</p>
+      <ul>
+        <li>Lead → sales → follow-up journey mapping</li>
+        <li>Clear ownership at every stage</li>
+        <li>Growth-ready system logic</li>
+        <li>Architecture that scales without rewrites</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>2️⃣ Business Website / Portal</h2>
+      <p>Your website becomes a controlled business interface, not just a marketing asset.</p>
+      <ul>
+        <li>Multi-page business platform</li>
+        <li>Admin & role-ready structure</li>
+        <li>Built for future modules</li>
+        <li>Expansion without disruption</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>3️⃣ CRM & Lead System</h2>
+      <p>Every lead is captured, tracked, and acted upon automatically.</p>
+      <ul>
+        <li>CRM integration or custom CRM</li>
+        <li>Source & campaign tracking</li>
+        <li>Pipeline & performance visibility</li>
+        <li>Accountability built into workflows</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>4️⃣ Data, Visibility & Decision Layer</h2>
+      <ul>
+        <li>Real-time dashboards for founders</li>
+        <li>Bottleneck and delay identification</li>
+        <li>Decision-making backed by data</li>
+        <li>One source of truth across teams</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Operating With Certainty</h2>
+      <ul>
+        <li>Accurate forecasting</li>
+        <li>Early warning signals</li>
+        <li>Performance clarity across teams</li>
+        <li>Confidence in every decision</li>
+        <li>Reduced dependency on verbal updates</li>
+<li>Decisions aligned across leadership and teams</li>
+<li>Confidence to act without waiting for confirmation</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+   Beetlebulbs® — Designing digital systems that support growth, reduce dependency, and maintain operational control.
+  </div>
+</div>
+
+<!-- ================= PAGE 3 ================= -->
+<div class="page">
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left"><h1>Automation & Control</h1></div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="section">
+      <h2>5️⃣ Automation Layer</h2>
+      <ul>
+        <li>Email & WhatsApp automation</li>
+        <li>Follow-up & response triggers</li>
+        <li>Task reminders & escalation logic</li>
+        <li>Sales activity logging</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Operational Confidence</h2>
+      <p>Presence Plus ensures growth is supported by systems — not heroics.</p>
+    </div>
+
+    <div class="section">
+      <h2>Systems That Hold Under Pressure</h2>
+      <p>As volume increases, systems remain stable. Performance does not depend on individual effort or memory.</p>
+    </div>
+
+    <div class="section">
+      <h2>Execution Without Dependency</h2>
+      <p>Workflows execute consistently even when people change. Processes outlive individuals.</p>
+    </div>
+
+    <div class="section">
+      <h2>Reduced Founder Dependence</h2>
+      <p>The system carries intent forward automatically — ensuring continuity without constant supervision.</p>
+    </div>
+
+    <div class="section">
+      <h2>Consistency Across Teams</h2>
+      <p>Every lead is treated consistently. Every task follows the same logic.</p>
+    </div>
+
+    <div class="section">
+      <h2>Systems That Mature With the Business</h2>
+      <p>Learning becomes repeatable process instead of tribal knowledge.</p>
+    </div>
+
+    <div class="section">
+      <h2>Scale Without Operational Fear</h2>
+      <p>Scale becomes controlled expansion — not a test of endurance.</p>
+      <h2>Predictability Replaces Pressure</h2>
+<p>
+As volume grows, outcomes become more predictable.
+Teams know what happens next.
+Founders stop reacting — and start planning ahead.
+</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    Beetlebulbs® — Designing digital systems that support growth, reduce dependency, and maintain operational control.
+  </div>
+</div>
+
+<!-- ================= PAGE 4 ================= -->
+<div class="page">
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left"><h1>Market Comparison & Investment</h1></div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="section">
+      <h2>Market vs Beetlebulbs® Presence Plus</h2>
+      <table>
+        <tr><th>Market Agencies</th><th>Beetlebulbs® Presence Plus</th></tr>
+        <tr><td>Disconnected tools</td><td><strong>Unified operating platform</strong></td></tr>
+        <tr><td>Manual tracking</td><td><strong>Automated activity logging</strong></td></tr>
+        <tr><td>Delayed follow-ups</td><td><strong>Instant response systems</strong></td></tr>
+        <tr><td>Guess-based sales</td><td><strong>Data-backed pipelines</strong></td></tr>
+        <tr><td>Founder dependency</td><td><strong>System-driven execution</strong></td></tr>
+        <tr><td>Scaling chaos</td><td><strong>Scaling stability</strong></td></tr>
+        <tr><td>Fragmented ownership</td><td><strong>Clearly defined responsibility at every stage</strong></td></tr>
+<tr><td>Founder-driven operations</td><td><strong>System-driven continuity</strong></td></tr>
+<tr><td>Manual reporting delays</td><td><strong>Real-time operational visibility</strong></td></tr>
+<tr><td>Ad-hoc processes</td><td><strong>Standardized, repeatable workflows</strong></td></tr>
+<tr><td>People-dependent execution</td><td><strong>Process-dependent execution</strong></td></tr>
+<tr><td>Scaling increases errors</td><td><strong>Scaling improves accuracy</strong></td></tr>
+<tr>
+  <td>Limited process documentation</td>
+  <td><strong>Documented, system-led workflows</strong></td>
+</tr>
+<tr>
+  <td>Knowledge trapped in individuals</td>
+  <td><strong>Knowledge embedded into systems</strong></td>
+</tr>
+<tr>
+  <td>Unclear performance ownership</td>
+  <td><strong>Measurable accountability at each stage</strong></td>
+</tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>Deliverables</h2>
+      <ul>
+        <li>Business platform / website</li>
+        <li>CRM & lead system</li>
+        <li>Automation workflows</li>
+        <li>Admin dashboards</li>
+        <li>Analytics & tracking</li>
+        <li>Role-based access & permission structure</li>
+<li>Future-ready modular architecture</li>
+<li>Operational scalability without redesign</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Timeline & Investment</h2>
+      <p><strong>Timeline:</strong> 4–6 weeks</p>
+      <p><strong>Investment:</strong> ₹2,00,000 – ₹4,50,000</p>
+    </div>
+  </div>
+
+  <div class="footer">
+   Beetlebulbs® — Designing digital systems that support growth, reduce dependency, and maintain operational control.
+  </div>
+</div>
+
+</body>
+</html>
