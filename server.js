@@ -713,18 +713,14 @@ app.use(
     error: err.message || err
   });
 });
- app.options("/api/formlead", (req, res) => {
+ // 🔥 EXPLICIT preflight handler for THIS route only
+app.options("/api/formlead", (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "https://beetlebulbs.com");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "POST, OPTIONS"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type"
-  );
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   return res.sendStatus(204);
 });
+
 
 app.post("/api/formlead", async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "https://beetlebulbs.com");
