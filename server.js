@@ -714,6 +714,8 @@ app.use(
   });
 });
  
+ 
+
 app.post("/api/formlead", async (req, res) => {
   try {
     const {
@@ -737,7 +739,7 @@ app.post("/api/formlead", async (req, res) => {
     const finalBusinessType =
       businessType === "other" ? otherBusinessType : businessType;
 
-    // ✅ ONLY SAVE TO SUPABASE
+    // ✅ SAVE TO SUPABASE
     const { error } = await supabase.from("formleads").insert([{
       name,
       email,
@@ -756,15 +758,28 @@ app.post("/api/formlead", async (req, res) => {
       return res.status(500).json({ error: "Database error" });
     }
 
-    // ✅ FAST RESPONSE (NO EMAIL)
-    return res.json({ success: true });
+    // ✅ SEND RESPONSE FAST
+    res.json({ success: true });
+
+    // ✅ FIRE EMAIL ASYNC (DO NOT AWAIT)
+    sendFormLeadEmail({
+      name,
+      email,
+      phone,
+      country,
+      stateRegion,
+      zipCode,
+      businessType: finalBusinessType,
+      marketingSpend,
+      primaryGoal,
+      biggestChallenge
+    });
 
   } catch (err) {
     console.error("❌ FORM LEAD ERROR:", err);
     return res.status(500).json({ error: "Server error" });
   }
 });
-
 
 
 // ---- START SERVER ----
