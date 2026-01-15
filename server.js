@@ -737,50 +737,48 @@ app.post("/api/formlead", async (req, res) => {
     const finalBusinessType =
       businessType === "other" ? otherBusinessType : businessType;
 
-    /* ================= SAVE TO SUPABASE ================= */
-    const { error } = await supabase.from("formleads").insert([
-      {
+    // 1️⃣ Save to Supabase
+    const { error } = await supabase.from("formleads").insert([{
+      name,
+      email,
+      phone,
+      country,
+      state_region: stateRegion,
+      zip_code: zipCode,
+      business_type: finalBusinessType,
+      marketing_spend: marketingSpend,
+      primary_goal: primaryGoal,
+      biggest_challenge: biggestChallenge
+    }]);
+
+    if (error) {
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    // 2️⃣ Try email (BUT DON'T FAIL REQUEST)
+    try {
+      await sendFormLeadEmail({
         name,
         email,
         phone,
         country,
-        state_region: stateRegion,
-        zip_code: zipCode,
-        business_type: finalBusinessType,
-        marketing_spend: marketingSpend,
-        primary_goal: primaryGoal,
-        biggest_challenge: biggestChallenge
-      }
-    ]);
-
-    if (error) {
-      console.error("❌ SUPABASE ERROR:", error);
-      return res.status(500).json({ error: "Database error" });
+        stateRegion,
+        zipCode,
+        businessType: finalBusinessType,
+        marketingSpend,
+        primaryGoal,
+        biggestChallenge
+      });
+    } catch (mailErr) {
+      console.error("❌ EMAIL FAILED (ignored):", mailErr.message);
     }
 
-    // ✅ SEND RESPONSE IMMEDIATELY
-    res.json({ success: true });
-
-    // 🔥 EMAIL IN BACKGROUND (non-blocking)
- await sendFormLeadEmail({
-  name,
-  email,
-  phone,
-  country,
-  stateRegion,
-  zipCode,
-  businessType: finalBusinessType,
-  marketingSpend,
-  primaryGoal,
-  biggestChallenge
-});
-
-// ✅ THEN send response
-res.json({ success: true });
+    // 3️⃣ Send response ONLY ONCE
+    return res.json({ success: true });
 
   } catch (err) {
     console.error("❌ FORM LEAD ERROR:", err);
-    res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: "Server error" });
   }
 });
 
