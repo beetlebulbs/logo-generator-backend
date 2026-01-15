@@ -1,13 +1,7 @@
 import nodemailer from "nodemailer";
 
-const safeBusinessType = businessType || "N/A";
-
 console.log("📩 FORM LEAD MAILER ACTIVE");
 
-/**
- * Sends internal admin email for form leads
- * NO user email, ONLY Beetlebulbs internal notification
- */
 export async function sendFormLeadEmail({
   name,
   email,
@@ -15,29 +9,31 @@ export async function sendFormLeadEmail({
   country,
   stateRegion,
   zipCode,
-  businessType: finalBusinessType,
+  businessType,
   marketingSpend,
   primaryGoal,
   biggestChallenge
 }) {
   try {
-    // 🔧 CREATE TRANSPORTER
+    // ✅ DEFINE SAFE VARIABLE *INSIDE FUNCTION*
+    const safeBusinessType = businessType || "N/A";
+
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port: 465,
-      secure: false, // TLS
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS // ⚠️ MUST BE APP PASSWORD (GMAIL)
+        pass: process.env.SMTP_PASS
       }
     });
 
-     
+    await transporter.verify();
+    console.log("✅ SMTP connection verified");
 
-    // 📧 SEND ADMIN EMAIL
-    const info = await transporter.sendMail({
+    await transporter.sendMail({
       from: `"Beetlebulbs Form Lead" <${process.env.SMTP_USER}>`,
-      to: "shahadat722020@gmail.com", // ✅ ADMIN ONLY
+      to: "shahadat722020@gmail.com", // 🔥 IMPORTANT
       subject: "🔥 New Website Form Lead",
       html: `
         <h2>New Form Lead Received</h2>
@@ -55,7 +51,7 @@ export async function sendFormLeadEmail({
 
         <br/>
 
-        <p><strong>Business Type:</strong> ${businessType || "N/A"}</p>
+        <p><strong>Business Type:</strong> ${safeBusinessType}</p>
         <p><strong>Marketing Spend:</strong> ${marketingSpend || "N/A"}</p>
         <p><strong>Primary Goal:</strong> ${primaryGoal || "N/A"}</p>
         <p><strong>Biggest Challenge:</strong> ${biggestChallenge || "N/A"}</p>
@@ -67,10 +63,8 @@ export async function sendFormLeadEmail({
       `
     });
 
-    console.log("✅ FORM LEAD EMAIL SENT:", info.messageId);
-
+    console.log("✅ FORM LEAD EMAIL SENT");
   } catch (error) {
-    // ❌ DO NOT CRASH SERVER
     console.error("❌ FORM LEAD EMAIL FAILED");
     console.error(error);
   }
