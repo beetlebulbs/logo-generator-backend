@@ -15,6 +15,10 @@ export async function sendFormLeadEmail({
   biggestChallenge
 }) {
   try {
+    console.log("🧪 BREVO_USER =", process.env.BREVO_USER);
+console.log("🧪 BREVO_KEY =", process.env.BREVO_KEY ? "SET" : "MISSING");
+console.log("🧪 FORM_LEADS_EMAIL =", process.env.FORM_LEADS_EMAIL);
+console.log("📨 ATTEMPTING TO SEND FORM LEAD EMAIL...");
     const transporter = nodemailer.createTransport({
       host: "smtp-relay.brevo.com",
       port: 587,
