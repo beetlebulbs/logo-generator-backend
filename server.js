@@ -713,27 +713,7 @@ app.use(
     error: err.message || err
   });
 });
- app.get("/force-mail", async (req, res) => {
-  try {
-    await sendFormLeadEmail({
-      name: "Render Test",
-      email: "test@test.com",
-      phone: "9999999999",
-      country: "India",
-      stateRegion: "Delhi",
-      zipCode: "110017",
-      businessType: "Test Business",
-      marketingSpend: "Test",
-      primaryGoal: "Test",
-      biggestChallenge: "Test"
-    });
-
-    res.send("MAIL TRIGGERED");
-  } catch (err) {
-    console.error("FORCE MAIL FAILED:", err);
-    res.status(500).send("MAIL FAILED");
-  }
-});
+ 
 app.post("/api/formlead", async (req, res) => {
   try {
     const {
@@ -757,7 +737,7 @@ app.post("/api/formlead", async (req, res) => {
     const finalBusinessType =
       businessType === "other" ? otherBusinessType : businessType;
 
-    // 1️⃣ SAVE TO SUPABASE (blocking – OK)
+    // ✅ ONLY SAVE TO SUPABASE
     const { error } = await supabase.from("formleads").insert([{
       name,
       email,
@@ -776,26 +756,8 @@ app.post("/api/formlead", async (req, res) => {
       return res.status(500).json({ error: "Database error" });
     }
 
-    // 2️⃣ RESPOND IMMEDIATELY (FORM FAST)
-    res.json({ success: true });
-
-    // 3️⃣ EMAIL IN BACKGROUND (NON-BLOCKING)
-    setImmediate(() => {
-      sendFormLeadEmail({
-        name,
-        email,
-        phone,
-        country,
-        stateRegion,
-        zipCode,
-        businessType: finalBusinessType,
-        marketingSpend,
-        primaryGoal,
-        biggestChallenge
-      }).catch(err => {
-        console.error("❌ EMAIL FAILED (ignored):", err.message);
-      });
-    });
+    // ✅ FAST RESPONSE (NO EMAIL)
+    return res.json({ success: true });
 
   } catch (err) {
     console.error("❌ FORM LEAD ERROR:", err);
