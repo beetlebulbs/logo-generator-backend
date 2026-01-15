@@ -713,7 +713,27 @@ app.use(
     error: err.message || err
   });
 });
- 
+ app.get("/force-mail", async (req, res) => {
+  try {
+    await sendFormLeadEmail({
+      name: "Render Test",
+      email: "test@test.com",
+      phone: "9999999999",
+      country: "India",
+      stateRegion: "Delhi",
+      zipCode: "110017",
+      businessType: "Test Business",
+      marketingSpend: "Test",
+      primaryGoal: "Test",
+      biggestChallenge: "Test"
+    });
+
+    res.send("MAIL TRIGGERED");
+  } catch (err) {
+    console.error("FORCE MAIL FAILED:", err);
+    res.status(500).send("MAIL FAILED");
+  }
+});
 app.post("/api/formlead", async (req, res) => {
   try {
     const {
