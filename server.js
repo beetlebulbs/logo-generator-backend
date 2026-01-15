@@ -758,8 +758,11 @@ app.post("/api/formlead", async (req, res) => {
       return res.status(500).json({ error: "Database error" });
     }
 
-    /* ================= ADMIN EMAIL ================= */
-    await sendFormLeadEmail({
+    // ✅ SEND RESPONSE IMMEDIATELY
+    res.json({ success: true });
+
+    // 🔥 EMAIL IN BACKGROUND (non-blocking)
+    sendFormLeadEmail({
       name,
       email,
       phone,
@@ -770,9 +773,10 @@ app.post("/api/formlead", async (req, res) => {
       marketingSpend,
       primaryGoal,
       biggestChallenge
+    }).catch(err => {
+      console.error("❌ EMAIL FAILED:", err);
     });
 
-    res.json({ success: true });
   } catch (err) {
     console.error("❌ FORM LEAD ERROR:", err);
     res.status(500).json({ error: "Server error" });
