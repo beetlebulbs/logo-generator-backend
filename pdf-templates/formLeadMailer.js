@@ -13,7 +13,7 @@ export async function sendFormLeadEmail({
   country,
   stateRegion,
   zipCode,
-  businessType,
+  businessType: finalBusinessType,
   marketingSpend,
   primaryGoal,
   biggestChallenge
@@ -22,7 +22,7 @@ export async function sendFormLeadEmail({
     // 🔧 CREATE TRANSPORTER
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port: 587,
+      port: 465,
       secure: false, // TLS
       auth: {
         user: process.env.SMTP_USER,
@@ -30,9 +30,7 @@ export async function sendFormLeadEmail({
       }
     });
 
-    // 🧪 VERIFY SMTP (CRITICAL FOR DEBUG)
-    await transporter.verify();
-    console.log("✅ SMTP connection verified");
+     
 
     // 📧 SEND ADMIN EMAIL
     const info = await transporter.sendMail({
