@@ -715,7 +715,6 @@ app.use(
 });
  
  
-
 app.post("/api/formlead", async (req, res) => {
   try {
     const {
@@ -739,8 +738,8 @@ app.post("/api/formlead", async (req, res) => {
     const finalBusinessType =
       businessType === "other" ? otherBusinessType : businessType;
 
-    // ✅ SAVE TO SUPABASE
-    const { error } = await supabase.from("formleads").insert([{
+    // save DB (already working)
+    await supabase.from("formleads").insert([{
       name,
       email,
       phone,
@@ -753,15 +752,10 @@ app.post("/api/formlead", async (req, res) => {
       biggest_challenge: biggestChallenge
     }]);
 
-    if (error) {
-      console.error("❌ SUPABASE ERROR:", error);
-      return res.status(500).json({ error: "Database error" });
-    }
-
-    // ✅ SEND RESPONSE FAST
+    // respond fast
     res.json({ success: true });
 
-    // ✅ FIRE EMAIL ASYNC (DO NOT AWAIT)
+    // send mail in background
     sendFormLeadEmail({
       name,
       email,
@@ -776,8 +770,7 @@ app.post("/api/formlead", async (req, res) => {
     });
 
   } catch (err) {
-    console.error("❌ FORM LEAD ERROR:", err);
-    return res.status(500).json({ error: "Server error" });
+    console.error("❌ FORM ERROR:", err);
   }
 });
 

@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-console.log("📩 FORM LEAD MAILER ACTIVE");
+console.log("📩 GMAIL FORM LEAD MAILER ACTIVE");
 
 export async function sendFormLeadEmail({
   name,
@@ -16,24 +16,19 @@ export async function sendFormLeadEmail({
 }) {
   try {
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // MUST be false for 587
+      service: "gmail",
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
-      },
-      tls: {
-        rejectUnauthorized: false
       }
     });
 
     const info = await transporter.sendMail({
-      from: `"BeetleBulbs Lead" <${process.env.SMTP_USER}>`,
-      to: "shahadat722020@gmail.com",
-      subject: "🔥 New Website Form Lead",
+      from: `"Beetlebulbs Lead" <${process.env.SMTP_USER}>`,
+      to: "betlebulbs@gmail.com", // SAME gmail for test
+      subject: "🔥 New Website Lead (TEST)",
       html: `
-        <h2>New Form Lead</h2>
+        <h3>New Lead</h3>
         <p><b>Name:</b> ${name}</p>
         <p><b>Email:</b> ${email}</p>
         <p><b>Phone:</b> ${phone}</p>
@@ -42,14 +37,13 @@ export async function sendFormLeadEmail({
         <p><b>ZIP:</b> ${zipCode}</p>
         <p><b>Business Type:</b> ${businessType}</p>
         <p><b>Marketing Spend:</b> ${marketingSpend}</p>
-        <p><b>Goal:</b> ${primaryGoal}</p>
-        <p><b>Challenge:</b> ${biggestChallenge}</p>
+        <p><b>Primary Goal:</b> ${primaryGoal}</p>
+        <p><b>Biggest Challenge:</b> ${biggestChallenge}</p>
       `
     });
 
-    console.log("✅ FORM LEAD EMAIL SENT:", info.messageId);
-
+    console.log("✅ GMAIL EMAIL SENT:", info.messageId);
   } catch (err) {
-    console.error("❌ FORM LEAD EMAIL FAILED:", err);
+    console.error("❌ GMAIL EMAIL FAILED:", err.message);
   }
 }
