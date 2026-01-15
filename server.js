@@ -782,7 +782,26 @@ app.post("/api/formlead", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+// 🧪 TEMP MAIL TEST ROUTE (REMOVE AFTER TEST)
+app.get("/test-mail", async (req, res) => {
+  try {
+    await sendFormLeadEmail({
+      name: "Test Lead",
+      email: "test@test.com",
+      phone: "9999999999",
+      country: "India",
+      businessType: "Test Business",
+      marketingSpend: "₹50k+",
+      primaryGoal: "Testing",
+      biggestChallenge: "Email delivery"
+    });
 
+    res.send("MAIL SENT");
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("MAIL FAILED");
+  }
+});
 
 // ---- START SERVER ----
 app.listen(PORT, () => {
