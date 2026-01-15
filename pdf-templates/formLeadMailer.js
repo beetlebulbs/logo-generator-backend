@@ -16,49 +16,40 @@ export async function sendFormLeadEmail({
 }) {
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // MUST be false for 587
       auth: {
-        user: process.env.SMTP_USER, // your gmail
-        pass: process.env.SMTP_PASS  // gmail APP PASSWORD
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
       },
-
-      // ⏱️ IMPORTANT: prevent server hang
-      connectionTimeout: 5000,
-      greetingTimeout: 5000,
-      socketTimeout: 5000
+      tls: {
+        rejectUnauthorized: false
+      }
     });
 
     const info = await transporter.sendMail({
-      from: `"Beetlebulbs Form Lead" <${process.env.SMTP_USER}>`,
+      from: `"BeetleBulbs Lead" <${process.env.SMTP_USER}>`,
       to: "shahadat722020@gmail.com",
       subject: "🔥 New Website Form Lead",
       html: `
         <h2>New Form Lead</h2>
-        <hr/>
-
-        <p><b>Name:</b> ${name || "N/A"}</p>
-        <p><b>Email:</b> ${email || "N/A"}</p>
-        <p><b>Phone:</b> ${phone || "N/A"}</p>
-
-        <p><b>Country:</b> ${country || "N/A"}</p>
-        <p><b>State / Region:</b> ${stateRegion || "N/A"}</p>
-        <p><b>ZIP:</b> ${zipCode || "N/A"}</p>
-
-        <p><b>Business Type:</b> ${businessType || "N/A"}</p>
-        <p><b>Marketing Spend:</b> ${marketingSpend || "N/A"}</p>
-        <p><b>Primary Goal:</b> ${primaryGoal || "N/A"}</p>
-        <p><b>Biggest Challenge:</b> ${biggestChallenge || "N/A"}</p>
-
-        <br/>
-        <p style="font-size:12px;opacity:0.6">
-          — Beetlebulbs Internal Lead System
-        </p>
+        <p><b>Name:</b> ${name}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Phone:</b> ${phone}</p>
+        <p><b>Country:</b> ${country}</p>
+        <p><b>State:</b> ${stateRegion}</p>
+        <p><b>ZIP:</b> ${zipCode}</p>
+        <p><b>Business Type:</b> ${businessType}</p>
+        <p><b>Marketing Spend:</b> ${marketingSpend}</p>
+        <p><b>Goal:</b> ${primaryGoal}</p>
+        <p><b>Challenge:</b> ${biggestChallenge}</p>
       `
     });
 
     console.log("✅ FORM LEAD EMAIL SENT:", info.messageId);
 
   } catch (err) {
-    console.error("❌ FORM LEAD EMAIL FAILED:", err.message);
+    console.error("❌ FORM LEAD EMAIL FAILED:", err);
   }
 }
