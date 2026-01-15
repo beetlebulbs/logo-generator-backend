@@ -737,7 +737,7 @@ app.post("/api/formlead", async (req, res) => {
     const finalBusinessType =
       businessType === "other" ? otherBusinessType : businessType;
 
-    // 1️⃣ Save to Supabase
+    // 1️⃣ SAVE TO SUPABASE (blocking – OK)
     const { error } = await supabase.from("formleads").insert([{
       name,
       email,
@@ -752,12 +752,16 @@ app.post("/api/formlead", async (req, res) => {
     }]);
 
     if (error) {
+      console.error("❌ SUPABASE ERROR:", error);
       return res.status(500).json({ error: "Database error" });
     }
 
-    // 2️⃣ Try email (BUT DON'T FAIL REQUEST)
-    try {
-      await sendFormLeadEmail({
+    // 2️⃣ RESPOND IMMEDIATELY (FORM FAST)
+    res.json({ success: true });
+
+    // 3️⃣ EMAIL IN BACKGROUND (NON-BLOCKING)
+    setImmediate(() => {
+      sendFormLeadEmail({
         name,
         email,
         phone,
@@ -768,19 +772,17 @@ app.post("/api/formlead", async (req, res) => {
         marketingSpend,
         primaryGoal,
         biggestChallenge
+      }).catch(err => {
+        console.error("❌ EMAIL FAILED (ignored):", err.message);
       });
-    } catch (mailErr) {
-      console.error("❌ EMAIL FAILED (ignored):", mailErr.message);
-    }
-
-    // 3️⃣ Send response ONLY ONCE
-    return res.json({ success: true });
+    });
 
   } catch (err) {
     console.error("❌ FORM LEAD ERROR:", err);
     return res.status(500).json({ error: "Server error" });
   }
 });
+
 
 
 // ---- START SERVER ----
