@@ -27,9 +27,14 @@ export async function generatePDF(htmlFile, pdfFile, data = {}) {
   }
 
   const browser = await puppeteer.launch({
-    headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
-  });
+  headless: "new",
+  executablePath: puppeteer.executablePath(), // 🔑 MOST IMPORTANT
+  args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage"
+  ]
+});
 
   const page = await browser.newPage();
 
