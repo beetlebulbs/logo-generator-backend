@@ -1,6 +1,6 @@
-import nodemailer from "nodemailer";
+import fetch from "node-fetch";
 
-console.log("📩 FORM LEAD MAILER ACTIVE (BREVO)");
+console.log("📩 FORM LEAD MAILER ACTIVE (BREVO API)");
 
 export async function sendFormLeadEmail({
   name,
@@ -15,51 +15,48 @@ export async function sendFormLeadEmail({
   biggestChallenge
 }) {
   try {
-    console.log("🧪 BREVO_USER =", process.env.BREVO_USER);
-console.log("🧪 BREVO_KEY =", process.env.BREVO_KEY ? "SET" : "MISSING");
-console.log("🧪 FORM_LEADS_EMAIL =", process.env.FORM_LEADS_EMAIL);
-console.log("📨 ATTEMPTING TO SEND FORM LEAD EMAIL...");
-    const transporter = nodemailer.createTransport({
-      host: "smtp-relay.brevo.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.BREVO_USER, // always "apikey"
-        pass: process.env.BREVO_KEY
-      }
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "api-key": process.env.BREVO_API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        sender: {
+          name: "BeetleBulbs Form Lead",
+          email: "package@beetlebulbs.com"
+        },
+        to: [
+          { email: process.env.FORM_LEADS_EMAIL }
+        ],
+        subject: "🔥 New Website Form Submission",
+        htmlContent: `
+          <h2>New Form Submission</h2>
+          <p><b>Name:</b> ${name}</p>
+          <p><b>Email:</b> ${email}</p>
+          <p><b>Phone:</b> ${phone}</p>
+          <p><b>Country:</b> ${country}</p>
+          <p><b>State:</b> ${stateRegion}</p>
+          <p><b>ZIP:</b> ${zipCode}</p>
+          <p><b>Business Type:</b> ${businessType}</p>
+          <p><b>Marketing Spend:</b> ${marketingSpend}</p>
+          <p><b>Goal:</b> ${primaryGoal}</p>
+          <p><b>Challenge:</b> ${biggestChallenge}</p>
+        `
+      })
     });
 
-    const info = await transporter.sendMail({
-      from: `"BeetleBulbs Form Lead" <package@beetlebulbs.com>`, // ✅ verified sender
-      to: process.env.FORM_LEADS_EMAIL, // ✅ ONLY YOU
-      subject: "🔥 New Website Form Submission",
-      html: `
-        <h2>New Form Submission</h2>
-        <hr/>
+    const data = await res.json();
 
-        <p><b>Name:</b> ${name || "N/A"}</p>
-        <p><b>Email:</b> ${email || "N/A"}</p>
-        <p><b>Phone:</b> ${phone || "N/A"}</p>
+    if (!res.ok) {
+      console.error("❌ BREVO API ERROR:", data);
+      return;
+    }
 
-        <p><b>Country:</b> ${country || "N/A"}</p>
-        <p><b>State / Region:</b> ${stateRegion || "N/A"}</p>
-        <p><b>ZIP:</b> ${zipCode || "N/A"}</p>
-
-        <p><b>Business Type:</b> ${businessType || "N/A"}</p>
-        <p><b>Marketing Spend:</b> ${marketingSpend || "N/A"}</p>
-        <p><b>Primary Goal:</b> ${primaryGoal || "N/A"}</p>
-        <p><b>Biggest Challenge:</b> ${biggestChallenge || "N/A"}</p>
-
-        <br/>
-        <p style="font-size:12px;opacity:0.6">
-          — BeetleBulbs Internal Lead System
-        </p>
-      `
-    });
-
-    console.log("✅ ADMIN FORM EMAIL SENT (BREVO):", info.messageId);
+    console.log("✅ ADMIN FORM EMAIL SENT (BREVO API)", data.messageId);
 
   } catch (err) {
-    console.error("❌ ADMIN FORM EMAIL FAILED (BREVO):", err);
+    console.error("❌ BREVO API FAILED:", err.message);
   }
 }
