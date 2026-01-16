@@ -11,19 +11,13 @@ export async function generatePDF(htmlFile, pdfFile, data = {}) {
   const outDir = path.join(__dirname, "generated");
   const outPath = path.join(outDir, pdfFile);
 
-  if (!fs.existsSync(outDir)) {
-    fs.mkdirSync(outDir, { recursive: true });
-  }
+  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
-  let html = fs.readFileSync(htmlPath, "utf8");
+  const html = fs.readFileSync(htmlPath, "utf8");
 
   const browser = await puppeteer.launch({
     headless: "new",
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage"
-    ]
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
   });
 
   const page = await browser.newPage();
