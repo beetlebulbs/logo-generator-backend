@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { chromium } from "playwright";
+import { chromium } from "playwright-chromium";
 import { COMPANY } from "./invoice.config.js";
 
 /* =====================================================
