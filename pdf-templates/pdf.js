@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import puppeteer from "puppeteer";
+import { chromium } from "playwright";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -18,48 +18,30 @@ export async function generatePDF(htmlFile, pdfFile, data = {}) {
     fs.mkdirSync(outDir, { recursive: true });
   }
 
-  // 🔥 READ HTML
   let html = fs.readFileSync(htmlPath, "utf8");
 
-  // ✅ Inject dynamic date
   if (data.generatedDate) {
     html = html.replaceAll("{{GENERATED_DATE}}", data.generatedDate);
   }
 
-  const browser = await puppeteer.launch({
-  headless: "new",
-  executablePath: puppeteer.executablePath(), // 🔑 MOST IMPORTANT
-  args: [
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage"
-  ]
-});
-
-  const page = await browser.newPage();
-
-  // 🔑 Force viewport
-  await page.setViewport({ width: 1240, height: 1754 });
-
-  await page.addStyleTag({
-    content: `body { background: #fff; }`
+  const browser = await chromium.launch({
+    headless: true,
+    args: ["--no-sandbox"]
   });
 
-  // 🔑 Load HTML
-  await page.setContent(html, {
-    waitUntil: "domcontentloaded"
+  const page = await browser.newPage({
+    viewport: { width: 1240, height: 1754 }
   });
 
-  // 🔥 Wait for logo
-  await page.waitForSelector("img", { timeout: 5000 });
+  await page.setContent(html, { waitUntil: "load" });
 
-  // 🔑 Generate PDF
   await page.pdf({
     path: outPath,
     format: "A4",
-    printBackground: true,
-    preferCSSPageSize: true
+    printBackground: true
   });
 
   await browser.close();
+
+  return outPath;
 }
