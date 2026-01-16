@@ -15,10 +15,14 @@ export async function generatePDF(htmlFile, pdfFile, data = {}) {
 
   const html = fs.readFileSync(htmlPath, "utf8");
 
-  const browser = await puppeteer.launch({
-    headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
-  });
+ const browser = await puppeteer.launch({
+  headless: "new",
+  args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage"
+  ]
+});
 
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });

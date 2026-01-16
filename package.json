@@ -10,7 +10,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "replace-urls": "node replace-urls.cjs"
+    "replace-urls": "node replace-urls.cjs",
+    "postinstall": "PUPPETEER_CACHE_DIR=/tmp/puppeteer npx puppeteer browsers install chrome"
   },
   "keywords": [],
   "author": "",
