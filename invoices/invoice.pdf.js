@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import puppeteer from "puppeteer";
+import { chromium } from "playwright";
 import { COMPANY } from "./invoice.config.js";
 
 /* =====================================================
@@ -221,7 +221,10 @@ ${isIndia
   const fileName = `${invoice.invoice_no.replace(/\//g, "-")}.pdf`;
   const filePath = path.join(baseDir, fileName);
 
-  const browser = await puppeteer.launch({ headless: "new" });
+  const browser = await chromium.launch({
+  headless: true,
+  args: ["--no-sandbox"]
+});
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
   await page.pdf({ path: filePath, format: "A4" });
