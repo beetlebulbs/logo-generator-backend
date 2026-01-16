@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
-
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
 import { COMPANY } from "./invoice.config.js";
 
 /* =====================================================
@@ -224,7 +224,8 @@ ${isIndia
 
   const browser = await puppeteer.launch({
   args: chromium.args,
-  executablePath: await chromium.executablePath,
+  defaultViewport: chromium.defaultViewport,
+  executablePath: await chromium.executablePath(),
   headless: chromium.headless
 });
   const page = await browser.newPage();
