@@ -25,9 +25,13 @@ export async function generatePDF(htmlFile, pdfFile, data = {}) {
   }
 
   const browser = await chromium.launch({
-    headless: true,
-    args: ["--no-sandbox"]
-  });
+  headless: true,
+  args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage"
+  ]
+});
 
   const page = await browser.newPage({
     viewport: { width: 1240, height: 1754 }
