@@ -1,9 +1,20 @@
 import express from "express";
-import nodemailer from "nodemailer";
 import fetch from "node-fetch";
+import SibApiV3Sdk from "sib-api-v3-sdk";
 
 const router = express.Router();
 
+/* ===============================
+   BREVO SETUP
+=============================== */
+const client = SibApiV3Sdk.ApiClient.instance;
+client.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+
+const emailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+
+/* ===============================
+   LEAD ROUTE
+=============================== */
 router.post("/", async (req, res) => {
   try {
     const { name, phone, email, business } = req.body;
@@ -18,7 +29,7 @@ Service Interested: ${business}
 `;
 
     /* ===============================
-       WHATSAPP (OPTIONAL – KEEP)
+       WHATSAPP (OPTIONAL – KEEP AS IS)
     =============================== */
     await fetch(
       `https://api.callmebot.com/whatsapp.php?phone=YOUR_NUMBER&text=${encodeURIComponent(
@@ -27,26 +38,20 @@ Service Interested: ${business}
     );
 
     /* ===============================
-       EMAIL
+       EMAIL (BREVO)
     =============================== */
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
-
-    await transporter.sendMail({
-      from: `"Beetlebulbs Leads" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_TO,
+    await emailApi.sendTransacEmail({
+      sender: {
+        email: "no-reply@beetlebulbs.com",
+        name: "Beetlebulbs Leads"
+      },
+      to: [{ email: process.env.EMAIL_TO }],
       subject: "🚀 New Growth Blueprint Lead",
-      text: message
+      textContent: message
     });
 
     res.json({ ok: true });
+
   } catch (err) {
     console.error("Lead Error:", err);
     res.status(500).json({ ok: false });

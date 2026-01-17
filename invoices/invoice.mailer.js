@@ -1,9 +1,17 @@
-import nodemailer from "nodemailer";
+import SibApiV3Sdk from "sib-api-v3-sdk";
+import fs from "fs";
 import path from "path";
 
 /* =====================================================
-   SEND INVOICE EMAIL (SAFE & PRODUCTION READY)
+   SEND INVOICE EMAIL (BREVO – SAFE & PRODUCTION READY)
 ===================================================== */
+
+// Brevo setup
+const client = SibApiV3Sdk.ApiClient.instance;
+client.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+
+const emailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+
 export async function sendInvoiceEmail({
   to,
   clientName,
@@ -11,51 +19,40 @@ export async function sendInvoiceEmail({
   pdfPath,
   total,
   documentType,
-  invoiceType   // ✅ ADDED (ONLY NEW THING)
+  invoiceType
 }) {
   try {
     /* ===============================
-       TRANSPORTER
-    =============================== */
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-      }
-    });
-
-    /* ===============================
-       CURRENCY LOGIC (SAFE)
+       CURRENCY LOGIC
     =============================== */
     const currencySymbol = invoiceType === "GLOBAL" ? "$" : "₹";
 
     /* ===============================
-       SAFE ATTACHMENT
+       ATTACHMENT (SAFE)
     =============================== */
-    const attachments = [];
+    let attachment = [];
 
     if (pdfPath && typeof pdfPath === "string") {
-      attachments.push({
-        filename: path.basename(pdfPath),
-        path: path.resolve(pdfPath)
+      const pdfBuffer = fs.readFileSync(path.resolve(pdfPath));
+      attachment.push({
+        content: pdfBuffer.toString("base64"),
+        name: path.basename(pdfPath)
       });
     }
 
     /* ===============================
-       SEND MAIL
+       SEND EMAIL (BREVO)
     =============================== */
-    await transporter.sendMail({
-      from:
-        process.env.SMTP_FROM ||
-        `"Beetlebulbs Accounts" <accounts@beetlebulbs.com>`,
-      to,
+    await emailApi.sendTransacEmail({
+      sender: {
+        email: "accounts@beetlebulbs.com",
+        name: "Beetlebulbs Accounts"
+      },
+      to: [{ email: to }],
       subject: `${
         documentType === "PROFORMA" ? "Proforma Invoice" : "Invoice"
       } ${invoiceNo} | Beetlebulbs`,
-      html: `
+      htmlContent: `
         <p>Hello <strong>${clientName}</strong>,</p>
 
         <p>
@@ -79,13 +76,13 @@ export async function sendInvoiceEmail({
           </a>
         </p>
       `,
-      attachments
+      attachment
     });
 
     console.log("📧 Invoice email sent successfully to", to);
 
   } catch (err) {
-    // ❗ Email failure should NEVER break invoice creation
+    // ❗ Invoice creation must never fail because of email
     console.error("📧 Invoice Email Error (ignored):", err.message);
   }
 }
