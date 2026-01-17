@@ -1,6 +1,13 @@
- import nodemailer from "nodemailer";
+import SibApiV3Sdk from "sib-api-v3-sdk";
+import fs from "fs";
 
-console.log("🔥🔥🔥 ACTIVE MAILER FILE LOADED 🔥🔥🔥");
+console.log("🔥🔥🔥 BREVO MAILER ACTIVE 🔥🔥🔥");
+
+// Brevo client setup
+const client = SibApiV3Sdk.ApiClient.instance;
+client.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+
+const emailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 
 export async function sendPdfEmail({
   userEmail,
@@ -10,48 +17,64 @@ export async function sendPdfEmail({
   name,
   phone
 }) {
-  console.log("📧 MAILER INPUT:", { name, phone, userEmail });
+  console.log("📧 BREVO MAIL INPUT:", { name, phone, userEmail });
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
-  });
+  // Load PDF
+  const pdfBuffer = fs.readFileSync(pdfPath);
 
-  // USER EMAIL
-  await transporter.sendMail({
-    from: `"Beetlebulbs®" <package@beetlebulbs.com>`,
-    to: userEmail,
+  /* =========================
+     1️⃣ USER EMAIL (PDF)
+  ========================= */
+  await emailApi.sendTransacEmail({
+    sender: {
+      email: "no-reply@beetlebulbs.com",
+      name: "Beetlebulbs®"
+    },
+    to: [{ email: userEmail }],
     subject: `${packageName} – Detailed Overview`,
-    html: `
+    htmlContent: `
       <p>Hi ${name || "there"},</p>
+
       <p>Thank you for your interest in <strong>Beetlebulbs®</strong>.</p>
-      <p>Please find attached the detailed overview of our <strong>${packageName} PDF.</p>
-      <p>This document explains what you will receive, how it helps your brand, and how the process works. <br/>
-      If you have any questions, feel free to reply to this email.</p>
+
+      <p>Please find attached the detailed overview of our 
+      <strong>${packageName}</strong>.</p>
+
+      <p>This document explains what you will receive, how it helps your brand, 
+      and how the process works.</p>
+
+      <p>If you have any questions, feel free to reply to this email.</p>
+
       <br/>
       <p>— Team Beetlebulbs®</p>
     `,
-    attachments: [{ path: pdfPath }]
+    attachment: [
+      {
+        content: pdfBuffer.toString("base64"),
+        name: `${packageName}.pdf`
+      }
+    ]
   });
 
- 
-  // ADMIN EMAIL
-  await transporter.sendMail({
-    from: `"Beetlebulbs Website" <info@beetlebulbs.com>`,
-    to: adminEmail,
+  /* =========================
+     2️⃣ ADMIN / LEAD EMAIL
+  ========================= */
+  await emailApi.sendTransacEmail({
+    sender: {
+      email: "no-reply@beetlebulbs.com",
+      name: "Beetlebulbs Website"
+    },
+    to: [{ email: adminEmail }],
     subject: `🔥 New Brand Identity Lead – ${packageName}`,
-    text: `
-New lead received from landing page:
+    htmlContent: `
+      <h3>New Lead Received</h3>
 
-Name: ${name || "N/A"}
-Email: ${userEmail}
-Phone: ${phone || "N/A"}
-Package: ${packageName}
+      <p><strong>Name:</strong> ${name || "N/A"}</p>
+      <p><strong>Email:</strong> ${userEmail}</p>
+      <p><strong>Phone:</strong> ${phone || "N/A"}</p>
+      <p><strong>Package:</strong> ${packageName}</p>
     `
   });
+
+  console.log("✅ BREVO EMAILS SENT SUCCESSFULLY");
 }
