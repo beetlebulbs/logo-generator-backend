@@ -225,16 +225,18 @@ ${isIndia
   const fileName = `${invoice.invoice_no.replace(/\//g, "-")}.pdf`;
   const filePath = path.join(baseDir, fileName);
 
-  const browser = isProd
-  ? await puppeteerCore.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless
-    })
-  : await puppeteer.launch({
-      headless: true
-    });
+  const browser = await puppeteerCore.launch(
+  isProd
+    ? {
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: chromium.headless
+      }
+    : {
+        headless: true
+      }
+);
 
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
