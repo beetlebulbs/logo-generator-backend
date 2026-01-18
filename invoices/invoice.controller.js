@@ -179,3 +179,33 @@ export async function createInvoice(req, res) {
     });
   }
 }
+/* =====================================================
+   LIST INVOICES
+===================================================== */
+export async function listInvoices(req, res) {
+  try {
+    const { data, error } = await supabase
+      .from("invoices")
+      .select(`
+        id,
+        invoice_no,
+        document_type,
+        invoice_type,
+        client_name,
+        total,
+        created_at
+      `)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return res.json({
+      success: true,
+      invoices: data
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message
+    });
+  }
+}
