@@ -1,4 +1,5 @@
-import nodemailer from "nodemailer";
+import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
 import fs from "fs";
 import path from "path";
 
