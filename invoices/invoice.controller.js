@@ -44,6 +44,12 @@ export async function createInvoice(req, res) {
       });
     }
 
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({
+        error: "At least one invoice item is required"
+      });
+    }
+
     console.log("🟢 STEP 1: VALIDATION PASSED");
 
     /* ===============================
@@ -134,13 +140,14 @@ export async function createInvoice(req, res) {
     });
 
     const fileName = `${invoiceNo.replace(/\//g, "-")}.pdf`;
+    const pdfUrl = `${BASE_URL}/uploads/invoices/${fileName}`;
 
-    console.log("🟢 STEP 5: PDF GENERATED");
+    console.log("🟢 STEP 5: PDF GENERATED:", pdfUrl);
 
     /* ===============================
-       SEND EMAIL (BREVO API – NON BLOCKING)
+       SEND EMAIL (BREVO API – AWAIT)
     =============================== */
-    sendInvoiceEmail({
+    await sendInvoiceEmail({
       to: invoice.client_email,
       subject: `Invoice ${invoice.invoice_no}`,
       html: `
@@ -148,21 +155,19 @@ export async function createInvoice(req, res) {
         <p>Please find your invoice attached.</p>
         <p><strong>Invoice No:</strong> ${invoice.invoice_no}</p>
       `,
-      pdfUrl: `${BASE_URL}/uploads/invoices/${fileName}`
-    })
-      .then(() => console.log("🟢 STEP 6: EMAIL SENT (Brevo API)"))
-      .catch(err =>
-        console.error("⚠️ EMAIL FAILED (Brevo API):", err.message)
-      );
+      pdfUrl
+    });
+
+    console.log("🟢 STEP 6: EMAIL SENT");
 
     /* ===============================
-       RESPONSE
+       FINAL RESPONSE
     =============================== */
-    return res.json({
+    return res.status(201).json({
       success: true,
       invoiceNo,
       total: totals.total,
-      downloadUrl: `${BASE_URL}/uploads/invoices/${fileName}`
+      downloadUrl: pdfUrl
     });
 
   } catch (err) {
@@ -171,37 +176,6 @@ export async function createInvoice(req, res) {
 
     return res.status(500).json({
       error: err.message || "Invoice creation failed"
-    });
-  }
-}
-
-/* =====================================================
-   LIST INVOICES
-===================================================== */
-export async function listInvoices(req, res) {
-  try {
-    const { data, error } = await supabase
-      .from("invoices")
-      .select(`
-        id,
-        invoice_no,
-        document_type,
-        invoice_type,
-        client_name,
-        total,
-        created_at
-      `)
-      .order("created_at", { ascending: false });
-
-    if (error) throw error;
-
-    return res.json({
-      success: true,
-      invoices: data
-    });
-  } catch (err) {
-    return res.status(500).json({
-      error: err.message
     });
   }
 }
