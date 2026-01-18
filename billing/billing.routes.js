@@ -1,4 +1,5 @@
 import express from "express";
+
 import {
   billingLogin,
   getAllInvoices,
@@ -9,8 +10,8 @@ import {
   resendInvoiceEmail,
   markInvoiceStatus
 } from "./billing.controller.js";
-
-import { billingAuth } from "./billing.auth.js";
+import { createInvoice } from "../invoices/invoice.controller.js";
+import { billingAuth } from "./billing.auth.js"; 
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ const router = express.Router();
 router.post("/login", billingLogin);
 
 /* INVOICES */
+router.post("/invoices", billingAuth, createInvoice);
 router.get("/invoices", billingAuth, getAllInvoices);
 router.get("/invoices/:id", billingAuth, getInvoiceById);
 router.put("/invoices/:id", billingAuth, updateInvoice);

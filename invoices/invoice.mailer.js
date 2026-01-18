@@ -1,16 +1,20 @@
-import SibApiV3Sdk from "sib-api-v3-sdk";
+import nodemailer from "nodemailer";
 import fs from "fs";
 import path from "path";
 
 /* =====================================================
-   SEND INVOICE EMAIL (BREVO – SAFE & PRODUCTION READY)
+   BREVO SMTP – INVOICE MAILER
 ===================================================== */
 
-// Brevo setup
-const client = SibApiV3Sdk.ApiClient.instance;
-client.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
-
-const emailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.BREVO_SMTP_USER, // a01bdh881@smtp-brevo.com
+    pass: process.env.BREVO_SMTP_KEY   // SMTP key value
+  }
+});
 
 export async function sendInvoiceEmail({
   to,
@@ -22,67 +26,37 @@ export async function sendInvoiceEmail({
   invoiceType
 }) {
   try {
-    /* ===============================
-       CURRENCY LOGIC
-    =============================== */
     const currencySymbol = invoiceType === "GLOBAL" ? "$" : "₹";
 
-    /* ===============================
-       ATTACHMENT (SAFE)
-    =============================== */
-    let attachment = [];
-
-    if (pdfPath && typeof pdfPath === "string") {
-      const pdfBuffer = fs.readFileSync(path.resolve(pdfPath));
-      attachment.push({
-        content: pdfBuffer.toString("base64"),
-        name: path.basename(pdfPath)
+    const attachments = [];
+    if (pdfPath) {
+      attachments.push({
+        filename: path.basename(pdfPath),
+        path: path.resolve(pdfPath)
       });
     }
 
-    /* ===============================
-       SEND EMAIL (BREVO)
-    =============================== */
-    await emailApi.sendTransacEmail({
-      sender: {
-        email: "accounts@beetlebulbs.com",
-        name: "Beetlebulbs Accounts"
-      },
-      to: [{ email: to }],
+    await transporter.sendMail({
+      from: `"Beetlebulbs Accounts" <accounts@beetlebulbs.com>`,
+      to,
       subject: `${
         documentType === "PROFORMA" ? "Proforma Invoice" : "Invoice"
       } ${invoiceNo} | Beetlebulbs`,
-      htmlContent: `
+      html: `
         <p>Hello <strong>${clientName}</strong>,</p>
-
-        <p>
-          Please find attached your ${
-            documentType === "PROFORMA" ? "Proforma Invoice" : "Invoice"
-          }.
-        </p>
-
-        <p>
-          <strong>Invoice No:</strong> ${invoiceNo}<br/>
-          <strong>Total:</strong> ${currencySymbol}${Number(total).toFixed(2)}
-        </p>
-
+        <p>Please find attached your ${
+          documentType === "PROFORMA" ? "Proforma Invoice" : "Invoice"
+        }.</p>
+        <p><strong>Total:</strong> ${currencySymbol}${Number(total).toFixed(2)}</p>
         <br/>
-
-        <p>
-          Regards,<br/>
-          <strong>Beetlebulbs Accounts Team</strong><br/>
-          <a href="https://www.beetlebulbs.com" target="_blank">
-            www.beetlebulbs.com
-          </a>
-        </p>
+        <p>— Beetlebulbs Accounts</p>
       `,
-      attachment
+      attachments
     });
 
-    console.log("📧 Invoice email sent successfully to", to);
+    console.log("📧 Invoice email sent successfully");
 
   } catch (err) {
-    // ❗ Invoice creation must never fail because of email
-    console.error("📧 Invoice Email Error (ignored):", err.message);
+    console.error("❌ SMTP EMAIL FAILED:", err.message);
   }
 }

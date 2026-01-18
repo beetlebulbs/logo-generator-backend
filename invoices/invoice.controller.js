@@ -7,6 +7,7 @@ import { sendInvoiceEmail } from "./invoice.mailer.js";
    CREATE INVOICE / PROFORMA
 ===================================================== */
 export async function createInvoice(req, res) {
+  console.log("🟢 STEP 0: CREATE INVOICE API HIT");
   try {
     console.log("========== INVOICE API HIT ==========");
     console.log("REQ BODY:", JSON.stringify(req.body, null, 2));
@@ -24,6 +25,7 @@ export async function createInvoice(req, res) {
        VALIDATION
     =============================== */
     // ----------------- COMMON VALIDATION (INDIA + GLOBAL) -----------------
+    console.log("🟢 STEP 1: VALIDATION PASSED");
 if (
   !client?.name ||
   !client?.email ||
@@ -62,7 +64,7 @@ if (invoiceType === "INDIA") {
     }
 
     console.log("GENERATED INVOICE NO:", invoiceNo);
-
+console.log("🟢 STEP 2: INVOICE NUMBER GENERATED");
     /* ===============================
        SAVE INVOICE
     =============================== */
@@ -99,7 +101,7 @@ if (invoiceType === "INDIA") {
     if (invErr) throw invErr;
 
     console.log("INVOICE SAVED:", invoice.id);
-
+console.log("🟢 STEP 3: INVOICE STORED IN DB");
     /* ===============================
        SAVE ITEMS
     =============================== */
@@ -116,6 +118,7 @@ if (invoiceType === "INDIA") {
     const { error: itemErr } =
       await supabase.from("invoice_items").insert(itemsData);
 
+console.log("🟢 STEP 4: INVOICE ITEMS SAVED");
     if (itemErr) throw itemErr;
 
     /* ===============================
@@ -131,7 +134,7 @@ if (invoiceType === "INDIA") {
   items,
   totals
 });
-
+console.log("🟢 STEP 5: PDF GENERATED AT:", pdfPath);
     /* ===============================
        EMAIL WITH ATTACHMENT
     =============================== */
@@ -144,7 +147,7 @@ if (invoiceType === "INDIA") {
       documentType,
       invoiceType
     });
-
+console.log("🟢 STEP 6: EMAIL SENT");
     const BASE_URL = process.env.BACKEND_URL || "http://localhost:3001";
 
     return res.json({

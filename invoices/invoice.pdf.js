@@ -1,8 +1,12 @@
 import fs from "fs";
 import path from "path";
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
+import puppeteerCore from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 import { COMPANY } from "./invoice.config.js";
+
+const isProd = process.env.NODE_ENV === "production";
+
 
 /* =====================================================
    GENERATE INVOICE / PROFORMA PDF
@@ -222,12 +226,17 @@ ${isIndia
   const fileName = `${invoice.invoice_no.replace(/\//g, "-")}.pdf`;
   const filePath = path.join(baseDir, fileName);
 
-  const browser = await puppeteer.launch({
-  args: chromium.args,
-  defaultViewport: chromium.defaultViewport,
-  executablePath: await chromium.executablePath(),
-  headless: chromium.headless
-});
+  const browser = isProd
+  ? await puppeteerCore.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless
+    })
+  : await puppeteer.launch({
+      headless: true
+    });
+
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
   await page.pdf({ path: filePath, format: "A4" });
