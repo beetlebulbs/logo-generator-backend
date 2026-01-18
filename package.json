@@ -10,8 +10,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "replace-urls": "node replace-urls.cjs",
-    "postinstall": "PUPPETEER_CACHE_DIR=/tmp/puppeteer npx puppeteer browsers install chrome"
+    "replace-urls": "node replace-urls.cjs"
+    
   },
   "keywords": [],
   "author": "",
@@ -29,8 +29,7 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "node-fetch": "^3.3.2",
-    "nodemailer": "^7.0.12",
-    "puppeteer": "^24.35.0",
+    "nodemailer": "^7.0.12",    
     "puppeteer-core": "^24.35.0",
     "react-phone-input-2": "^2.15.1",
     "sib-api-v3-sdk": "^8.5.0",
