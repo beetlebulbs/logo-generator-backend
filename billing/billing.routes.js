@@ -10,16 +10,25 @@ import {
   resendInvoiceEmail,
   markInvoiceStatus
 } from "./billing.controller.js";
+
 import { createInvoice } from "../invoices/invoice.controller.js";
-import { billingAuth } from "./billing.auth.js"; 
+import { billingAuth } from "./billing.auth.js";
 
 const router = express.Router();
 
-/* AUTH */
+/* ===============================
+   AUTH
+=============================== */
 router.post("/login", billingLogin);
 
-/* INVOICES */
-router.post("/invoices", billingAuth, createInvoice);
+/* ===============================
+   PUBLIC INVOICE (NO AUTH)
+=============================== */
+router.post("/invoices/create", createInvoice);
+
+/* ===============================
+   BILLING CMS (AUTH REQUIRED)
+=============================== */
 router.get("/invoices", billingAuth, getAllInvoices);
 router.get("/invoices/:id", billingAuth, getInvoiceById);
 router.put("/invoices/:id", billingAuth, updateInvoice);

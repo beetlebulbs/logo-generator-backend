@@ -3,9 +3,10 @@ import path from "path";
 import supabase from "../database/supabase.js";
 import { sendInvoiceEmail } from "../invoices/invoice.mailer.js";
 import { generateInvoicePDF } from "../invoices/invoice.pdf.js";
-  
 
-/* LOGIN */
+/* =====================================================
+   LOGIN
+===================================================== */
 export function billingLogin(req, res) {
   if (req.body.password !== process.env.BILLING_PASSWORD) {
     return res.status(401).json({ message: "Invalid password" });
@@ -13,13 +14,16 @@ export function billingLogin(req, res) {
   res.json({ success: true });
 }
 
-/* LIST + FILTER */
+/* =====================================================
+   LIST + FILTER
+===================================================== */
 export async function getAllInvoices(req, res) {
   const { client, status, from, to } = req.query;
 
-  let query = supabase.from("invoices").select("*").order("created_at", {
-    ascending: false
-  });
+  let query = supabase
+    .from("invoices")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (client) query = query.ilike("client_name", `%${client}%`);
   if (status) query = query.eq("status", status);
@@ -32,7 +36,9 @@ export async function getAllInvoices(req, res) {
   res.json(data);
 }
 
-/* SINGLE */
+/* =====================================================
+   SINGLE INVOICE
+===================================================== */
 export async function getInvoiceById(req, res) {
   const { data, error } = await supabase
     .from("invoices")
@@ -44,7 +50,9 @@ export async function getInvoiceById(req, res) {
   res.json(data);
 }
 
-/* UPDATE + REGENERATE PDF */
+/* =====================================================
+   UPDATE + REGENERATE PDF
+===================================================== */
 export async function updateInvoice(req, res) {
   try {
     const id = req.params.id;
@@ -57,6 +65,7 @@ export async function updateInvoice(req, res) {
       items
     } = req.body;
 
+    /* UPDATE INVOICE */
     await supabase.from("invoices").update({
       document_type: documentType,
       invoice_type: invoiceType,
@@ -73,6 +82,7 @@ export async function updateInvoice(req, res) {
       client_gstin: client.gstin
     }).eq("id", id);
 
+    /* RESET ITEMS */
     await supabase.from("invoice_items").delete().eq("invoice_id", id);
 
     const normalizedItems = items.map(i => ({
@@ -87,6 +97,7 @@ export async function updateInvoice(req, res) {
 
     await supabase.from("invoice_items").insert(normalizedItems);
 
+    /* FETCH UPDATED DATA */
     const { data } = await supabase
       .from("invoices")
       .select("*, invoice_items(*)")
@@ -100,7 +111,9 @@ export async function updateInvoice(req, res) {
 
     const cgst = invoiceType === "INDIA" ? subtotal * 0.09 : 0;
     const sgst = invoiceType === "INDIA" ? subtotal * 0.09 : 0;
+    const total = subtotal + cgst + sgst;
 
+    /* REGENERATE PDF */
     await generateInvoicePDF({
       documentType,
       invoiceType,
@@ -130,7 +143,7 @@ export async function updateInvoice(req, res) {
         cgst,
         sgst,
         igst: 0,
-        total: subtotal + cgst + sgst
+        total
       }
     });
 
@@ -142,7 +155,9 @@ export async function updateInvoice(req, res) {
   }
 }
 
-/* STATUS */
+/* =====================================================
+   STATUS UPDATE
+===================================================== */
 export async function markInvoiceStatus(req, res) {
   await supabase
     .from("invoices")
@@ -152,7 +167,9 @@ export async function markInvoiceStatus(req, res) {
   res.json({ success: true });
 }
 
-/* DELETE */
+/* =====================================================
+   DELETE INVOICE
+===================================================== */
 export async function deleteInvoice(req, res) {
   const { data } = await supabase
     .from("invoices")
@@ -162,7 +179,7 @@ export async function deleteInvoice(req, res) {
 
   if (data?.invoice_no) {
     const safe = data.invoice_no.replace(/\//g, "-");
-    const file = `uploads/invoices/${safe}.pdf`;
+    const file = path.join(process.cwd(), "uploads", "invoices", `${safe}.pdf`);
     if (fs.existsSync(file)) fs.unlinkSync(file);
   }
 
@@ -172,7 +189,9 @@ export async function deleteInvoice(req, res) {
   res.json({ success: true });
 }
 
-/* PDF */
+/* =====================================================
+   DOWNLOAD PDF
+===================================================== */
 export async function downloadInvoicePDF(req, res) {
   const { data } = await supabase
     .from("invoices")
@@ -181,7 +200,7 @@ export async function downloadInvoicePDF(req, res) {
     .single();
 
   const safe = data.invoice_no.replace(/\//g, "-");
-  const file = path.resolve(`uploads/invoices/${safe}.pdf`);
+  const file = path.join(process.cwd(), "uploads", "invoices", `${safe}.pdf`);
 
   if (!fs.existsSync(file)) {
     return res.status(404).json({ message: "Not found" });
@@ -190,7 +209,9 @@ export async function downloadInvoicePDF(req, res) {
   res.download(file);
 }
 
-/* RESEND */
+/* =====================================================
+   RESEND INVOICE EMAIL (BREVO API)
+===================================================== */
 export async function resendInvoiceEmail(req, res) {
   const { data } = await supabase
     .from("invoices")
@@ -199,15 +220,17 @@ export async function resendInvoiceEmail(req, res) {
     .single();
 
   const safe = data.invoice_no.replace(/\//g, "-");
+  const BASE_URL = process.env.BACKEND_URL || "http://localhost:3001";
 
   await sendInvoiceEmail({
     to: data.client_email,
-    clientName: data.client_name,
-    invoiceNo: data.invoice_no,
-    pdfPath: `uploads/invoices/${safe}.pdf`,
-    total: data.total,
-    documentType: data.document_type,
-    invoiceType: data.invoice_type
+    subject: `Invoice ${data.invoice_no}`,
+    html: `
+      <p>Hello ${data.client_name},</p>
+      <p>Please find your invoice attached.</p>
+      <p><strong>Invoice No:</strong> ${data.invoice_no}</p>
+    `,
+    pdfUrl: `${BASE_URL}/uploads/invoices/${safe}.pdf`
   });
 
   res.json({ success: true });

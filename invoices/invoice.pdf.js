@@ -1,10 +1,26 @@
 import fs from "fs";
 import path from "path"; 
+import puppeteer from "puppeteer";
 import puppeteerCore from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 import { COMPANY } from "./invoice.config.js";
 
+ 
 const isProd = process.env.NODE_ENV === "production";
+async function launchBrowser() {
+  if (isProd) {
+    return puppeteerCore.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: true
+    });
+  }
+
+  return puppeteer.launch({
+    headless: true
+  });
+}
 
 
 /* =====================================================
@@ -219,33 +235,21 @@ ${isIndia
 `;
 
   /* -------- FILE WRITE -------- */
-  const baseDir = path.join("uploads", "invoices");
-  fs.mkdirSync(baseDir, { recursive: true });
+  const baseDir = path.join(process.cwd(), "uploads", "invoices");
+fs.mkdirSync(baseDir, { recursive: true });
 
-  const fileName = `${invoice.invoice_no.replace(/\//g, "-")}.pdf`;
-  const filePath = path.join(baseDir, fileName);
+const fileName = `${invoice.invoice_no.replace(/\//g, "-")}.pdf`;
+const filePath = path.join(baseDir, fileName);
 
-  const browser = await puppeteerCore.launch(
-  isProd
-    ? {
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
-        headless: chromium.headless
-      }
-    : {
-        headless: true
-      }
-);
+const browser = await launchBrowser();
 
-  const page = await browser.newPage();
-  await page.setContent(html, { waitUntil: "networkidle0" });
-  await page.pdf({ path: filePath, format: "A4" });
-  await browser.close();
+const page = await browser.newPage();
+await page.setContent(html, { waitUntil: "networkidle0" });
+await page.pdf({ path: filePath, format: "A4" });
+await browser.close();
 
-  return filePath;
+return filePath;
 }
-
 /* ===============================
    AMOUNT TO WORDS
 ================================ */

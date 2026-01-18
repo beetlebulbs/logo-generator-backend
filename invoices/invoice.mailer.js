@@ -1,72 +1,63 @@
-import SibApiV3Sdk from "sib-api-v3-sdk";
-import fs from "fs";
-import path from "path";
+import fetch from "node-fetch";
 
-/* =====================================================
-   SEND INVOICE EMAIL — BREVO TRANSACTIONAL
-===================================================== */
-
-// Brevo client
-const client = SibApiV3Sdk.ApiClient.instance;
-client.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
-
-const emailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
+const REQUEST_TIMEOUT = 10000; // 10 seconds
 
 export async function sendInvoiceEmail({
   to,
-  clientName,
-  invoiceNo,
-  pdfPath,
-  total,
-  documentType,
-  invoiceType
+  subject,
+  html,
+  pdfUrl
 }) {
+  if (!to) {
+    throw new Error("Brevo Email Error: recipient email missing");
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+
+  const payload = {
+    sender: {
+      email: process.env.BREVO_SENDER_EMAIL,
+      name: process.env.BREVO_SENDER_NAME
+    },
+    to: [{ email: to }],
+    subject,
+    htmlContent: html,
+    attachment: pdfUrl
+      ? [
+          {
+            url: pdfUrl,
+            name: "Invoice.pdf"
+          }
+        ]
+      : []
+  };
+
   try {
-    const currency = invoiceType === "GLOBAL" ? "$" : "₹";
-
-    let attachment = [];
-
-    if (pdfPath && fs.existsSync(pdfPath)) {
-      const pdfBuffer = fs.readFileSync(path.resolve(pdfPath));
-      attachment.push({
-        content: pdfBuffer.toString("base64"),
-        name: path.basename(pdfPath)
-      });
-    }
-
-    await emailApi.sendTransacEmail({
-      sender: {
-        email: "accounts@beetlebulbs.com",
-        name: "Beetlebulbs Accounts"
+    const res = await fetch(BREVO_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "api-key": process.env.BREVO_API_KEY
       },
-      to: [{ email: to }],
-      subject: `${
-        documentType === "PROFORMA" ? "Proforma Invoice" : "Invoice"
-      } ${invoiceNo} | Beetlebulbs`,
-      htmlContent: `
-        <p>Hello <strong>${clientName}</strong>,</p>
-
-        <p>Please find attached your ${
-          documentType === "PROFORMA" ? "Proforma Invoice" : "Invoice"
-        }.</p>
-
-        <p>
-          <strong>Invoice No:</strong> ${invoiceNo}<br/>
-          <strong>Total:</strong> ${currency}${Number(total).toFixed(2)}
-        </p>
-
-        <p>
-          Regards,<br/>
-          <strong>Beetlebulbs Accounts Team</strong><br/>
-          <a href="https://www.beetlebulbs.com">www.beetlebulbs.com</a>
-        </p>
-      `,
-      attachment
+      body: JSON.stringify(payload),
+      signal: controller.signal
     });
 
-    console.log("📧 Brevo invoice email sent to", to);
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Brevo API failed: ${errorText}`);
+    }
 
+    return true;
   } catch (err) {
-    console.error("❌ BREVO EMAIL FAILED:", err.response?.body || err.message);
+    if (err.name === "AbortError") {
+      throw new Error("Brevo API timeout");
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeout);
   }
 }

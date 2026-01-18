@@ -7,10 +7,10 @@ import { sendInvoiceEmail } from "./invoice.mailer.js";
    CREATE INVOICE / PROFORMA
 ===================================================== */
 export async function createInvoice(req, res) {
-  console.log("🟢 STEP 0: CREATE INVOICE API HIT");
+  console.log("🔥🔥🔥 CREATE INVOICE CONTROLLER HIT 🔥🔥🔥");
+
   try {
-    console.log("========== INVOICE API HIT ==========");
-    console.log("REQ BODY:", JSON.stringify(req.body, null, 2));
+    const BASE_URL = process.env.BACKEND_URL || "http://localhost:3001";
 
     const {
       documentType,
@@ -24,37 +24,35 @@ export async function createInvoice(req, res) {
     /* ===============================
        VALIDATION
     =============================== */
-    // ----------------- COMMON VALIDATION (INDIA + GLOBAL) -----------------
-    console.log("🟢 STEP 1: VALIDATION PASSED");
-if (
-  !client?.name ||
-  !client?.email ||
-  !client?.phone ||
-  !client?.address ||
-  !client?.country ||
-  !client?.state ||   // ✅ NOW REQUIRED FOR GLOBAL ALSO
-  !client?.zip
-) {
-  return res.status(400).json({
-    error: "Name, Email, Phone, Address, Country, State and ZIP are required"
-  });
-}
+    if (
+      !client?.name ||
+      !client?.email ||
+      !client?.phone ||
+      !client?.address ||
+      !client?.country ||
+      !client?.state ||
+      !client?.zip
+    ) {
+      return res.status(400).json({
+        error: "Name, Email, Phone, Address, Country, State and ZIP are required"
+      });
+    }
 
-// ----------------- INDIA ONLY VALIDATION -----------------
-if (invoiceType === "INDIA") {
-  if (!client?.stateCode) {
-    return res.status(400).json({
-      error: "State Code is required for India invoices"
-    });
-  }
-}
+    if (invoiceType === "INDIA" && !client?.stateCode) {
+      return res.status(400).json({
+        error: "State Code is required for India invoices"
+      });
+    }
+
+    console.log("🟢 STEP 1: VALIDATION PASSED");
+
     /* ===============================
        TOTALS
     =============================== */
     const totals = calculateTotals(items, invoiceType);
 
     /* ===============================
-       INVOICE NUMBER (DB SAFE)
+       INVOICE NUMBER
     =============================== */
     const { data: invoiceNo, error: noErr } =
       await supabase.rpc("generate_invoice_no");
@@ -63,8 +61,8 @@ if (invoiceType === "INDIA") {
       throw new Error("Invoice number generation failed");
     }
 
-    console.log("GENERATED INVOICE NO:", invoiceNo);
-console.log("🟢 STEP 2: INVOICE NUMBER GENERATED");
+    console.log("🟢 STEP 2: INVOICE NUMBER GENERATED:", invoiceNo);
+
     /* ===============================
        SAVE INVOICE
     =============================== */
@@ -88,7 +86,6 @@ console.log("🟢 STEP 2: INVOICE NUMBER GENERATED");
         client_gstin: client.gstin || null,
 
         currency: invoiceType === "INDIA" ? "INR" : "USD",
-
         subtotal: totals.subtotal,
         cgst: totals.cgst,
         sgst: totals.sgst,
@@ -100,8 +97,8 @@ console.log("🟢 STEP 2: INVOICE NUMBER GENERATED");
 
     if (invErr) throw invErr;
 
-    console.log("INVOICE SAVED:", invoice.id);
-console.log("🟢 STEP 3: INVOICE STORED IN DB");
+    console.log("🟢 STEP 3: INVOICE STORED IN DB:", invoice.id);
+
     /* ===============================
        SAVE ITEMS
     =============================== */
@@ -118,49 +115,60 @@ console.log("🟢 STEP 3: INVOICE STORED IN DB");
     const { error: itemErr } =
       await supabase.from("invoice_items").insert(itemsData);
 
-console.log("🟢 STEP 4: INVOICE ITEMS SAVED");
     if (itemErr) throw itemErr;
+
+    console.log("🟢 STEP 4: INVOICE ITEMS SAVED");
 
     /* ===============================
        GENERATE PDF
     =============================== */
-   const pdfPath = await generateInvoicePDF({
-  invoiceNo,
-  documentType,
-  invoiceType,
-  invoiceDate,
-  dueDate,
-  client,
-  items,
-  totals
-});
-console.log("🟢 STEP 5: PDF GENERATED AT:", pdfPath);
-    /* ===============================
-       EMAIL WITH ATTACHMENT
-    =============================== */
-    await sendInvoiceEmail({
-      to: client.email,
-      clientName: client.name,
+    await generateInvoicePDF({
       invoiceNo,
-      pdfPath,
-      total: totals.total,
       documentType,
-      invoiceType
+      invoiceType,
+      invoiceDate,
+      dueDate,
+      client,
+      items,
+      totals
     });
-console.log("🟢 STEP 6: EMAIL SENT");
-    const BASE_URL = process.env.BACKEND_URL || "http://localhost:3001";
 
+    const fileName = `${invoiceNo.replace(/\//g, "-")}.pdf`;
+
+    console.log("🟢 STEP 5: PDF GENERATED");
+
+    /* ===============================
+       SEND EMAIL (BREVO API – NON BLOCKING)
+    =============================== */
+    sendInvoiceEmail({
+      to: invoice.client_email,
+      subject: `Invoice ${invoice.invoice_no}`,
+      html: `
+        <p>Hello ${invoice.client_name},</p>
+        <p>Please find your invoice attached.</p>
+        <p><strong>Invoice No:</strong> ${invoice.invoice_no}</p>
+      `,
+      pdfUrl: `${BASE_URL}/uploads/invoices/${fileName}`
+    })
+      .then(() => console.log("🟢 STEP 6: EMAIL SENT (Brevo API)"))
+      .catch(err =>
+        console.error("⚠️ EMAIL FAILED (Brevo API):", err.message)
+      );
+
+    /* ===============================
+       RESPONSE
+    =============================== */
     return res.json({
       success: true,
       invoiceNo,
       total: totals.total,
-      pdfPath,
-      downloadUrl: `${BASE_URL}/${pdfPath}`
+      downloadUrl: `${BASE_URL}/uploads/invoices/${fileName}`
     });
 
   } catch (err) {
-    console.error("🔥 INVOICE ERROR FULL 🔥");
+    console.error("🔥🔥🔥 INVOICE CREATE FAILED 🔥🔥🔥");
     console.error(err);
+
     return res.status(500).json({
       error: err.message || "Invoice creation failed"
     });
@@ -168,7 +176,7 @@ console.log("🟢 STEP 6: EMAIL SENT");
 }
 
 /* =====================================================
-   LIST INVOICES  ✅ (THIS WAS MISSING)
+   LIST INVOICES
 ===================================================== */
 export async function listInvoices(req, res) {
   try {
