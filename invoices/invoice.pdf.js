@@ -1,23 +1,21 @@
 import fs from "fs";
-import path from "path"; 
-import puppeteer from "puppeteer";
+import path from "path";  
 import puppeteerCore from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 import { COMPANY } from "./invoice.config.js";
 
- 
-const isProd = process.env.NODE_ENV === "production";
+ const isProd = process.env.NODE_ENV === "production";
+
 async function launchBrowser() {
   if (isProd) {
     return puppeteerCore.launch({
       args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(),
-      headless: true
+      headless: chromium.headless
     });
   }
 
-  return puppeteer.launch({
+  return puppeteerCore.launch({
     headless: true
   });
 }
