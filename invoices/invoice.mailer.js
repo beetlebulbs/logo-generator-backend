@@ -1,21 +1,16 @@
-import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium";
+import SibApiV3Sdk from "sib-api-v3-sdk";
 import fs from "fs";
 import path from "path";
 
 /* =====================================================
-   BREVO SMTP – INVOICE MAILER
+   SEND INVOICE EMAIL — BREVO TRANSACTIONAL
 ===================================================== */
 
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_SMTP_USER, // a01bdh881@smtp-brevo.com
-    pass: process.env.BREVO_SMTP_KEY   // SMTP key value
-  }
-});
+// Brevo client
+const client = SibApiV3Sdk.ApiClient.instance;
+client.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+
+const emailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 
 export async function sendInvoiceEmail({
   to,
@@ -27,37 +22,51 @@ export async function sendInvoiceEmail({
   invoiceType
 }) {
   try {
-    const currencySymbol = invoiceType === "GLOBAL" ? "$" : "₹";
+    const currency = invoiceType === "GLOBAL" ? "$" : "₹";
 
-    const attachments = [];
-    if (pdfPath) {
-      attachments.push({
-        filename: path.basename(pdfPath),
-        path: path.resolve(pdfPath)
+    let attachment = [];
+
+    if (pdfPath && fs.existsSync(pdfPath)) {
+      const pdfBuffer = fs.readFileSync(path.resolve(pdfPath));
+      attachment.push({
+        content: pdfBuffer.toString("base64"),
+        name: path.basename(pdfPath)
       });
     }
 
-    await transporter.sendMail({
-      from: `"Beetlebulbs Accounts" <accounts@beetlebulbs.com>`,
-      to,
+    await emailApi.sendTransacEmail({
+      sender: {
+        email: "accounts@beetlebulbs.com",
+        name: "Beetlebulbs Accounts"
+      },
+      to: [{ email: to }],
       subject: `${
         documentType === "PROFORMA" ? "Proforma Invoice" : "Invoice"
       } ${invoiceNo} | Beetlebulbs`,
-      html: `
+      htmlContent: `
         <p>Hello <strong>${clientName}</strong>,</p>
+
         <p>Please find attached your ${
           documentType === "PROFORMA" ? "Proforma Invoice" : "Invoice"
         }.</p>
-        <p><strong>Total:</strong> ${currencySymbol}${Number(total).toFixed(2)}</p>
-        <br/>
-        <p>— Beetlebulbs Accounts</p>
+
+        <p>
+          <strong>Invoice No:</strong> ${invoiceNo}<br/>
+          <strong>Total:</strong> ${currency}${Number(total).toFixed(2)}
+        </p>
+
+        <p>
+          Regards,<br/>
+          <strong>Beetlebulbs Accounts Team</strong><br/>
+          <a href="https://www.beetlebulbs.com">www.beetlebulbs.com</a>
+        </p>
       `,
-      attachments
+      attachment
     });
 
-    console.log("📧 Invoice email sent successfully");
+    console.log("📧 Brevo invoice email sent to", to);
 
   } catch (err) {
-    console.error("❌ SMTP EMAIL FAILED:", err.message);
+    console.error("❌ BREVO EMAIL FAILED:", err.response?.body || err.message);
   }
 }
