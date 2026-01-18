@@ -1,6 +1,5 @@
 import fs from "fs";
-import path from "path";
-import puppeteer from "puppeteer";
+import path from "path"; 
 import puppeteerCore from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 import { COMPANY } from "./invoice.config.js";
