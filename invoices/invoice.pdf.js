@@ -24,7 +24,7 @@ async function launchBrowser() {
 /* =====================================================
    GENERATE INVOICE / PROFORMA PDF
 ===================================================== */
-const LOGO_PATH = path.resolve("uploads/logo.png");
+const LOGO_URL = `${process.env.FRONTEND_URL}/logo1.png`;
 export async function generateInvoicePDF(payload) {
   const {
     documentType,
@@ -85,10 +85,7 @@ if (documentType === "PROFORMA") {
 } else {
   watermarkText = `${COMPANY.name} – Invoice`;
 }
-  /* -------- HTML TEMPLATE -------- */
-  const logoBase64 = fs.existsSync(LOGO_PATH)
-  ? fs.readFileSync(LOGO_PATH).toString("base64")
-  : "";
+   
 
 const html = `
 <!DOCTYPE html>
@@ -135,8 +132,8 @@ ${
 <table>
 <tr>
 <td style="vertical-align:top; max-width:280px;">
-<img src="data:image/png;base64,${logoBase64}"
-     style="height:20px; margin-bottom:1px;" /><br/>
+<img src="${LOGO_URL}"
+     style="height:40px; margin-bottom:4px;" /><br/>
 208-A/9 F/F FLAT NO-2,<br/>
 KH NO. 548/135, Savitri Nagar,<br/>
 Sheikh Sarai Village, South Delhi – 110017 India<br/>
@@ -239,7 +236,7 @@ ${isIndia ? `
     </td>
   </tr>
 </table>
- 
+ <br/><br/>
 <strong>For ${COMPANY.name}</strong><br/><br/>
 Authorised Signatory
 
