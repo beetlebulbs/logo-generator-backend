@@ -173,7 +173,7 @@ export async function createInvoice(req, res) {
         <p>Please find your invoice attached.</p>
         <p><strong>Invoice No:</strong> ${invoice.invoice_no}</p>
       `,
-      pdfUrl: publicPdfUrl
+      pdfPath: publicPdfUrl
     });
 
     console.log("🟢 STEP 8: EMAIL SENT");
