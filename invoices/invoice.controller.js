@@ -11,8 +11,6 @@ export async function createInvoice(req, res) {
   console.log("🔥🔥🔥 CREATE INVOICE CONTROLLER HIT 🔥🔥🔥");
 
   try {
-    const BASE_URL = process.env.BACKEND_URL || "http://localhost:3001";
-
     const {
       documentType,
       invoiceType,
@@ -127,48 +125,68 @@ export async function createInvoice(req, res) {
     console.log("🟢 STEP 4: INVOICE ITEMS SAVED");
 
     /* ===============================
-       GENERATE PDF
+       GENERATE PDF (BUFFER)
     =============================== */
     const pdfBuffer = await generateInvoicePDF({
-  invoiceNo,
-  documentType,
-  invoiceType,
-  invoiceDate,
-  dueDate,
-  client,
-  items,
-  totals
-});
+      invoiceNo,
+      documentType,
+      invoiceType,
+      invoiceDate,
+      dueDate,
+      client,
+      items,
+      totals
+    });
 
-const fileName = `invoices/${invoiceNo.replace(/\//g, "-")}.pdf`;
+    console.log("🟢 STEP 5: PDF GENERATED");
 
-const publicPdfUrl = await uploadInvoicePDF({
-  pdfBuffer,
-  fileName
-}); 
     /* ===============================
-       SEND EMAIL (BREVO API – AWAIT)
+       UPLOAD PDF TO SUPABASE STORAGE
     =============================== */
-   sendInvoiceEmail({
-  to: invoice.client_email,
-  subject: `Invoice ${invoice.invoice_no}`,
-  html: `
-    <p>Hello ${invoice.client_name},</p>
-    <p>Please find your invoice attached.</p>
-    <p><strong>Invoice No:</strong> ${invoice.invoice_no}</p>
-  `,
-  pdfUrl: publicPdfUrl
-}); 
+    const fileName = `${invoiceNo.replace(/\//g, "-")}.pdf`;
+
+    const publicPdfUrl = await uploadInvoicePDF({
+      pdfBuffer,
+      fileName
+    });
+
+    console.log("🟢 STEP 6: PDF UPLOADED TO STORAGE");
+
+    /* ===============================
+       SAVE PDF URL IN DB
+    =============================== */
+    await supabase
+      .from("invoices")
+      .update({ pdf_url: publicPdfUrl })
+      .eq("id", invoice.id);
+
+    console.log("🟢 STEP 7: PDF URL SAVED IN DB");
+
+    /* ===============================
+       SEND EMAIL (BREVO API)
+    =============================== */
+    await sendInvoiceEmail({
+      to: invoice.client_email,
+      subject: `Invoice ${invoice.invoice_no}`,
+      html: `
+        <p>Hello ${invoice.client_name},</p>
+        <p>Please find your invoice attached.</p>
+        <p><strong>Invoice No:</strong> ${invoice.invoice_no}</p>
+      `,
+      pdfUrl: publicPdfUrl
+    });
+
+    console.log("🟢 STEP 8: EMAIL SENT");
 
     /* ===============================
        FINAL RESPONSE
     =============================== */
-  return res.json({
-  success: true,
-  invoiceNo,
-  total: totals.total,
-  downloadUrl: publicPdfUrl
-});
+    return res.json({
+      success: true,
+      invoiceNo,
+      total: totals.total,
+      downloadUrl: publicPdfUrl
+    });
 
   } catch (err) {
     console.error("🔥🔥🔥 INVOICE CREATE FAILED 🔥🔥🔥");
@@ -179,6 +197,7 @@ const publicPdfUrl = await uploadInvoicePDF({
     });
   }
 }
+
 /* =====================================================
    LIST INVOICES
 ===================================================== */
@@ -193,6 +212,7 @@ export async function listInvoices(req, res) {
         invoice_type,
         client_name,
         total,
+        pdf_url,
         created_at
       `)
       .order("created_at", { ascending: false });

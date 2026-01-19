@@ -193,20 +193,17 @@ export async function deleteInvoice(req, res) {
    DOWNLOAD PDF
 ===================================================== */
 export async function downloadInvoicePDF(req, res) {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("invoices")
-    .select("invoice_no")
+    .select("pdf_url")
     .eq("id", req.params.id)
     .single();
 
-  const safe = data.invoice_no.replace(/\//g, "-");
-  const file = path.join(process.cwd(), "uploads", "invoices", `${safe}.pdf`);
-
-  if (!fs.existsSync(file)) {
-    return res.status(404).json({ message: "Not found" });
+  if (error || !data?.pdf_url) {
+    return res.status(404).json({ message: "PDF not found" });
   }
 
-  res.download(file);
+  return res.redirect(data.pdf_url);
 }
 
 /* =====================================================
@@ -223,15 +220,11 @@ export async function resendInvoiceEmail(req, res) {
   const BASE_URL = process.env.BACKEND_URL || "http://localhost:3001";
 
   await sendInvoiceEmail({
-    to: data.client_email,
-    subject: `Invoice ${data.invoice_no}`,
-    html: `
-      <p>Hello ${data.client_name},</p>
-      <p>Please find your invoice attached.</p>
-      <p><strong>Invoice No:</strong> ${data.invoice_no}</p>
-    `,
-    pdfUrl: `${BASE_URL}/uploads/invoices/${safe}.pdf`
-  });
+  to: data.client_email,
+  subject: `Invoice ${data.invoice_no}`,
+  html: `<p>Please find your invoice attached.</p>`,
+  pdfUrl: data.pdf_url
+});
 
   res.json({ success: true });
 }
