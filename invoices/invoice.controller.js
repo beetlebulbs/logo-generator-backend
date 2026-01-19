@@ -1,3 +1,4 @@
+import fs from "fs";
 import { calculateTotals } from "./invoice.utils.js";
 import supabase from "../database/supabase.js";
 import { generateInvoicePDF } from "./invoice.pdf.js";
@@ -103,90 +104,95 @@ export async function createInvoice(req, res) {
     if (invErr) throw invErr;
 
     console.log("🟢 STEP 3: INVOICE STORED IN DB:", invoice.id);
+/* ===============================
+   SAVE ITEMS
+=============================== */
+const itemsData = items.map(i => ({
+  invoice_id: invoice.id,
+  service_name: i.name,
+  sac: i.sac,
+  description: i.description,
+  qty: Number(i.qty),
+  rate: Number(i.rate),
+  amount: Number(i.amount)
+}));
 
-    /* ===============================
-       SAVE ITEMS
-    =============================== */
-    const itemsData = items.map(i => ({
-      invoice_id: invoice.id,
-      service_name: i.name,
-      sac: i.sac,
-      description: i.description,
-      qty: Number(i.qty),
-      rate: Number(i.rate),
-      amount: Number(i.amount)
-    }));
+const { error: itemErr } =
+  await supabase.from("invoice_items").insert(itemsData);
 
-    const { error: itemErr } =
-      await supabase.from("invoice_items").insert(itemsData);
+if (itemErr) throw itemErr;
 
-    if (itemErr) throw itemErr;
+console.log("🟢 STEP 4: INVOICE ITEMS SAVED");
 
-    console.log("🟢 STEP 4: INVOICE ITEMS SAVED");
+/* ===============================
+   GENERATE PDF (FILE PATH)
+=============================== */
+const pdfFilePath = await generateInvoicePDF({
+  invoiceNo,
+  documentType,
+  invoiceType,
+  invoiceDate,
+  dueDate,
+  client,
+  items,
+  totals
+});
 
-    /* ===============================
-       GENERATE PDF (BUFFER)
-    =============================== */
-    const pdfBuffer = await generateInvoicePDF({
-      invoiceNo,
-      documentType,
-      invoiceType,
-      invoiceDate,
-      dueDate,
-      client,
-      items,
-      totals
-    });
+console.log("🟢 STEP 5: PDF GENERATED AT:", pdfFilePath);
 
-    console.log("🟢 STEP 5: PDF GENERATED");
+/* ===============================
+   READ PDF AS BUFFER
+=============================== */
+const pdfBuffer = fs.readFileSync(pdfFilePath);
 
-    /* ===============================
-       UPLOAD PDF TO SUPABASE STORAGE
-    =============================== */
-    const fileName = `${invoiceNo.replace(/\//g, "-")}.pdf`;
+/* ===============================
+   UPLOAD PDF TO SUPABASE STORAGE
+=============================== */
+const fileName = `${invoiceNo.replace(/\//g, "-")}.pdf`;
 
-    const publicPdfUrl = await uploadInvoicePDF({
-      pdfBuffer,
-      fileName
-    });
+const publicPdfUrl = await uploadInvoicePDF({
+  pdfBuffer,
+  fileName
+});
 
-    console.log("🟢 STEP 6: PDF UPLOADED TO STORAGE");
+console.log("🟢 STEP 6: PDF UPLOADED TO STORAGE");
 
-    /* ===============================
-       SAVE PDF URL IN DB
-    =============================== */
-    await supabase
-      .from("invoices")
-      .update({ pdf_url: publicPdfUrl })
-      .eq("id", invoice.id);
+/* ===============================
+   SAVE PDF URL IN DB
+=============================== */
+await supabase
+  .from("invoices")
+  .update({ pdf_url: publicPdfUrl })
+  .eq("id", invoice.id);
 
-    console.log("🟢 STEP 7: PDF URL SAVED IN DB");
+console.log("🟢 STEP 7: PDF URL SAVED IN DB");
 
-    /* ===============================
-       SEND EMAIL (BREVO API)
-    =============================== */
-    await sendInvoiceEmail({
-      to: invoice.client_email,
-      subject: `Invoice ${invoice.invoice_no}`,
-      html: `
-        <p>Hello ${invoice.client_name},</p>
-        <p>Please find your invoice attached.</p>
-        <p><strong>Invoice No:</strong> ${invoice.invoice_no}</p>
-      `,
-      pdfPath: publicPdfUrl
-    });
+/* ===============================
+   SEND EMAIL (BREVO API)
+=============================== */
+await sendInvoiceEmail({
+  to: invoice.client_email,
+  subject: `Invoice ${invoice.invoice_no}`,
+  html: `
+    <p>Hello ${invoice.client_name},</p>
+    <p>Please find your invoice attached.</p>
+    <p><strong>Invoice No:</strong> ${invoice.invoice_no}</p>
+  `,
+  pdfPath: publicPdfUrl
+});
 
-    console.log("🟢 STEP 8: EMAIL SENT");
+console.log("🟢 STEP 8: EMAIL SENT");
 
-    /* ===============================
-       FINAL RESPONSE
-    =============================== */
-    return res.json({
-      success: true,
-      invoiceNo,
-      total: totals.total,
-      downloadUrl: publicPdfUrl
-    });
+/* ===============================
+   FINAL RESPONSE
+=============================== */
+return res.json({
+  success: true,
+  invoiceNo,
+  total: totals.total,
+  downloadUrl: publicPdfUrl
+});
+
 
   } catch (err) {
     console.error("🔥🔥🔥 INVOICE CREATE FAILED 🔥🔥🔥");
