@@ -132,8 +132,10 @@ ${
 <table>
 <tr>
 <td style="vertical-align:top; max-width:280px;">
-<img src="${LOGO_URL}"
-     style="height:40px; margin-bottom:4px;" /><br/>
+<img 
+  src="${LOGO_URL}" 
+  style="height:40px; margin-bottom:6px;" 
+/><br/>
 208-A/9 F/F FLAT NO-2,<br/>
 KH NO. 548/135, Savitri Nagar,<br/>
 Sheikh Sarai Village, South Delhi – 110017 India<br/>
@@ -261,7 +263,14 @@ const filePath = path.join(baseDir, fileName);
 const browser = await launchBrowser();
 
 const page = await browser.newPage();
-await page.setContent(html, { waitUntil: "networkidle0" });
+await page.setContent(html, { waitUntil: "domcontentloaded" });
+
+// 🔴 IMPORTANT: wait for logo to load
+await page.waitForSelector("img", { timeout: 5000 });
+
+// small buffer (real-world fix)
+await new Promise(resolve => setTimeout(resolve, 300));
+
 await page.pdf({ path: filePath, format: "A4" });
 await page.close();
 await browser.close();
