@@ -141,7 +141,7 @@ ${
 <tr>
 <td style="vertical-align:top; max-width:280px;">
 <img
-  src="https://www.beetlebulbs.com/logo1.png"/>
+  src="https://www.beetlebulbs.com/logo1.png" style="max-width:150px"/>
 <br/>
 208-A/9 F/F FLAT NO-2,<br/>
 KH NO. 548/135, Savitri Nagar,<br/>
