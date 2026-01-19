@@ -127,7 +127,10 @@ console.log("🟢 STEP 4: INVOICE ITEMS SAVED");
 /* ===============================
    GENERATE PDF (FILE PATH)
 =============================== */
-const pdfFilePath = await generateInvoicePDF({
+/* ===============================
+   GENERATE PDF (BUFFER)
+=============================== */
+const pdfBuffer = await generateInvoicePDF({
   invoiceNo,
   documentType,
   invoiceType,
@@ -138,12 +141,8 @@ const pdfFilePath = await generateInvoicePDF({
   totals
 });
 
-console.log("🟢 STEP 5: PDF GENERATED AT:", pdfFilePath);
-
-/* ===============================
-   READ PDF AS BUFFER
-=============================== */
-const pdfBuffer = fs.readFileSync(pdfFilePath);
+console.log("🟢 STEP 5: PDF BUFFER GENERATED");
+ 
 
 /* ===============================
    UPLOAD PDF TO SUPABASE STORAGE
