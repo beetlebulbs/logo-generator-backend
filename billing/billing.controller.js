@@ -66,21 +66,24 @@ export async function updateInvoice(req, res) {
     } = req.body;
 
     /* UPDATE INVOICE */
-    await supabase.from("invoices").update({
-      document_type: documentType,
-      invoice_type: invoiceType,
-      invoice_date: invoiceDate,
-      due_date: dueDate,
-      client_name: client.name,
-      client_email: client.email,
-      client_phone: client.phone,
-      client_address: client.address,
-      client_country: client.country,
-      client_state: client.state,
-      client_state_code: client.stateCode,
-      client_zip: client.zip,
-      client_gstin: client.gstin
-    }).eq("id", id);
+    await supabase
+      .from("invoices")
+      .update({
+        document_type: documentType,
+        invoice_type: invoiceType,
+        invoice_date: invoiceDate,
+        due_date: dueDate,
+        client_name: client.name,
+        client_email: client.email,
+        client_phone: client.phone,
+        client_address: client.address,
+        client_country: client.country,
+        client_state: client.state,
+        client_state_code: client.stateCode,
+        client_zip: client.zip,
+        client_gstin: client.gstin
+      })
+      .eq("id", id);
 
     /* RESET ITEMS */
     await supabase.from("invoice_items").delete().eq("invoice_id", id);
@@ -113,8 +116,8 @@ export async function updateInvoice(req, res) {
     const sgst = invoiceType === "INDIA" ? subtotal * 0.09 : 0;
     const total = subtotal + cgst + sgst;
 
-    /* REGENERATE PDF */
-    await generateInvoicePDF({
+    /* REGENERATE PDF (RETURNS PUBLIC URL) */
+    const pdfUrl = await generateInvoicePDF({
       documentType,
       invoiceType,
       invoiceNo: data.invoice_no,
@@ -147,8 +150,13 @@ export async function updateInvoice(req, res) {
       }
     });
 
-    res.json({ success: true });
+    /* 🔥 SAVE NEW PDF URL */
+    await supabase
+      .from("invoices")
+      .update({ pdf_url: pdfUrl })
+      .eq("id", id);
 
+    res.json({ success: true });
   } catch (err) {
     console.error("❌ Update Invoice Error:", err);
     res.status(500).json({ error: err.message });
@@ -173,14 +181,13 @@ export async function markInvoiceStatus(req, res) {
 export async function deleteInvoice(req, res) {
   const { data } = await supabase
     .from("invoices")
-    .select("invoice_no")
+    .select("pdf_url")
     .eq("id", req.params.id)
     .single();
 
-  if (data?.invoice_no) {
-    const safe = data.invoice_no.replace(/\//g, "-");
-    const file = path.join(process.cwd(), "uploads", "invoices", `${safe}.pdf`);
-    if (fs.existsSync(file)) fs.unlinkSync(file);
+  if (data?.pdf_url) {
+    const fileName = data.pdf_url.split("/").pop();
+    await supabase.storage.from("invoices").remove([fileName]);
   }
 
   await supabase.from("invoice_items").delete().eq("invoice_id", req.params.id);
@@ -207,7 +214,7 @@ export async function downloadInvoicePDF(req, res) {
 }
 
 /* =====================================================
-   RESEND INVOICE EMAIL (BREVO API)
+   RESEND INVOICE EMAIL
 ===================================================== */
 export async function resendInvoiceEmail(req, res) {
   const { data } = await supabase
@@ -216,15 +223,19 @@ export async function resendInvoiceEmail(req, res) {
     .eq("id", req.params.id)
     .single();
 
-  const safe = data.invoice_no.replace(/\//g, "-");
-  const BASE_URL = process.env.BACKEND_URL || "http://localhost:3001";
+  if (!data?.pdf_url) {
+    return res.status(400).json({ error: "PDF not available" });
+  }
 
   await sendInvoiceEmail({
-  to: data.client_email,
-  subject: `Invoice ${data.invoice_no}`,
-  html: `<p>Please find your invoice attached.</p>`,
-  pdfUrl: data.pdf_url
-});
+    to: data.client_email,
+    subject: `Invoice ${data.invoice_no}`,
+    html: `
+      <p>Hello ${data.client_name},</p>
+      <p>Please find your invoice attached.</p>
+    `,
+    pdfUrl: data.pdf_url
+  });
 
   res.json({ success: true });
 }

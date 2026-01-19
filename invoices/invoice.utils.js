@@ -1,5 +1,5 @@
-export function getInvoicePdfFileName(invoiceNo) {
-  return invoiceNo.replaceAll("/", "-") + ".pdf";
+export function getInvoicePdfUrl(invoice) {
+  return invoice.pdf_url || null;
 }
 export function calculateTotals(items = [], invoiceType = "INDIA") {
   if (!Array.isArray(items)) items = [];
