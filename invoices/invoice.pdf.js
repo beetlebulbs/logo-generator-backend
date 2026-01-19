@@ -24,7 +24,7 @@ async function launchBrowser() {
 /* =====================================================
    GENERATE INVOICE / PROFORMA PDF
 ===================================================== */
-const LOGO_PATH = path.resolve("uploads/logo.png");
+const LOGO_PATH = path.join(process.cwd(), "uploads", "logo.png");
 export async function generateInvoicePDF(payload) {
   const {
     documentType,
@@ -75,7 +75,16 @@ export async function generateInvoicePDF(payload) {
     invoice.total,
     isIndia ? "INR" : "USD"
   );
+/* -------- WATERMARK TEXT -------- */
+let watermarkText = COMPANY.name;
 
+if (documentType === "PROFORMA") {
+  watermarkText = `${COMPANY.name} – Proforma Invoice`;
+} else if (invoiceType === "INDIA") {
+  watermarkText = `${COMPANY.name} – Tax Invoice`;
+} else {
+  watermarkText = `${COMPANY.name} – Invoice`;
+}
   /* -------- HTML TEMPLATE -------- */
   const logoBase64 = fs.existsSync(LOGO_PATH)
   ? fs.readFileSync(LOGO_PATH).toString("base64")
@@ -112,8 +121,7 @@ th { background: #f3f3f3; }
 
 <body>
 
-<div class="watermark">${COMPANY.name}</div>
-
+<div class="watermark">${watermarkText}</div>
 <h1 style="text-align:center; margin-bottom:15px;">
 ${
   invoice.document_type === "PROFORMA"
@@ -217,7 +225,14 @@ IFSC: ${COMPANY.bank?.ifsc || "HDFC0001360"}<br/>
 Bank: ${COMPANY.bank?.bank || "HDFC BANK"}
 
 <br/><br/>
+You can pay this invoice securely using Credit Card, Debit Card, UPI, or Net Banking via Razorpay.<br/><br/>
 
+<strong>Pay Now:</strong><br/>
+<a href="https://razorpay.me/@beetlebulbs" target="_blank">
+https://razorpay.me/@beetlebulbs
+</a>
+
+<br/><br/>
 <strong>For ${COMPANY.name}</strong><br/><br/>
 Authorised Signatory
 
@@ -244,8 +259,9 @@ const browser = await launchBrowser();
 const page = await browser.newPage();
 await page.setContent(html, { waitUntil: "networkidle0" });
 await page.pdf({ path: filePath, format: "A4" });
+await page.close();
 await browser.close();
-
+await new Promise(resolve => setTimeout(resolve, 500));
 return filePath;
 }
 /* ===============================
