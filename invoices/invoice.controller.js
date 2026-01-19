@@ -2,6 +2,7 @@ import { calculateTotals } from "./invoice.utils.js";
 import supabase from "../database/supabase.js";
 import { generateInvoicePDF } from "./invoice.pdf.js";
 import { sendInvoiceEmail } from "./invoice.mailer.js";
+import { uploadInvoicePDF } from "../utils/supabaseStorage.js";
 
 /* =====================================================
    CREATE INVOICE / PROFORMA
@@ -128,26 +129,27 @@ export async function createInvoice(req, res) {
     /* ===============================
        GENERATE PDF
     =============================== */
-    await generateInvoicePDF({
-      invoiceNo,
-      documentType,
-      invoiceType,
-      invoiceDate,
-      dueDate,
-      client,
-      items,
-      totals
-    });
+    const pdfBuffer = await generateInvoicePDF({
+  invoiceNo,
+  documentType,
+  invoiceType,
+  invoiceDate,
+  dueDate,
+  client,
+  items,
+  totals
+});
 
-    const fileName = `${invoiceNo.replace(/\//g, "-")}.pdf`;
-    const pdfUrl = `${BASE_URL}/uploads/invoices/${fileName}`;
+const fileName = `invoices/${invoiceNo.replace(/\//g, "-")}.pdf`;
 
-    console.log("🟢 STEP 5: PDF GENERATED:", pdfUrl);
-
+const publicPdfUrl = await uploadInvoicePDF({
+  pdfBuffer,
+  fileName
+}); 
     /* ===============================
        SEND EMAIL (BREVO API – AWAIT)
     =============================== */
-    await sendInvoiceEmail({
+   sendInvoiceEmail({
   to: invoice.client_email,
   subject: `Invoice ${invoice.invoice_no}`,
   html: `
@@ -155,21 +157,18 @@ export async function createInvoice(req, res) {
     <p>Please find your invoice attached.</p>
     <p><strong>Invoice No:</strong> ${invoice.invoice_no}</p>
   `,
-  pdfPath: `uploads/invoices/${fileName}`
-});
-
-
-    console.log("🟢 STEP 6: EMAIL SENT");
+  pdfUrl: publicPdfUrl
+}); 
 
     /* ===============================
        FINAL RESPONSE
     =============================== */
-    return res.status(201).json({
-      success: true,
-      invoiceNo,
-      total: totals.total,
-      downloadUrl: pdfUrl
-    });
+  return res.json({
+  success: true,
+  invoiceNo,
+  total: totals.total,
+  downloadUrl: publicPdfUrl
+});
 
   } catch (err) {
     console.error("🔥🔥🔥 INVOICE CREATE FAILED 🔥🔥🔥");
