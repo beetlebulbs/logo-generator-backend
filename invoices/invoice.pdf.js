@@ -8,11 +8,15 @@ import { COMPANY } from "./invoice.config.js";
 
 async function launchBrowser() {
   if (isProd) {
-    return puppeteerCore.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless
-    });
+   return puppeteerCore.launch({
+  args: [
+    ...chromium.args,
+    "--disable-web-security",
+    "--disable-features=IsolateOrigins,site-per-process"
+  ],
+  executablePath: await chromium.executablePath(),
+  headless: chromium.headless
+});
   }
 
   return puppeteerCore.launch({
