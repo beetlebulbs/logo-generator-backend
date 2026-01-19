@@ -141,9 +141,7 @@ ${
 <tr>
 <td style="vertical-align:top; max-width:280px;">
 <img
-  src="https://www.beetlebulbs.com/logo1.png"
-  style="max-width:180px; margin-bottom:6px;"
-/>
+  src="https://www.beetlebulbs.com/logo1.png"/>
 <br/>
 208-A/9 F/F FLAT NO-2,<br/>
 KH NO. 548/135, Savitri Nagar,<br/>
@@ -248,7 +246,7 @@ ${isIndia ? `
   </tr>
 </table>
  <br/><br/>
-<strong>For ${COMPANY.name}</strong><br/><br/>
+<strong>For ${COMPANY.name}</strong><br/><br/><br/>
 Authorised Signatory
 
 <div class="footer">
@@ -272,7 +270,12 @@ const filePath = path.join(baseDir, fileName);
 const browser = await launchBrowser();
 
 const page = await browser.newPage();
-await page.setContent(html, { waitUntil: "domcontentloaded" });
+const dataUrl = `data:text/html;charset=UTF-8,${encodeURIComponent(html)}`;
+
+await page.goto(dataUrl, {
+  waitUntil: "networkidle0",
+  timeout: 0
+});
 
 // 🔴 IMPORTANT: wait for logo to load
 await page.waitForSelector("img", { timeout: 5000 });
