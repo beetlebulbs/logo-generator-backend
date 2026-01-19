@@ -1,3 +1,4 @@
+import fs from "fs";
 import fetch from "node-fetch";
 
 const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
@@ -7,11 +8,25 @@ export async function sendInvoiceEmail({
   to,
   subject,
   html,
-  pdfUrl
+  pdfPath
 }) {
   if (!to) {
     throw new Error("Brevo Email Error: recipient email missing");
   }
+
+  if (!pdfPath) {
+    throw new Error("Brevo Email Error: pdfPath missing");
+  }
+
+  // ===============================
+  // READ PDF & CONVERT TO BASE64
+  // ===============================
+  if (!fs.existsSync(pdfPath)) {
+    throw new Error(`Invoice PDF not found at path: ${pdfPath}`);
+  }
+
+  const pdfBuffer = fs.readFileSync(pdfPath);
+  const pdfBase64 = pdfBuffer.toString("base64");
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
@@ -24,14 +39,12 @@ export async function sendInvoiceEmail({
     to: [{ email: to }],
     subject,
     htmlContent: html,
-    attachment: pdfUrl
-      ? [
-          {
-            url: pdfUrl,
-            name: "Invoice.pdf"
-          }
-        ]
-      : []
+    attachment: [
+      {
+        name: "Invoice.pdf",
+        content: pdfBase64
+      }
+    ]
   };
 
   try {
@@ -52,6 +65,7 @@ export async function sendInvoiceEmail({
     }
 
     return true;
+
   } catch (err) {
     if (err.name === "AbortError") {
       throw new Error("Brevo API timeout");

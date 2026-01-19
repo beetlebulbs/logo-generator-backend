@@ -148,15 +148,16 @@ export async function createInvoice(req, res) {
        SEND EMAIL (BREVO API – AWAIT)
     =============================== */
     await sendInvoiceEmail({
-      to: invoice.client_email,
-      subject: `Invoice ${invoice.invoice_no}`,
-      html: `
-        <p>Hello ${invoice.client_name},</p>
-        <p>Please find your invoice attached.</p>
-        <p><strong>Invoice No:</strong> ${invoice.invoice_no}</p>
-      `,
-      pdfUrl
-    });
+  to: invoice.client_email,
+  subject: `Invoice ${invoice.invoice_no}`,
+  html: `
+    <p>Hello ${invoice.client_name},</p>
+    <p>Please find your invoice attached.</p>
+    <p><strong>Invoice No:</strong> ${invoice.invoice_no}</p>
+  `,
+  pdfPath: `uploads/invoices/${fileName}`
+});
+
 
     console.log("🟢 STEP 6: EMAIL SENT");
 
