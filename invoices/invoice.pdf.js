@@ -24,7 +24,7 @@ async function launchBrowser() {
 /* =====================================================
    GENERATE INVOICE / PROFORMA PDF
 ===================================================== */
-const LOGO_URL = `${process.env.FRONTEND_URL}/logo1.png`;
+/*const LOGO_URL = `${process.env.FRONTEND_URL}/logo1.png`; */
 export async function generateInvoicePDF(payload) {
   const {
     documentType,
@@ -102,11 +102,15 @@ th { background: #f3f3f3; }
 .center { text-align: center; }
 .watermark {
   position: fixed;
-  top: 35%;
-  left: 15%;
-  font-size: 80px;
-  color: rgba(0,0,0,0.05);
-  transform: rotate(-30deg);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 48px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.06);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
 }
 .footer {
   font-size: 10px;
@@ -132,10 +136,11 @@ ${
 <table>
 <tr>
 <td style="vertical-align:top; max-width:280px;">
-<img 
-  src="${LOGO_URL}" 
-  style="height:40px; margin-bottom:6px;" 
-/><br/>
+<img
+  src="https://www.beetlebulbs.com/logo1.png"
+  style="max-width:180px; margin-bottom:6px;"
+/>
+<br/>
 208-A/9 F/F FLAT NO-2,<br/>
 KH NO. 548/135, Savitri Nagar,<br/>
 Sheikh Sarai Village, South Delhi – 110017 India<br/>
