@@ -40,15 +40,30 @@ export async function getAllInvoices(req, res) {
    SINGLE INVOICE
 ===================================================== */
 export async function getInvoiceById(req, res) {
-  const { data, error } = await supabase
+  const { data: invoice, error } = await supabase
     .from("invoices")
-    .select("*, invoice_items(*)")
+    .select(`
+      *,
+      invoice_items (
+        id,
+        service_name,
+        sac,
+        description,
+        qty,
+        rate,
+        amount
+      )
+    `)
     .eq("id", req.params.id)
     .single();
 
-  if (error) return res.status(404).json(error);
-  res.json(data);
+  if (error || !invoice) {
+    return res.status(404).json({ error: "Invoice not found" });
+  }
+
+  return res.json(invoice);
 }
+
 
 /* =====================================================
    UPDATE + REGENERATE PDF
@@ -216,14 +231,21 @@ export async function downloadInvoicePDF(req, res) {
 /* =====================================================
    RESEND INVOICE EMAIL
 ===================================================== */
+/* =====================================================
+   RESEND INVOICE EMAIL (BREVO API)
+===================================================== */
 export async function resendInvoiceEmail(req, res) {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("invoices")
     .select("*")
     .eq("id", req.params.id)
     .single();
 
-  if (!data?.pdf_url) {
+  if (error || !data) {
+    return res.status(404).json({ error: "Invoice not found" });
+  }
+
+  if (!data.pdf_url) {
     return res.status(400).json({ error: "PDF not available" });
   }
 
@@ -233,9 +255,10 @@ export async function resendInvoiceEmail(req, res) {
     html: `
       <p>Hello ${data.client_name},</p>
       <p>Please find your invoice attached.</p>
+      <p><strong>Invoice No:</strong> ${data.invoice_no}</p>
     `,
-    pdfUrl: data.pdf_url
+    pdfPath: data.pdf_url   // ✅ ONLY THIS
   });
 
-  res.json({ success: true });
+  return res.json({ success: true });
 }
