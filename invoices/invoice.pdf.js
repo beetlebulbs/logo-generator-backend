@@ -24,7 +24,7 @@ async function launchBrowser() {
 /* =====================================================
    GENERATE INVOICE / PROFORMA PDF
 ===================================================== */
-const LOGO_PATH = path.join(process.cwd(), "uploads", "logo.png");
+const LOGO_PATH = path.resolve("uploads/logo.png");
 export async function generateInvoicePDF(payload) {
   const {
     documentType,
@@ -217,22 +217,29 @@ ${isIndia ? `
 <p><strong>Amount in Words:</strong> ${amountInWords}</p>
 
 <hr/>
+<table style="width:100%; margin-top:20px;">
+  <tr>
+    <!-- LEFT -->
+    <td style="vertical-align:top; width:50%;">
+      <strong>Bank Details</strong><br/><br/>
+      Account Name: ${COMPANY.bank?.name || "BEETLEBULBS"}<br/>
+      Account No: ${COMPANY.bank?.account || "50200108796363"}<br/>
+      IFSC: ${COMPANY.bank?.ifsc || "HDFC0001360"}<br/>
+      Bank: ${COMPANY.bank?.bank || "HDFC BANK"}
+    </td>
 
-<strong>Bank Details</strong><br/>
-Account Name: ${COMPANY.bank?.name || "BEETLEBULBS"}<br/>
-Account No: ${COMPANY.bank?.account || "50200108796363"}<br/>
-IFSC: ${COMPANY.bank?.ifsc || "HDFC0001360"}<br/>
-Bank: ${COMPANY.bank?.bank || "HDFC BANK"}
-
-<br/><br/>
-You can pay this invoice securely using Credit Card, Debit Card, UPI, or Net Banking via Razorpay.<br/><br/>
-
-<strong>Pay Now:</strong><br/>
-<a href="https://razorpay.me/@beetlebulbs" target="_blank">
-https://razorpay.me/@beetlebulbs
-</a>
-
-<br/><br/>
+    <!-- RIGHT -->
+    <td style="vertical-align:top; width:50%; text-align:right;">
+      <strong>Online Payment</strong><br/><br/>
+      Pay securely using Credit Card, Debit Card, UPI or Net Banking.<br/><br/>
+      <strong>Pay Now:</strong><br/>
+      <a href="https://razorpay.me/@beetlebulbs" target="_blank">
+        https://razorpay.me/@beetlebulbs
+      </a>
+    </td>
+  </tr>
+</table>
+ 
 <strong>For ${COMPANY.name}</strong><br/><br/>
 Authorised Signatory
 
