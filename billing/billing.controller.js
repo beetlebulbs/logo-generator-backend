@@ -15,14 +15,25 @@ export function billingLogin(req, res) {
 }
 
 /* =====================================================
-   LIST + FILTER
+   LIST + FILTER (FIXED)
 ===================================================== */
 export async function getAllInvoices(req, res) {
   const { client, status, from, to } = req.query;
 
   let query = supabase
     .from("invoices")
-    .select("*")
+    .select(`
+      id,
+      invoice_no,
+      client_name,
+      client_email,
+      client_phone,
+      invoice_date,
+      currency,
+      total,
+      status,
+      pdf_url
+    `)
     .order("created_at", { ascending: false });
 
   if (client) query = query.ilike("client_name", `%${client}%`);
