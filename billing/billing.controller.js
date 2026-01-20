@@ -43,7 +43,7 @@ export async function getAllInvoices(req, res) {
   const { data, error } = await query;
   if (error) return res.status(500).json(error);
 
-  res.json(data);
+  return res.json(data);
 }
 
 /* =====================================================
@@ -52,7 +52,18 @@ export async function getAllInvoices(req, res) {
 export async function getInvoiceById(req, res) {
   const { data, error } = await supabase
     .from("invoices")
-    .select(`*, invoice_items(*)`)
+    .select(`
+      *,
+      invoice_items (
+        id,
+        service_name,
+        sac,
+        description,
+        qty,
+        rate,
+        amount
+      )
+    `)
     .eq("id", req.params.id)
     .single();
 
@@ -60,11 +71,11 @@ export async function getInvoiceById(req, res) {
     return res.status(404).json({ error: "Invoice not found" });
   }
 
-  res.json(data);
+  return res.json(data);
 }
 
 /* =====================================================
-   UPDATE + REGENERATE PDF (FIXED)
+   UPDATE + REGENERATE PDF
 ===================================================== */
 export async function updateInvoice(req, res) {
   try {
@@ -73,38 +84,41 @@ export async function updateInvoice(req, res) {
       req.body;
 
     /* UPDATE INVOICE */
-    await supabase.from("invoices").update({
-      document_type: documentType,
-      invoice_type: invoiceType,
-      invoice_date: invoiceDate,
-      due_date: dueDate,
-      client_name: client.name,
-      client_email: client.email,
-      client_phone: client.phone,
-      client_address: client.address,
-      client_country: client.country,
-      client_state: client.state,
-      client_state_code: client.stateCode,
-      client_zip: client.zip,
-      client_gstin: client.gstin
-    }).eq("id", id);
+    await supabase
+      .from("invoices")
+      .update({
+        document_type: documentType,
+        invoice_type: invoiceType,
+        invoice_date: invoiceDate,
+        due_date: dueDate,
+        client_name: client.name,
+        client_email: client.email,
+        client_phone: client.phone,
+        client_address: client.address,
+        client_country: client.country,
+        client_state: client.state,
+        client_state_code: client.stateCode,
+        client_zip: client.zip,
+        client_gstin: client.gstin
+      })
+      .eq("id", id);
 
     /* RESET ITEMS */
     await supabase.from("invoice_items").delete().eq("invoice_id", id);
 
-    await supabase.from("invoice_items").insert(
-      items.map(i => ({
-        invoice_id: id,
-        service_name: i.name,
-        sac: i.sac,
-        description: i.description,
-        qty: Number(i.qty),
-        rate: Number(i.rate),
-        amount: Number(i.amount)
-      }))
-    );
+    const normalizedItems = items.map(i => ({
+      invoice_id: id,
+      service_name: i.name,
+      sac: i.sac,
+      description: i.description,
+      qty: Number(i.qty),
+      rate: Number(i.rate),
+      amount: Number(i.amount)
+    }));
 
-    /* FETCH UPDATED */
+    await supabase.from("invoice_items").insert(normalizedItems);
+
+    /* FETCH UPDATED DATA */
     const { data } = await supabase
       .from("invoices")
       .select("*, invoice_items(*)")
@@ -112,7 +126,7 @@ export async function updateInvoice(req, res) {
       .single();
 
     const subtotal = data.invoice_items.reduce(
-      (s, i) => s + Number(i.amount),
+      (sum, i) => sum + Number(i.amount),
       0
     );
 
@@ -120,7 +134,7 @@ export async function updateInvoice(req, res) {
     const sgst = invoiceType === "INDIA" ? subtotal * 0.09 : 0;
     const total = subtotal + cgst + sgst;
 
-    /* PDF BUFFER */
+    /* GENERATE PDF BUFFER */
     const pdfBuffer = await generateInvoicePDF({
       documentType,
       invoiceType,
@@ -148,79 +162,105 @@ export async function updateInvoice(req, res) {
       totals: { subtotal, cgst, sgst, igst: 0, total }
     });
 
-    /* UPLOAD + URL */
+    /* UPLOAD TO SUPABASE */
     const fileName = `${data.invoice_no.replace(/\//g, "-")}.pdf`;
-    const publicPdfUrl = await uploadInvoicePDF({ pdfBuffer, fileName });
 
-    if (!publicPdfUrl || !publicPdfUrl.startsWith("https://")) {
-      throw new Error("Invalid PDF URL generated");
-    }
+    const publicPdfUrl = await uploadInvoicePDF({
+      pdfBuffer,
+      fileName
+    });
 
-    await supabase.from("invoices").update({
-      pdf_url: publicPdfUrl
-    }).eq("id", id);
+    /* SAVE PDF URL */
+    await supabase
+      .from("invoices")
+      .update({ pdf_url: publicPdfUrl })
+      .eq("id", id);
 
-    res.json({ success: true, pdf_url: publicPdfUrl });
+    return res.json({ success: true });
   } catch (err) {
     console.error("❌ Update Invoice Error:", err);
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 }
 
 /* =====================================================
-   RESEND EMAIL (AUTO FIX)
+   STATUS UPDATE
+===================================================== */
+export async function markInvoiceStatus(req, res) {
+  await supabase
+    .from("invoices")
+    .update({ status: req.body.status })
+    .eq("id", req.params.id);
+
+  return res.json({ success: true });
+}
+
+/* =====================================================
+   DELETE INVOICE
+===================================================== */
+export async function deleteInvoice(req, res) {
+  const { data } = await supabase
+    .from("invoices")
+    .select("pdf_url")
+    .eq("id", req.params.id)
+    .single();
+
+  if (data?.pdf_url) {
+    const fileName = data.pdf_url.split("/").pop();
+    await supabase.storage.from("invoices").remove([fileName]);
+  }
+
+  await supabase.from("invoice_items").delete().eq("invoice_id", req.params.id);
+  await supabase.from("invoices").delete().eq("id", req.params.id);
+
+  return res.json({ success: true });
+}
+
+/* =====================================================
+   DOWNLOAD PDF
+===================================================== */
+export async function downloadInvoicePDF(req, res) {
+  const { data } = await supabase
+    .from("invoices")
+    .select("pdf_url")
+    .eq("id", req.params.id)
+    .single();
+
+  if (!data?.pdf_url) {
+    return res.status(404).json({ message: "PDF not found" });
+  }
+
+  return res.redirect(data.pdf_url);
+}
+
+/* =====================================================
+   RESEND INVOICE EMAIL
 ===================================================== */
 export async function resendInvoiceEmail(req, res) {
   const { data } = await supabase
     .from("invoices")
-    .select("*, invoice_items(*)")
+    .select("*")
     .eq("id", req.params.id)
     .single();
 
-  if (!data) return res.status(404).json({ error: "Invoice not found" });
+  if (!data) {
+    return res.status(404).json({ error: "Invoice not found" });
+  }
 
-  let pdfUrl = data.pdf_url;
-
-  /* AUTO-REGENERATE IF MISSING */
-  if (!pdfUrl || !pdfUrl.startsWith("https://")) {
-    const pdfBuffer = await generateInvoicePDF({
-      documentType: data.document_type,
-      invoiceType: data.invoice_type,
-      invoiceNo: data.invoice_no,
-      invoiceDate: data.invoice_date,
-      dueDate: data.due_date,
-      client: {
-        name: data.client_name,
-        email: data.client_email,
-        phone: data.client_phone,
-        address: data.client_address,
-        state: data.client_state,
-        country: data.client_country,
-        zip: data.client_zip,
-        gstin: data.client_gstin
-      },
-      items: data.invoice_items,
-      totals: {
-        subtotal: data.subtotal,
-        cgst: data.cgst,
-        sgst: data.sgst,
-        igst: data.igst,
-        total: data.total
-      }
-    });
-
-    const fileName = `${data.invoice_no.replace(/\//g, "-")}.pdf`;
-    pdfUrl = await uploadInvoicePDF({ pdfBuffer, fileName });
-
-    await supabase.from("invoices").update({ pdf_url: pdfUrl }).eq("id", data.id);
+  if (!data.pdf_url) {
+    return res.status(400).json({ error: "PDF not available" });
   }
 
   await sendInvoiceEmail({
     to: data.client_email,
     subject: `Invoice ${data.invoice_no}`,
-    html: `<p>Please find your invoice attached.</p>`,
-    pdfPath: pdfUrl
+    html: `
+      <p>Hello ${data.client_name},</p>
+      <p>Please find your invoice attached.</p>
+      <p><strong>Invoice No:</strong> ${data.invoice_no}</p>
+    `,
+    pdfPath: data.pdf_url
   });
 
-  res.json({ success: true });
+  return res.json({ success: true });
 }
