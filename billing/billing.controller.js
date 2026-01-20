@@ -1,8 +1,7 @@
-import fs from "fs";
-import path from "path";
 import supabase from "../database/supabase.js";
 import { sendInvoiceEmail } from "../invoices/invoice.mailer.js";
 import { generateInvoicePDF } from "../invoices/invoice.pdf.js";
+import { uploadInvoicePDF } from "../utils/supabaseStorage.js";
 
 /* =====================================================
    LOGIN
@@ -15,7 +14,7 @@ export function billingLogin(req, res) {
 }
 
 /* =====================================================
-   LIST + FILTER (FIXED)
+   LIST + FILTER
 ===================================================== */
 export async function getAllInvoices(req, res) {
   const { client, status, from, to } = req.query;
@@ -51,82 +50,61 @@ export async function getAllInvoices(req, res) {
    SINGLE INVOICE
 ===================================================== */
 export async function getInvoiceById(req, res) {
-  const { data: invoice, error } = await supabase
+  const { data, error } = await supabase
     .from("invoices")
-    .select(`
-      *,
-      invoice_items (
-        id,
-        service_name,
-        sac,
-        description,
-        qty,
-        rate,
-        amount
-      )
-    `)
+    .select(`*, invoice_items(*)`)
     .eq("id", req.params.id)
     .single();
 
-  if (error || !invoice) {
+  if (error || !data) {
     return res.status(404).json({ error: "Invoice not found" });
   }
 
-  return res.json(invoice);
+  res.json(data);
 }
 
-
 /* =====================================================
-   UPDATE + REGENERATE PDF
+   UPDATE + REGENERATE PDF (FIXED)
 ===================================================== */
 export async function updateInvoice(req, res) {
   try {
     const id = req.params.id;
-    const {
-      documentType,
-      invoiceType,
-      invoiceDate,
-      dueDate,
-      client,
-      items
-    } = req.body;
+    const { documentType, invoiceType, invoiceDate, dueDate, client, items } =
+      req.body;
 
     /* UPDATE INVOICE */
-    await supabase
-      .from("invoices")
-      .update({
-        document_type: documentType,
-        invoice_type: invoiceType,
-        invoice_date: invoiceDate,
-        due_date: dueDate,
-        client_name: client.name,
-        client_email: client.email,
-        client_phone: client.phone,
-        client_address: client.address,
-        client_country: client.country,
-        client_state: client.state,
-        client_state_code: client.stateCode,
-        client_zip: client.zip,
-        client_gstin: client.gstin
-      })
-      .eq("id", id);
+    await supabase.from("invoices").update({
+      document_type: documentType,
+      invoice_type: invoiceType,
+      invoice_date: invoiceDate,
+      due_date: dueDate,
+      client_name: client.name,
+      client_email: client.email,
+      client_phone: client.phone,
+      client_address: client.address,
+      client_country: client.country,
+      client_state: client.state,
+      client_state_code: client.stateCode,
+      client_zip: client.zip,
+      client_gstin: client.gstin
+    }).eq("id", id);
 
     /* RESET ITEMS */
     await supabase.from("invoice_items").delete().eq("invoice_id", id);
 
-    const normalizedItems = items.map(i => ({
-      invoice_id: id,
-      service_name: i.name,
-      sac: i.sac,
-      description: i.description,
-      qty: Number(i.qty),
-      rate: Number(i.rate),
-      amount: Number(i.amount)
-    }));
+    await supabase.from("invoice_items").insert(
+      items.map(i => ({
+        invoice_id: id,
+        service_name: i.name,
+        sac: i.sac,
+        description: i.description,
+        qty: Number(i.qty),
+        rate: Number(i.rate),
+        amount: Number(i.amount)
+      }))
+    );
 
-    await supabase.from("invoice_items").insert(normalizedItems);
-
-    /* FETCH UPDATED DATA */
+    /* FETCH UPDATED */
     const { data } = await supabase
       .from("invoices")
       .select("*, invoice_items(*)")
@@ -134,7 +112,7 @@ export async function updateInvoice(req, res) {
       .single();
 
     const subtotal = data.invoice_items.reduce(
-      (sum, i) => sum + Number(i.amount),
+      (s, i) => s + Number(i.amount),
       0
     );
 
@@ -142,8 +120,8 @@ export async function updateInvoice(req, res) {
     const sgst = invoiceType === "INDIA" ? subtotal * 0.09 : 0;
     const total = subtotal + cgst + sgst;
 
-    /* REGENERATE PDF (RETURNS PUBLIC URL) */
-    const pdfUrl = await generateInvoicePDF({
+    /* PDF BUFFER */
+    const pdfBuffer = await generateInvoicePDF({
       documentType,
       invoiceType,
       invoiceNo: data.invoice_no,
@@ -167,22 +145,22 @@ export async function updateInvoice(req, res) {
         rate: i.rate,
         amount: i.amount
       })),
-      totals: {
-        subtotal,
-        cgst,
-        sgst,
-        igst: 0,
-        total
-      }
+      totals: { subtotal, cgst, sgst, igst: 0, total }
     });
 
-    /* 🔥 SAVE NEW PDF URL */
-    await supabase
-      .from("invoices")
-      .update({ pdf_url: pdfUrl })
-      .eq("id", id);
+    /* UPLOAD + URL */
+    const fileName = `${data.invoice_no.replace(/\//g, "-")}.pdf`;
+    const publicPdfUrl = await uploadInvoicePDF({ pdfBuffer, fileName });
 
-    res.json({ success: true });
+    if (!publicPdfUrl || !publicPdfUrl.startsWith("https://")) {
+      throw new Error("Invalid PDF URL generated");
+    }
+
+    await supabase.from("invoices").update({
+      pdf_url: publicPdfUrl
+    }).eq("id", id);
+
+    res.json({ success: true, pdf_url: publicPdfUrl });
   } catch (err) {
     console.error("❌ Update Invoice Error:", err);
     res.status(500).json({ error: err.message });
@@ -190,86 +168,59 @@ export async function updateInvoice(req, res) {
 }
 
 /* =====================================================
-   STATUS UPDATE
-===================================================== */
-export async function markInvoiceStatus(req, res) {
-  await supabase
-    .from("invoices")
-    .update({ status: req.body.status })
-    .eq("id", req.params.id);
-
-  res.json({ success: true });
-}
-
-/* =====================================================
-   DELETE INVOICE
-===================================================== */
-export async function deleteInvoice(req, res) {
-  const { data } = await supabase
-    .from("invoices")
-    .select("pdf_url")
-    .eq("id", req.params.id)
-    .single();
-
-  if (data?.pdf_url) {
-    const fileName = data.pdf_url.split("/").pop();
-    await supabase.storage.from("invoices").remove([fileName]);
-  }
-
-  await supabase.from("invoice_items").delete().eq("invoice_id", req.params.id);
-  await supabase.from("invoices").delete().eq("id", req.params.id);
-
-  res.json({ success: true });
-}
-
-/* =====================================================
-   DOWNLOAD PDF
-===================================================== */
-export async function downloadInvoicePDF(req, res) {
-  const { data, error } = await supabase
-    .from("invoices")
-    .select("pdf_url")
-    .eq("id", req.params.id)
-    .single();
-
-  if (error || !data?.pdf_url) {
-    return res.status(404).json({ message: "PDF not found" });
-  }
-
-  return res.redirect(data.pdf_url);
-}
-
-/* =====================================================
-   RESEND INVOICE EMAIL
-===================================================== */
-/* =====================================================
-   RESEND INVOICE EMAIL (BREVO API)
+   RESEND EMAIL (AUTO FIX)
 ===================================================== */
 export async function resendInvoiceEmail(req, res) {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("invoices")
-    .select("*")
+    .select("*, invoice_items(*)")
     .eq("id", req.params.id)
     .single();
 
-  if (error || !data) {
-    return res.status(404).json({ error: "Invoice not found" });
-  }
+  if (!data) return res.status(404).json({ error: "Invoice not found" });
 
-  if (!data.pdf_url) {
-    return res.status(400).json({ error: "PDF not available" });
+  let pdfUrl = data.pdf_url;
+
+  /* AUTO-REGENERATE IF MISSING */
+  if (!pdfUrl || !pdfUrl.startsWith("https://")) {
+    const pdfBuffer = await generateInvoicePDF({
+      documentType: data.document_type,
+      invoiceType: data.invoice_type,
+      invoiceNo: data.invoice_no,
+      invoiceDate: data.invoice_date,
+      dueDate: data.due_date,
+      client: {
+        name: data.client_name,
+        email: data.client_email,
+        phone: data.client_phone,
+        address: data.client_address,
+        state: data.client_state,
+        country: data.client_country,
+        zip: data.client_zip,
+        gstin: data.client_gstin
+      },
+      items: data.invoice_items,
+      totals: {
+        subtotal: data.subtotal,
+        cgst: data.cgst,
+        sgst: data.sgst,
+        igst: data.igst,
+        total: data.total
+      }
+    });
+
+    const fileName = `${data.invoice_no.replace(/\//g, "-")}.pdf`;
+    pdfUrl = await uploadInvoicePDF({ pdfBuffer, fileName });
+
+    await supabase.from("invoices").update({ pdf_url: pdfUrl }).eq("id", data.id);
   }
 
   await sendInvoiceEmail({
     to: data.client_email,
     subject: `Invoice ${data.invoice_no}`,
-    html: `
-      <p>Hello ${data.client_name},</p>
-      <p>Please find your invoice attached.</p>
-      <p><strong>Invoice No:</strong> ${data.invoice_no}</p>
-    `,
-    pdfPath: data.pdf_url   // ✅ ONLY THIS
+    html: `<p>Please find your invoice attached.</p>`,
+    pdfPath: pdfUrl
   });
 
-  return res.json({ success: true });
+  res.json({ success: true });
 }
