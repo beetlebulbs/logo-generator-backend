@@ -6,13 +6,18 @@ export async function sendInvoiceEmail({
   to,
   subject,
   html,
-  pdfPath   // <-- THIS IS A PUBLIC URL
+  pdfPath   // MUST be Supabase public https URL
 }) {
   if (!to) {
     throw new Error("Brevo Email Error: recipient missing");
   }
 
-  if (!pdfPath || !pdfPath.startsWith("http")) {
+  if (
+    !pdfPath ||
+    typeof pdfPath !== "string" ||
+    !pdfPath.startsWith("https://")
+  ) {
+    console.error("❌ INVALID PDF URL:", pdfPath);
     throw new Error("Brevo Email Error: invalid PDF URL");
   }
 
