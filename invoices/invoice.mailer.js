@@ -6,34 +6,39 @@ export async function sendInvoiceEmail({
   to,
   subject,
   html,
-  pdfPath // can be URL OR Buffer
+  pdfPath // URL OR Buffer
 }) {
   if (!to) {
     throw new Error("Brevo Email Error: recipient missing");
   }
 
-  let attachment;
+  let pdfBuffer;
 
-  // ✅ CASE 1: Public URL
+  // ✅ CASE 1: pdfPath is URL → DOWNLOAD IT
   if (typeof pdfPath === "string" && pdfPath.startsWith("http")) {
-    attachment = [{
-      url: pdfPath,
-      name: "Invoice.pdf"
-    }];
+    const res = await fetch(pdfPath);
+    if (!res.ok) {
+      throw new Error("Failed to download PDF from Supabase");
+    }
+
+    const arrayBuffer = await res.arrayBuffer();
+    pdfBuffer = Buffer.from(arrayBuffer);
   }
 
-  // ✅ CASE 2: Buffer / Uint8Array (resend case)
+  // ✅ CASE 2: Buffer / Uint8Array → NORMALIZE
   else if (Buffer.isBuffer(pdfPath) || pdfPath instanceof Uint8Array) {
-    attachment = [{
-      content: Buffer.from(pdfPath).toString("base64"),
-      name: "Invoice.pdf"
-    }];
+    pdfBuffer = Buffer.from(pdfPath);
   }
 
+  // ❌ ANYTHING ELSE = BUG
   else {
-    console.error("❌ INVALID PDF INPUT:", pdfPath);
+    console.error("❌ INVALID PDF INPUT TYPE:", typeof pdfPath);
+    console.error(pdfPath);
     throw new Error("Brevo Email Error: invalid PDF input");
   }
+
+  // ✅ ALWAYS BASE64
+  const pdfBase64 = pdfBuffer.toString("base64");
 
   const payload = {
     sender: {
@@ -43,7 +48,13 @@ export async function sendInvoiceEmail({
     to: [{ email: to }],
     subject,
     htmlContent: html,
-    attachment
+    attachment: [
+      {
+        content: pdfBase64,
+        name: "Invoice.pdf",
+        type: "application/pdf"
+      }
+    ]
   };
 
   const res = await fetch(BREVO_API_URL, {

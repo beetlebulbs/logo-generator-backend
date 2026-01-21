@@ -251,16 +251,16 @@ export async function resendInvoiceEmail(req, res) {
     return res.status(400).json({ error: "PDF not available" });
   }
 
-  await sendInvoiceEmail({
-    to: data.client_email,
-    subject: `Invoice ${data.invoice_no}`,
-    html: `
-      <p>Hello ${data.client_name},</p>
-      <p>Please find your invoice attached.</p>
-      <p><strong>Invoice No:</strong> ${data.invoice_no}</p>
-    `,
-    pdfPath: data.pdf_url
-  });
+   await sendInvoiceEmail({
+  to: data.client_email,
+  subject: `Invoice ${data.invoice_no}`,
+  html: `
+    <p>Hello ${data.client_name},</p>
+    <p>Please find your invoice attached.</p>
+    <p><strong>Invoice No:</strong> ${data.invoice_no}</p>
+  `,
+  pdfPath: data.pdf_url  
+});
 
   return res.json({ success: true });
 }
