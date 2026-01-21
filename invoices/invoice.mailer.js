@@ -1,4 +1,6 @@
 import fetch from "node-fetch";
+import fs from "fs";
+import path from "path";
 
 const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 
@@ -6,7 +8,7 @@ export async function sendInvoiceEmail({
   to,
   subject,
   html,
-  pdfPath // URL OR Buffer
+  pdfPath // URL | local path | Buffer | Uint8Array
 }) {
   if (!to) {
     throw new Error("Brevo Email Error: recipient missing");
@@ -14,31 +16,65 @@ export async function sendInvoiceEmail({
 
   let pdfBuffer;
 
-  // ✅ CASE 1: pdfPath is URL → DOWNLOAD IT
-  if (typeof pdfPath === "string" && pdfPath.startsWith("http")) {
-    const res = await fetch(pdfPath);
-    if (!res.ok) {
-      throw new Error("Failed to download PDF from Supabase");
-    }
+  /* ==================================================
+     NORMALIZE PDF INPUT (STRICT + SAFE + NO GUESS)
+  ================================================== */
 
-    const arrayBuffer = await res.arrayBuffer();
-    pdfBuffer = Buffer.from(arrayBuffer);
+  // ✅ CASE 1: Already a Buffer
+  if (Buffer.isBuffer(pdfPath)) {
+    pdfBuffer = pdfPath;
   }
 
-  // ✅ CASE 2: Buffer / Uint8Array → NORMALIZE
-  else if (Buffer.isBuffer(pdfPath) || pdfPath instanceof Uint8Array) {
+  // ✅ CASE 2: Uint8Array
+  else if (pdfPath instanceof Uint8Array) {
     pdfBuffer = Buffer.from(pdfPath);
   }
 
-  // ❌ ANYTHING ELSE = BUG
+  // ✅ CASE 3: STRING → URL
+  else if (
+    typeof pdfPath === "string" &&
+    (pdfPath.startsWith("http://") || pdfPath.startsWith("https://"))
+  ) {
+    try {
+      const res = await fetch(pdfPath);
+      if (!res.ok) {
+        throw new Error(`PDF download failed: ${res.status}`);
+      }
+      const ab = await res.arrayBuffer();
+      pdfBuffer = Buffer.from(ab);
+    } catch (err) {
+      console.error("❌ PDF URL FETCH FAILED:", pdfPath);
+      throw new Error("Brevo Email Error: unable to download PDF");
+    }
+  }
+
+  // ✅ CASE 4: STRING → LOCAL FILE PATH (🔥 THIS FIXES YOUR BUG)
+  else if (typeof pdfPath === "string") {
+    const resolvedPath = path.resolve(pdfPath);
+
+    if (!fs.existsSync(resolvedPath)) {
+      console.error("❌ PDF FILE NOT FOUND:", resolvedPath);
+      throw new Error("Brevo Email Error: PDF file not found");
+    }
+
+    try {
+      pdfBuffer = fs.readFileSync(resolvedPath);
+    } catch (err) {
+      console.error("❌ PDF FILE READ FAILED:", resolvedPath);
+      throw new Error("Brevo Email Error: unable to read PDF file");
+    }
+  }
+
+  // ❌ CASE 5: ANYTHING ELSE → HARD FAIL
   else {
     console.error("❌ INVALID PDF INPUT TYPE:", typeof pdfPath);
     console.error(pdfPath);
     throw new Error("Brevo Email Error: invalid PDF input");
   }
 
-  // ✅ ALWAYS BASE64
-  const pdfBase64 = pdfBuffer.toString("base64");
+  /* ==================================================
+     SEND EMAIL VIA BREVO
+  ================================================== */
 
   const payload = {
     sender: {
@@ -50,7 +86,7 @@ export async function sendInvoiceEmail({
     htmlContent: html,
     attachment: [
       {
-        content: pdfBase64,
+        content: pdfBuffer.toString("base64"),
         name: "Invoice.pdf",
         type: "application/pdf"
       }
