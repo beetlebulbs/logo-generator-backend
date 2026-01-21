@@ -1,0 +1,39 @@
+[1mdiff --git a/billing/billing.controller.js b/billing/billing.controller.js[m
+[1mindex 335d3c2..e9d7fd9 100644[m
+[1m--- a/billing/billing.controller.js[m
+[1m+++ b/billing/billing.controller.js[m
+[36m@@ -176,7 +176,10 @@[m [mexport async function updateInvoice(req, res) {[m
+       .update({ pdf_url: publicPdfUrl })[m
+       .eq("id", id);[m
+ [m
+[31m-    return res.json({ success: true });[m
+[32m+[m[32m   return res.json({[m
+[32m+[m[32m  success: true,[m
+[32m+[m[32m   pdf_url: publicPdfUrl[m
+[32m+[m[32m });[m
+   } catch (err) {[m
+     console.error("❌ Update Invoice Error:", err);[m
+     return res.status(500).json({ error: err.message });[m
+[36m@@ -230,7 +233,7 @@[m [mexport async function downloadInvoicePDF(req, res) {[m
+     return res.status(404).json({ message: "PDF not found" });[m
+   }[m
+ [m
+[31m-  return res.redirect(data.pdf_url);[m
+[32m+[m[32m  return res.json({ url: data.pdf_url });[m
+ }[m
+ [m
+ /* =====================================================[m
+[1mdiff --git a/invoices/invoice.controller.js b/invoices/invoice.controller.js[m
+[1mindex dba91e9..92e842c 100644[m
+[1m--- a/invoices/invoice.controller.js[m
+[1m+++ b/invoices/invoice.controller.js[m
+[36m@@ -189,7 +189,8 @@[m [mreturn res.json({[m
+   success: true,[m
+   invoiceNo,[m
+   total: totals.total,[m
+[31m-  downloadUrl: publicPdfUrl[m
+[32m+[m[32m  downloadUrl: publicPdfUrl,[m
+[32m+[m[32m  invoiceId: invoice.id[m
+ });[m
+ [m
+ [m

@@ -189,7 +189,8 @@ return res.json({
   success: true,
   invoiceNo,
   total: totals.total,
-  downloadUrl: publicPdfUrl
+  downloadUrl: publicPdfUrl,
+  invoiceId: invoice.id
 });
 
 
