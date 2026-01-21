@@ -1,4 +1,4 @@
-import supabase from "../database/supabase.js";
+ import supabase from "../database/supabase.js";
 import { sendInvoiceEmail } from "../invoices/invoice.mailer.js";
 import { generateInvoicePDF } from "../invoices/invoice.pdf.js";
 import { uploadInvoicePDF } from "../utils/supabaseStorage.js";
@@ -14,7 +14,7 @@ export function billingLogin(req, res) {
 }
 
 /* =====================================================
-   LIST + FILTER
+   LIST + FILTER (DASHBOARD)
 ===================================================== */
 export async function getAllInvoices(req, res) {
   const { client, status, from, to } = req.query;
@@ -47,7 +47,7 @@ export async function getAllInvoices(req, res) {
 }
 
 /* =====================================================
-   SINGLE INVOICE
+   SINGLE INVOICE (FRONTEND-CONTRACT SHAPE)
 ===================================================== */
 export async function getInvoiceById(req, res) {
   const { data, error } = await supabase
@@ -55,7 +55,6 @@ export async function getInvoiceById(req, res) {
     .select(`
       *,
       invoice_items (
-        id,
         service_name,
         sac,
         description,
@@ -71,7 +70,44 @@ export async function getInvoiceById(req, res) {
     return res.status(404).json({ error: "Invoice not found" });
   }
 
-  return res.json(data);
+  /* 🔥 FRONTEND EXPECTED STRUCTURE */
+  return res.json({
+    id: data.id,
+    invoiceNo: data.invoice_no,
+
+    documentType: data.document_type,
+    invoiceType: data.invoice_type,
+
+    invoiceDate: data.invoice_date,
+    dueDate: data.due_date,
+
+    client: {
+      name: data.client_name,
+      email: data.client_email,
+      phone: data.client_phone,
+      address: data.client_address,
+      country: data.client_country,
+      state: data.client_state,
+      stateCode: data.client_state_code,
+      zip: data.client_zip,
+      gstin: data.client_gstin
+    },
+
+    items: data.invoice_items.map(i => ({
+      name: i.service_name,
+      sac: i.sac,
+      description: i.description,
+      qty: i.qty,
+      rate: i.rate,
+      amount: i.amount,
+      editableRate: true
+    })),
+
+    pdf_url: data.pdf_url,
+    status: data.status,
+    currency: data.currency,
+    total: data.total
+  });
 }
 
 /* =====================================================
@@ -134,7 +170,7 @@ export async function updateInvoice(req, res) {
     const sgst = invoiceType === "INDIA" ? subtotal * 0.09 : 0;
     const total = subtotal + cgst + sgst;
 
-    /* GENERATE PDF BUFFER */
+    /* GENERATE PDF (UNCHANGED LOGIC) */
     const pdfBuffer = await generateInvoicePDF({
       documentType,
       invoiceType,
@@ -162,7 +198,7 @@ export async function updateInvoice(req, res) {
       totals: { subtotal, cgst, sgst, igst: 0, total }
     });
 
-    /* UPLOAD TO SUPABASE */
+    /* UPLOAD PDF */
     const fileName = `${data.invoice_no.replace(/\//g, "-")}.pdf`;
 
     const publicPdfUrl = await uploadInvoicePDF({
@@ -180,7 +216,6 @@ export async function updateInvoice(req, res) {
       success: true,
       pdf_url: publicPdfUrl
     });
-
   } catch (err) {
     console.error("❌ Update Invoice Error:", err);
     return res.status(500).json({
@@ -258,16 +293,16 @@ export async function resendInvoiceEmail(req, res) {
     return res.status(400).json({ error: "PDF not available" });
   }
 
-   await sendInvoiceEmail({
-  to: data.client_email,
-  subject: `Invoice ${data.invoice_no}`,
-  html: `
-    <p>Hello ${data.client_name},</p>
-    <p>Please find your invoice attached.</p>
-    <p><strong>Invoice No:</strong> ${data.invoice_no}</p>
-  `,
-  pdfPath: data.pdf_url  
-});
+  await sendInvoiceEmail({
+    to: data.client_email,
+    subject: `Invoice ${data.invoice_no}`,
+    html: `
+      <p>Hello ${data.client_name},</p>
+      <p>Please find your invoice attached.</p>
+      <p><strong>Invoice No:</strong> ${data.invoice_no}</p>
+    `,
+    pdfPath: data.pdf_url
+  });
 
   return res.json({ success: true });
 }
