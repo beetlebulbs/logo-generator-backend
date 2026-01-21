@@ -274,6 +274,31 @@ export async function downloadInvoicePDF(req, res) {
 
   return res.json({ url: data.pdf_url });
 }
+/* =====================================================
+   PDF STREAM (IFRAME SAFE)
+===================================================== */
+export async function streamInvoicePDF(req, res) {
+  const { data } = await supabase
+    .from("invoices")
+    .select("pdf_url")
+    .eq("id", req.params.id)
+    .single();
+
+  if (!data?.pdf_url) {
+    return res.status(404).send("PDF not found");
+  }
+
+  const pdfRes = await fetch(data.pdf_url);
+
+  if (!pdfRes.ok) {
+    return res.status(500).send("Failed to load PDF");
+  }
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", "inline");
+
+  pdfRes.body.pipe(res);
+}
 
 /* =====================================================
    RESEND INVOICE EMAIL
