@@ -269,10 +269,10 @@ export async function downloadInvoicePDF(req, res) {
     .single();
 
   if (error || !data?.pdf_url) {
-    return res.status(404).json({ message: "PDF not found" });
+    return res.status(404).send("PDF not found");
   }
 
-  // 🔥 REDIRECT to Supabase public PDF
+  // 🔥 This is the KEY fix
   return res.redirect(data.pdf_url);
 }
 /* =====================================================
