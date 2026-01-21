@@ -176,10 +176,17 @@ export async function updateInvoice(req, res) {
       .update({ pdf_url: publicPdfUrl })
       .eq("id", id);
 
-    return res.json({ success: true });
+    return res.json({
+      success: true,
+      pdf_url: publicPdfUrl
+    });
+
   } catch (err) {
     console.error("❌ Update Invoice Error:", err);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({
+      success: false,
+      error: err.message
+    });
   }
 }
 
@@ -230,7 +237,7 @@ export async function downloadInvoicePDF(req, res) {
     return res.status(404).json({ message: "PDF not found" });
   }
 
-  return res.redirect(data.pdf_url);
+  return res.json({ url: data.pdf_url });
 }
 
 /* =====================================================
