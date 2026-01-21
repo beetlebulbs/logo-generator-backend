@@ -257,22 +257,23 @@ export async function deleteInvoice(req, res) {
 
   return res.json({ success: true });
 }
-
+  
 /* =====================================================
-   DOWNLOAD PDF
+   STREAM PDF FOR PREVIEW / DOWNLOAD
 ===================================================== */
 export async function downloadInvoicePDF(req, res) {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("invoices")
     .select("pdf_url")
     .eq("id", req.params.id)
     .single();
 
-  if (!data?.pdf_url) {
+  if (error || !data?.pdf_url) {
     return res.status(404).json({ message: "PDF not found" });
   }
 
-  return res.json({ url: data.pdf_url });
+  // 🔥 REDIRECT to Supabase public PDF
+  return res.redirect(data.pdf_url);
 }
 /* =====================================================
    PDF STREAM (IFRAME SAFE)
