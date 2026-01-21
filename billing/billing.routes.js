@@ -35,7 +35,6 @@ router.put("/invoices/:id", billingAuth, updateInvoice);
 router.put("/invoices/:id/status", billingAuth, markInvoiceStatus);
 router.delete("/invoices/:id", billingAuth, deleteInvoice);
 router.get("/invoices/:id/download", billingAuth, downloadInvoicePDF);
-router.post("/invoices/:id/resend", billingAuth, resendInvoiceEmail);
-router.get("/invoices/:id/preview", billingAuth, streamInvoicePDF);
+router.post("/invoices/:id/resend", billingAuth, resendInvoiceEmail); 
 
 export default router;
