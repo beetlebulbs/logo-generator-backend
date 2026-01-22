@@ -217,15 +217,38 @@ ${isIndia ? `
 
 <hr/>
 
-<strong>Bank Details</strong><br/>
-Account Name: ${COMPANY.bank?.name || "BEETLEBULBS"}<br/>
-Account No: ${COMPANY.bank?.account || "50200108796363"}<br/>
-IFSC: ${COMPANY.bank?.ifsc || "HDFC0001360"}<br/>
-Bank: ${COMPANY.bank?.bank || "HDFC BANK"}
+<table style="width:100%; margin-top:20px;">
+  <tr>
+    <!-- LEFT : BANK DETAILS -->
+    <td style="width:50%; vertical-align:top;">
+      <strong>Bank Details</strong><br/><br/>
+      Account Name: ${COMPANY.bank?.name || "BEETLEBULBS"}<br/>
+      Account No: ${COMPANY.bank?.account || "50200108796363"}<br/>
+      IFSC: ${COMPANY.bank?.ifsc || "HDFC0001360"}<br/>
+      Bank: ${COMPANY.bank?.bank || "HDFC BANK"}
+    </td>
+
+    <!-- RIGHT : ONLINE PAYMENT -->
+    <td style="width:50%; vertical-align:top;">
+      <strong>Online Payment</strong><br/><br/>
+      You can pay this invoice using:<br/>
+      • Credit Card<br/>
+      • Debit Card<br/>
+      • UPI<br/><br/>
+
+      <strong>Pay securely here:</strong><br/>
+      <a href="https://razorpay.me/@beetlebulbs"
+         target="_blank"
+         style="color:#2563eb; text-decoration:none;">
+        https://razorpay.me/@beetlebulbs
+      </a>
+    </td>
+  </tr>
+</table>
 
 <br/><br/>
 
-<strong>For ${COMPANY.name}</strong><br/><br/>
+<strong>For ${COMPANY.name}</strong><br/><br/><br/>
 Authorised Signatory
 
 <div class="footer">
