@@ -3,14 +3,7 @@ import supabase from "../database/supabase.js";
 import { sendFormLeadEmail } from "../pdf-templates/formLeadMailer.js";
 
 const router = express.Router();
-
-/* ✅ PREFLIGHT SAFETY */
-router.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-  res.header("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  return res.sendStatus(200);
-});
+ 
 
 router.post("/", async (req, res) => {
   try {
