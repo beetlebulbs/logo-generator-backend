@@ -26,7 +26,7 @@ import { generatePDF } from "./pdf-templates/pdf.js";
 import { sendPdfEmail } from "./pdf-templates/mailer.js";
 import supabase from "./database/supabase.js";
 import { sendFormLeadEmail } from "./pdf-templates/formLeadMailer.js";
- 
+import formLeadRoute from "./routes/formlead.js";
 // -------- FREE IP LOOKUP --------
 
 const normalizePackage = (pkg) => {
@@ -93,6 +93,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/billing", billingRoutes);
 app.use("/api/leads", leadsRoute);
+app.use("/api/formlead", formLeadRoute);
 
 app.use(
   "/uploads",
@@ -713,69 +714,8 @@ app.use(
     error: err.message || err
   });
 });
+  
  
- 
-app.post("/api/formlead", async (req, res) => {
-  try {
-    const {
-      name,
-      email,
-      phone,
-      country,
-      stateRegion,
-      zipCode,
-      businessType,
-      otherBusinessType,
-      marketingSpend,
-      primaryGoal,
-      biggestChallenge
-    } = req.body;
-
-    if (!name || !email) {
-      return res.status(400).json({ error: "Name and email required" });
-    }
-
-    const finalBusinessType =
-      businessType === "other" ? otherBusinessType : businessType;
-
-    // ✅ SAVE TO SUPABASE
-    await supabase.from("formleads").insert([{
-      name,
-      email,
-      phone,
-      country,
-      state_region: stateRegion,
-      zip_code: zipCode,
-      business_type: finalBusinessType,
-      marketing_spend: marketingSpend,
-      primary_goal: primaryGoal,
-      biggest_challenge: biggestChallenge
-    }]);
-
-    // ✅ SEND RESPONSE FIRST
-    res.json({ success: true });
-
-    // 🔥 THIS LINE WAS MISSING / NOT RUNNING
-    console.log("🔥 CALLING sendFormLeadEmail()");
-    sendFormLeadEmail({
-      name,
-      email,
-      phone,
-      country,
-      stateRegion,
-      zipCode,
-      businessType: finalBusinessType,
-      marketingSpend,
-      primaryGoal,
-      biggestChallenge
-    });
-
-  } catch (err) {
-    console.error("❌ FORM LEAD ERROR:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
 // ---- START SERVER ----
 app.listen(PORT, () => {
   console.log(`🚀 Backend running on port ${PORT}`);
