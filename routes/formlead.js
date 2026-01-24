@@ -3,13 +3,20 @@ import supabase from "../database/supabase.js";
 import { sendFormLeadEmail } from "../pdf-templates/formLeadMailer.js";
 
 const router = express.Router();
- 
+const clean = (v) =>
+  typeof v === "string" && v.trim() === "" ? null : v;
+// ✅ BYPASS fileUpload FOR THIS ROUTE ONLY
+router.use((req, res, next) => {
+  req.files = null;
+  next();
+});
 
 router.post("/", async (req, res) => {
   try {
     /* ===============================
        EXTRACT FULL PAYLOAD
     ================================ */
+     console.log("BODY RECEIVED 👉", req.body);
     const {
       service,
 
@@ -57,32 +64,33 @@ const finalService =
     /* ===============================
        SAVE TO SUPABASE
     ================================ */
-    const { error } = await supabase.from("formleads").insert([
-      {
-        service: finalService,
+  const { error } = await supabase.from("formleads").insert([
+  {
+    service: finalService,
 
-        name,
-        email,
-        phone,
-        country,
-        state_region: stateRegion || null,
-        zip_code: zipCode || null,
+    name,
+    email,
+    phone,
+    country,
+    state_region: clean(stateRegion),
+    zip_code: clean(zipCode),
 
-        identity_for: identityFor || null,
-        brand_stage: brandStage || null,
-        brand_requirement: brandRequirement || null,
-        industry: industry || null,
+    identity_for: clean(identityFor),
+    brand_stage: clean(brandStage),
+    brand_requirement: clean(brandRequirement),
+    industry: clean(industry),
 
-        digital_requirement: digitalRequirement || null,
-        digital_goal: digitalGoal || null,
-        existing_setup: existingSetup || null,
+    digital_requirement: clean(digitalRequirement),
+    digital_goal: clean(digitalGoal),
+    existing_setup: clean(existingSetup),
 
-        marketing_spend: marketingSpend || null,
-        primary_goal: primaryGoal || null,
-        biggest_challenge: biggestChallenge || null,
-        business_type: finalBusinessType || null
-      }
-    ]);
+    marketing_spend: clean(marketingSpend),
+    primary_goal: clean(primaryGoal),
+    biggest_challenge: clean(biggestChallenge),
+    business_type: clean(finalBusinessType)
+  }
+]);
+
 
     if (error) {
       console.error("❌ SUPABASE INSERT ERROR:", error);
