@@ -27,16 +27,21 @@ export async function sendFormLeadEmail(payload) {
       businessType
     } = payload;
 
-    // -------- helpers --------
+    // ===============================
+    // HELPERS
+    // ===============================
     const clean = (v) =>
-      typeof v === "string" && v.trim() === "" ? "-" : v || "-";
+      typeof v === "string" && v.trim() !== "" ? v : "-";
 
     // normalize service key
     const serviceKey =
-      service === "Brand Identity" ? "brand" :
-      service === "Digital Presence" ? "digital" :
-      service === "Growth Engine" ? "growth" :
-      service;
+      service === "Brand Identity"
+        ? "brand"
+        : service === "Digital Presence"
+        ? "digital"
+        : service === "Growth Engine"
+        ? "growth"
+        : service;
 
     const SUBJECT_MAP = {
       brand: "🔥 Brand Identity Form Lead",
@@ -44,12 +49,15 @@ export async function sendFormLeadEmail(payload) {
       growth: "🔥 Growth Engine Form Lead"
     };
 
+    // ===============================
+    // SEND EMAIL (BREVO)
+    // ===============================
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
         "api-key": process.env.BREVO_API_KEY,
         "Content-Type": "application/json",
-        "Accept": "application/json"
+        Accept: "application/json"
       },
       body: JSON.stringify({
         sender: {
@@ -76,11 +84,11 @@ export async function sendFormLeadEmail(payload) {
             serviceKey === "brand"
               ? `
             <h3>Brand Identity</h3>
-            <p>Identity For: ${clean(identityFor)}</p>
-            <p>Brand Stage: ${clean(brandStage)}</p>
-            <p>Brand Requirement: ${clean(brandRequirement)}</p>
-            <p>Industry: ${clean(industry)}</p>
-            `
+            <p><b>Identity For:</b> ${clean(identityFor)}</p>
+            <p><b>Brand Stage:</b> ${clean(brandStage)}</p>
+            <p><b>Brand Requirement:</b> ${clean(brandRequirement)}</p>
+            <p><b>Industry:</b> ${clean(industry)}</p>
+          `
               : ""
           }
 
@@ -88,10 +96,10 @@ export async function sendFormLeadEmail(payload) {
             serviceKey === "digital"
               ? `
             <h3>Digital Presence</h3>
-            <p>Requirement: ${clean(digitalRequirement)}</p>
-            <p>Goal: ${clean(digitalGoal)}</p>
-            <p>Existing Setup: ${clean(existingSetup)}</p>
-            `
+            <p><b>Requirement:</b> ${clean(digitalRequirement)}</p>
+            <p><b>Goal:</b> ${clean(digitalGoal)}</p>
+            <p><b>Existing Setup:</b> ${clean(existingSetup)}</p>
+          `
               : ""
           }
 
@@ -99,11 +107,11 @@ export async function sendFormLeadEmail(payload) {
             serviceKey === "growth"
               ? `
             <h3>Growth Engine</h3>
-            <p>Marketing Spend: ${clean(marketingSpend)}</p>
-            <p>Primary Goal: ${clean(primaryGoal)}</p>
-            <p>Biggest Challenge: ${clean(biggestChallenge)}</p>
-            <p>Business Type: ${clean(businessType)}</p>
-            `
+            <p><b>Marketing Spend:</b> ${clean(marketingSpend)}</p>
+            <p><b>Primary Goal:</b> ${clean(primaryGoal)}</p>
+            <p><b>Biggest Challenge:</b> ${clean(biggestChallenge)}</p>
+            <p><b>Business Type:</b> ${clean(businessType)}</p>
+          `
               : ""
           }
         `
