@@ -4,7 +4,11 @@ import { sendFormLeadEmail } from "../pdf-templates/formLeadMailer.js";
 
 const router = express.Router();
 
-// readable label maps
+// ===============================
+// READABLE LABEL MAPS
+// ===============================
+
+// Brand Identity
 const BRAND_MAP = {
   company: "Company",
   brand: "Brand",
@@ -19,6 +23,45 @@ const BRAND_MAP = {
   identity: "Logo & Visual Identity",
   packaging: "Product / Packaging",
   complete: "Complete Brand System"
+};
+
+// Digital Presence
+const DIGITAL_MAP = {
+  website: "Website / Landing Pages",
+  ecommerce: "E-commerce Platform",
+  app: "Web / Mobile App",
+  system: "Complete Digital System",
+
+  leads: "Lead Generation",
+  sales: "Online Sales",
+  automation: "Automation",
+  scale: "Scaling",
+
+  none: "No Website / No Digital Presence",
+  basic: "Basic Website (No Leads)",
+  template: "Template-based Website",
+  ads_only: "Running Ads Without System",
+  advanced: "Website + Multiple Tools",
+  messy: "Too Many Tools, No Clarity",
+  unsure: "Not Sure / Need Audit"
+};
+
+// Growth Engine
+const GROWTH_MAP = {
+  under_50k: "Under ₹50,000",
+  "50k_2l": "₹50,000 – ₹2,00,000",
+  "2l_5l": "₹2,00,000 – ₹5,00,000",
+  "5l_plus": "₹5,00,000+",
+
+  leads: "More Quality Leads",
+  conversion: "Better Conversion",
+  customers: "Predictable Customers",
+  scale: "Scale Revenue",
+
+  low_quality: "Low Lead Quality",
+  high_cost: "High Cost, Low Sales",
+  sales_issue: "Sales Team Struggling",
+  no_predictability: "No Predictability"
 };
 
 router.post("/", async (req, res) => {
@@ -49,6 +92,9 @@ router.post("/", async (req, res) => {
       otherBusinessType
     } = req.body;
 
+    // ===============================
+    // BASIC VALIDATION
+    // ===============================
     if (!name || !email) {
       return res.status(400).json({ error: "Name and email required" });
     }
@@ -69,6 +115,9 @@ router.post("/", async (req, res) => {
     const finalService =
       SERVICE_LABEL_MAP[service] || service;
 
+    // ===============================
+    // SAVE TO SUPABASE (READABLE TEXT)
+    // ===============================
     const { error } = await supabase.from("formleads").insert([
       {
         service: finalService,
@@ -80,19 +129,28 @@ router.post("/", async (req, res) => {
         state_region: stateRegion || null,
         zip_code: zipCode || null,
 
+        // Brand Identity
         identity_for: BRAND_MAP[identityFor] || identityFor || null,
         brand_stage: BRAND_MAP[brandStage] || brandStage || null,
         brand_requirement:
           BRAND_MAP[brandRequirement] || brandRequirement || null,
         industry: industry || null,
 
-        digital_requirement: digitalRequirement || null,
-        digital_goal: digitalGoal || null,
-        existing_setup: existingSetup || null,
+        // Digital Presence
+        digital_requirement:
+          DIGITAL_MAP[digitalRequirement] || digitalRequirement || null,
+        digital_goal:
+          DIGITAL_MAP[digitalGoal] || digitalGoal || null,
+        existing_setup:
+          DIGITAL_MAP[existingSetup] || existingSetup || null,
 
-        marketing_spend: marketingSpend || null,
-        primary_goal: primaryGoal || null,
-        biggest_challenge: biggestChallenge || null,
+        // Growth Engine
+        marketing_spend:
+          GROWTH_MAP[marketingSpend] || marketingSpend || null,
+        primary_goal:
+          GROWTH_MAP[primaryGoal] || primaryGoal || null,
+        biggest_challenge:
+          GROWTH_MAP[biggestChallenge] || biggestChallenge || null,
         business_type: finalBusinessType || null
       }
     ]);
@@ -102,9 +160,12 @@ router.post("/", async (req, res) => {
       return res.status(500).json({ error: "Supabase insert failed" });
     }
 
+    // respond fast
     res.json({ success: true });
 
-    // async email (non-blocking)
+    // ===============================
+    // EMAIL (ASYNC, CLEAN DATA)
+    // ===============================
     setImmediate(() => {
       sendFormLeadEmail({
         service: finalService,
@@ -116,6 +177,7 @@ router.post("/", async (req, res) => {
         stateRegion,
         zipCode,
 
+        // Brand
         identityFor:
           BRAND_MAP[identityFor] || identityFor,
         brandStage:
@@ -124,13 +186,21 @@ router.post("/", async (req, res) => {
           BRAND_MAP[brandRequirement] || brandRequirement,
         industry,
 
-        digitalRequirement,
-        digitalGoal,
-        existingSetup,
+        // Digital
+        digitalRequirement:
+          DIGITAL_MAP[digitalRequirement] || digitalRequirement,
+        digitalGoal:
+          DIGITAL_MAP[digitalGoal] || digitalGoal,
+        existingSetup:
+          DIGITAL_MAP[existingSetup] || existingSetup,
 
-        marketingSpend,
-        primaryGoal,
-        biggestChallenge,
+        // Growth
+        marketingSpend:
+          GROWTH_MAP[marketingSpend] || marketingSpend,
+        primaryGoal:
+          GROWTH_MAP[primaryGoal] || primaryGoal,
+        biggestChallenge:
+          GROWTH_MAP[biggestChallenge] || biggestChallenge,
         businessType: finalBusinessType
       });
     });
