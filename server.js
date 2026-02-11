@@ -94,6 +94,9 @@ app.use("/api/invoices", invoiceRoutes);
 app.use("/api/billing", billingRoutes);
 app.use("/api/leads", leadsRoute);
 app.use("/api/formlead", formLeadRoute);
+app.get("/health-check-2026", (req, res) => {
+  res.send("Backend updated and working");
+});
 
 app.use(
   "/uploads",
