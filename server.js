@@ -28,7 +28,7 @@ import supabase from "./database/supabase.js";
 import { sendFormLeadEmail } from "./pdf-templates/formLeadMailer.js";
 import formLeadRoute from "./routes/formlead.js";
 // -------- FREE IP LOOKUP --------
-
+console.log("🔥 SERVER FILE EXECUTION STARTED");
 const normalizePackage = (pkg) => {
   if (!pkg) return null;
 
@@ -718,7 +718,7 @@ app.use(
   });
 });
   
- 
+ console.log("🔥 BEFORE SERVER START");
 // ---- START SERVER ----
 app.listen(PORT, () => {
   console.log(`🚀 Backend running on port ${PORT}`);
