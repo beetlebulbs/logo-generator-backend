@@ -120,11 +120,16 @@ const UPLOADS_DIR = path.join(__dirname, "uploads");
 const COMMENTS_DIR = path.join(__dirname, "comments");
 const BLOGS_DIR = path.join(__dirname, "blogs");
  
+let razorpay = null;
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+  razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+  });
+} else {
+  console.warn("⚠ Razorpay ENV missing. Payment routes disabled.");
+}
 // ensure dirs exist
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 if (!fs.existsSync(COMMENTS_DIR)) fs.mkdirSync(COMMENTS_DIR, { recursive: true });
@@ -731,6 +736,19 @@ app.use(
 app.post("/api/create-order", async (req, res) => {
   const { amount, bookId } = req.body;
 
+  // 🔥 CRASH-PROOF CHECK
+  if (!razorpay) {
+    return res.status(500).json({
+      error: "Payment service not configured"
+    });
+  }
+
+  if (!amount) {
+    return res.status(400).json({
+      error: "Amount is required"
+    });
+  }
+
   try {
     const order = await razorpay.orders.create({
       amount: amount * 100, // ₹ to paise
@@ -739,10 +757,15 @@ app.post("/api/create-order", async (req, res) => {
     });
 
     res.json(order);
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Create order error:", err);
+    res.status(500).json({
+      error: "Payment initialization failed"
+    });
   }
 });
+
 
 /* ===============================
    VERIFY PAYMENT BOOK
