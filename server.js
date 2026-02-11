@@ -1,7 +1,4 @@
-// server.js
-// Cleaned backend (Option A: blog routes in routes/blog-routes.js only)
-
-// Load environment variables
+ 
 import 'dotenv/config';
 import express from "express";
 console.log("🔥 SERVER.JS LOADED");
@@ -27,8 +24,11 @@ import { sendPdfEmail } from "./pdf-templates/mailer.js";
 import supabase from "./database/supabase.js";
 import { sendFormLeadEmail } from "./pdf-templates/formLeadMailer.js";
 import formLeadRoute from "./routes/formlead.js";
+import Razorpay from "razorpay";
+import crypto from "crypto";
+import { sendBookEmail } from "./mailers/sendBookEmail.js";
 // -------- FREE IP LOOKUP --------
-console.log("🔥 SERVER FILE EXECUTION STARTED");
+
 const normalizePackage = (pkg) => {
   if (!pkg) return null;
 
@@ -71,7 +71,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const LOG_FILE = path.join(__dirname, "logs", "admin-activity.json");
 // ---- App + config ----
+
+
+
+
 const app = express();
+
 /* ================== GLOBAL CORS (SAFE) ================== */
 app.use(cors({
   origin: [
@@ -94,9 +99,6 @@ app.use("/api/invoices", invoiceRoutes);
 app.use("/api/billing", billingRoutes);
 app.use("/api/leads", leadsRoute);
 app.use("/api/formlead", formLeadRoute);
-app.get("/health-check-2026", (req, res) => {
-  res.send("Backend updated and working");
-});
 
 app.use(
   "/uploads",
@@ -117,7 +119,12 @@ const PORT = process.env.PORT ? Number(process.env.PORT) : 3001;
 const UPLOADS_DIR = path.join(__dirname, "uploads");
 const COMMENTS_DIR = path.join(__dirname, "comments");
 const BLOGS_DIR = path.join(__dirname, "blogs");
+ 
 
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
+});
 // ensure dirs exist
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 if (!fs.existsSync(COMMENTS_DIR)) fs.mkdirSync(COMMENTS_DIR, { recursive: true });
@@ -718,7 +725,163 @@ app.use(
   });
 });
   
- console.log("🔥 BEFORE SERVER START");
+/* ===============================
+   CREATE ORDER BOOK
+   =============================== */
+app.post("/api/create-order", async (req, res) => {
+  const { amount, bookId } = req.body;
+
+  try {
+    const order = await razorpay.orders.create({
+      amount: amount * 100, // ₹ to paise
+      currency: "INR",
+      receipt: `book_${bookId}_${Date.now()}`
+    });
+
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ===============================
+   VERIFY PAYMENT BOOK
+   =============================== */
+app.post("/api/verify-payment", async (req, res) => {
+  const {
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+    bookId,
+    bookTitle
+  } = req.body;
+
+  const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+  const expectedSignature = crypto
+    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+    .update(body)
+    .digest("hex");
+
+  if (expectedSignature !== razorpay_signature) {
+    return res.status(400).json({ success: false });
+  }
+
+  const payment = await razorpay.payments.fetch(razorpay_payment_id);
+
+  console.log("🧾 PAYMENT FETCHED:", {
+    email: payment.email,
+    contact: payment.contact,
+    method: payment.method
+  });
+
+  const userEmail = payment.email;
+  const userPhone = payment.contact;
+
+  if (!userEmail) {
+    return res.json({
+      success: true,
+      askEmail: true,
+      bookId,
+      bookTitle
+    });
+  }
+
+  const pdfMap = {
+    1: "brand-identity-vol1.pdf",
+    2: "brand-identity-vol2.pdf",
+    3: "brand-identity-vol3.pdf"
+  };
+
+  const pdfPath = `pdf-templates/generated/${pdfMap[bookId]}`;
+
+  if (!fs.existsSync(pdfPath)) {
+    console.error("❌ PDF NOT FOUND:", pdfPath);
+    return res.status(500).json({
+      success: false,
+      message: "PDF file missing on server"
+    });
+  }
+
+  try {
+    console.log("📤 Sending eBook to:", userEmail);
+
+await sendBookEmail({
+  userEmail: userEmail,          
+  adminEmail: "betlebulbs@gmail.com",
+  pdfPath,
+  packageName: bookTitle,
+  phone: userPhone || "N/A",
+  name: "Ebook Buyer"
+});
+ 
+    console.log("✅ Email sent successfully");
+    return res.json({ success: true });
+
+  } catch (err) {
+    console.error("❌ Email sending failed:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Payment done but email failed"
+    });
+  }
+});
+
+app.post("/api/send-ebook", async (req, res) => {
+  const { email, bookId, bookTitle } = req.body;
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid email address"
+    });
+  }
+
+  if (!bookId) {
+    return res.status(400).json({ error: "Missing bookId" });
+  }
+
+  const pdfMap = {
+    1: "brand-identity-vol1.pdf",
+    2: "brand-identity-vol2.pdf",
+    3: "brand-identity-vol3.pdf"
+  };
+
+  const pdfFile = pdfMap[bookId];
+  if (!pdfFile) {
+    return res.status(400).json({ error: "Invalid bookId" });
+  }
+
+  const pdfPath = `pdf-templates/generated/${pdfFile}`;
+
+  if (!fs.existsSync(pdfPath)) {
+    return res.status(500).json({
+      success: false,
+      message: "PDF file missing on server"
+    });
+  }
+
+  const safeTitle = bookTitle || `Brand Identity 2026 – Vol. ${bookId}`;
+
+  try {
+    await sendBookEmail({
+      userEmail: email,
+      adminEmail: "betlebulbs@gmail.com",
+      pdfPath,
+      packageName: safeTitle,
+      phone: "N/A",
+      name: "Ebook Buyer"
+    });
+
+    return res.json({ success: true });
+  } catch (err) {
+    console.error("❌ SEND EBOOK ERROR:", err);
+    return res.status(500).json({ error: "Email sending failed" });
+  }
+});
+
+
 // ---- START SERVER ----
 app.listen(PORT, () => {
   console.log(`🚀 Backend running on port ${PORT}`);
